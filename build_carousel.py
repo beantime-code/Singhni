@@ -42,18 +42,18 @@ FONTS = "".join(
 )
 
 
-def pips(active, dark):
+def pips(active, dark, total=TOTAL):
     inactive = "rgba(237,232,223,0.25)" if dark else "rgba(0,0,0,0.18)"
     dots = "".join(
         '<span class="pip" style="background:%s"></span>'
         % (RED if i == active else inactive)
-        for i in range(1, TOTAL + 1)
+        for i in range(1, total + 1)
     )
     return '<div class="pips">%s</div>' % dots
 
 
 def slide_html(num, dark, brand, headline, body_blocks, kicker=None,
-                brand_text="NO PLACE / PART II"):
+                brand_text="NO PLACE / PART II", total=TOTAL):
     bg = BLACK if dark else CREAM
     fg = CREAM if dark else BLACK
     rule = "rgba(237,232,223,0.30)" if dark else "rgba(0,0,0,0.25)"
@@ -112,7 +112,7 @@ h1{{font-family:'Poppins',sans-serif;font-weight:700;font-size:74px;
   <div class="body">{body_html}</div>
   <div class="spacer"></div>
 </div>
-{pips(num, dark)}
+{pips(num, dark, total)}
 <div class="footer">
   <span>We need to talk about Canada</span>
   <span class="num">{num:02d}</span>
