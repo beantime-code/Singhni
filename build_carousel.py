@@ -52,13 +52,14 @@ def pips(active, dark):
     return '<div class="pips">%s</div>' % dots
 
 
-def slide_html(num, dark, brand, headline, body_blocks, kicker=None):
+def slide_html(num, dark, brand, headline, body_blocks, kicker=None,
+                brand_text="NO PLACE / PART II"):
     bg = BLACK if dark else CREAM
     fg = CREAM if dark else BLACK
     rule = "rgba(237,232,223,0.30)" if dark else "rgba(0,0,0,0.25)"
 
     brand_html = (
-        '<div class="brand">NO PLACE / PART II</div>' if brand else ""
+        f'<div class="brand">{brand_text}</div>' if brand else ""
     )
     kicker_html = '<div class="kicker">%s</div>' % kicker if kicker else ""
     body_html = "".join("<p>%s</p>" % b for b in body_blocks)
@@ -89,6 +90,7 @@ h1{{font-family:'Poppins',sans-serif;font-weight:700;font-size:74px;
 .body .named{{display:block;margin-bottom:12px;}}
 .body .list{{display:block;font-weight:600;line-height:1.34;
   padding-left:26px;border-left:4px solid {RED};}}
+.body .divider{{display:block;width:100%;height:3px;background:{RED};margin:34px 0;}}
 .spacer{{flex:1;min-height:24px;}}
 .pips{{position:absolute;left:18px;bottom:154px;width:1062px;
   display:flex;justify-content:center;gap:12px;}}
