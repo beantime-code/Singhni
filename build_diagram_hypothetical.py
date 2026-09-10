@@ -11,10 +11,15 @@ real CRA complaint -- close enough to feel like a real Hindu-Canadian
 community charity, distant enough that nobody could read it as a claim
 about a specific real one. See EXAMPLES_PART3.md for the reasoning.
 
-Icons are hand-drawn inline SVG: a mandir silhouette, folded hands
-(anjali mudra, a respectful and universal gesture, drawn as plain
-architecture/posture with no deity imagery), a hundi donation box, a
-grant document, and a border crossing. No external assets.
+Icons are hand-drawn inline SVG, redrawn from flat-icon references the
+user supplied (a tiered pagoda, a person avatar, a currency-exchange
+loop, a phone-and-banknote transfer) in this diagram's own red
+line-art style, so the set stays visually unified and has no external
+dependency. One reference icon, a horned skull, was not used: every
+open slot in this flow is the overseas recipient organization, and
+demon imagery there would assert the group is monstrous, a claim no
+source material supports and not something this project builds. The
+border-crossing icon keeps its plain question mark instead.
 
 Carries two disclaimers on purpose: a small persistent badge near the
 masthead (survives a top-cropped screenshot) and the full disclaimer
@@ -30,54 +35,58 @@ OUT = HERE / "diagram"
 S = f'stroke="{RED}" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"'
 
 
-def icon_hands(size=100):
-    """Folded hands, anjali mudra -- a donor giving. A single pointed
-    vesica (two palms pressed together) split by a centerline, on a
-    pair of short forearm strokes. Plain gesture, no deity or
-    religious symbol depicted."""
+def icon_person(size=100):
+    """A donor: simple avatar, circle head on a rounded-shoulder body.
+    Matches the flat-icon avatar the user referenced."""
     return f"""<svg width="{size}" height="{size}" viewBox="0 0 64 64">
-      <path d="M32 6C21 10 15 20 15 30c0 11 8 19 17 24
-               9-5 17-13 17-24 0-10-6-20-17-24Z" {S}/>
-      <path d="M32 10v40" {S}/>
-      <path d="M15 30c-3 4-5 9-5 14M49 30c3 4 5 9 5 14" {S}/>
+      <circle cx="32" cy="21" r="12" {S}/>
+      <path d="M10 56c0-13.3 9.8-21 22-21s22 7.7 22 21" {S}/>
     </svg>"""
 
 
-def icon_mandir(size=100):
-    """A temple silhouette: base, a curved shikhara, a small finial.
-    Architecture only, no deity imagery."""
+def icon_temple(size=100):
+    """A tiered pagoda/mandir: three stacked, flared roof tiers over a
+    plinth, topped with a finial. Matches the tiered pavilion the user
+    referenced. Architecture only, no deity imagery."""
     return f"""<svg width="{size}" height="{size}" viewBox="0 0 64 64">
-      <path d="M32 6c-6 8-6 16 0 22 6-6 6-14 0-22Z" {S}/>
-      <line x1="32" y1="6" x2="32" y2="2" {S}/>
-      <circle cx="32" cy="2" r="2" fill="{RED}" stroke="none"/>
-      <path d="M14 56V30l18-8 18 8v26" {S}/>
-      <line x1="10" y1="56" x2="54" y2="56" {S}/>
-      <line x1="22" y1="56" x2="22" y2="40" {S}/>
-      <line x1="32" y1="56" x2="32" y2="40" {S}/>
-      <line x1="42" y1="56" x2="42" y2="40" {S}/>
+      <line x1="32" y1="3" x2="32" y2="9" {S}/>
+      <circle cx="32" cy="3" r="1.8" fill="{RED}" stroke="none"/>
+      <path d="M26 9h12l5 7H21Z" {S}/>
+      <path d="M22 16h20v8H22Z" {S}/>
+      <path d="M20 24h24l6 8H14Z" {S}/>
+      <path d="M17 32h30v9H17Z" {S}/>
+      <path d="M13 41h38l4 6H9Z" {S}/>
+      <path d="M12 47h40v9H12Z" {S}/>
+      <line x1="8" y1="56" x2="56" y2="56" {S}/>
     </svg>"""
 
 
-def icon_hundi(size=100):
-    """A donation box with a coin dropping in."""
+def icon_exchange(size=100):
+    """A currency exchange: two curved arrows forming a loop, a coin
+    at the centre. Matches the swap icon the user referenced -- used
+    for the charity itself, which receives and redirects funds."""
     return f"""<svg width="{size}" height="{size}" viewBox="0 0 64 64">
-      <circle cx="40" cy="12" r="6" {S}/>
-      <path d="M40 18v8" {S}/>
-      <path d="M14 30h36l-3 26a4 4 0 0 1-4 3.6H21a4 4 0 0 1-4-3.6Z" {S}/>
-      <line x1="14" y1="30" x2="50" y2="30" {S}/>
-      <line x1="26" y1="24" x2="38" y2="24" {S}/>
+      <path d="M14 24a18 18 0 0 1 30-9" {S}/>
+      <path d="M38 8l7 6-8 4" {S}/>
+      <path d="M50 40a18 18 0 0 1-30 9" {S}/>
+      <path d="M26 56l-7-6 8-4" {S}/>
+      <circle cx="32" cy="32" r="9" {S}/>
+      <text x="32" y="37" font-family="Poppins,sans-serif" font-weight="700"
+            font-size="13" fill="{RED}" text-anchor="middle">$</text>
     </svg>"""
 
 
-def icon_grant(size=100):
-    """A grant agreement: a document with a signature line and a seal."""
+def icon_transfer(size=100):
+    """A phone receiving a transfer: a handset with a banknote in
+    flight toward it and short motion lines. Matches the mobile-money
+    icon the user referenced -- used for the grant moving onward."""
     return f"""<svg width="{size}" height="{size}" viewBox="0 0 64 64">
-      <rect x="14" y="8" width="30" height="40" rx="2" {S}/>
-      <line x1="20" y1="18" x2="38" y2="18" {S}/>
-      <line x1="20" y1="26" x2="38" y2="26" {S}/>
-      <line x1="20" y1="34" x2="30" y2="34" {S}/>
-      <circle cx="44" cy="44" r="10" {S}/>
-      <path d="M40 44l3 3 6-6" {S}/>
+      <rect x="30" y="14" width="20" height="36" rx="3" {S}/>
+      <line x1="37" y1="44" x2="43" y2="44" {S}/>
+      <rect x="6" y="24" width="18" height="12" rx="2"
+            transform="rotate(-18 15 30)" {S}/>
+      <circle cx="15" cy="30" r="3" transform="rotate(-18 15 30)" {S}/>
+      <path d="M25 22l4-3M27 28l4.5-1.5M25 34l4-1" {S} opacity="0.6"/>
     </svg>"""
 
 
@@ -137,8 +146,8 @@ def build():
         "WHAT SHE BELIEVES HAPPENS",
         "She gives at the mandir.",
         [
-            (icon_hands(), "She gives"),
-            (icon_mandir(), "The mandir"),
+            (icon_person(), "She gives"),
+            (icon_temple(), "The mandir"),
         ],
         icon_check(),
         "Stays there",
@@ -149,9 +158,9 @@ def build():
         "WHAT THE STRUCTURE ALLOWS",
         "The registered charity decides.",
         [
-            (icon_hands(), "She gives"),
-            (icon_hundi(), "Sanatan Sanskriti Foundation"),
-            (icon_grant(), "Grant to Ekta Seva Trust"),
+            (icon_person(), "She gives"),
+            (icon_exchange(), "Sanatan Sanskriti Foundation"),
+            (icon_transfer(), "Grant to Ekta Seva Trust"),
         ],
         icon_border(),
         "Bharat Vikas Samiti, a name she's never heard",
