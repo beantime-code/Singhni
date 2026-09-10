@@ -11,83 +11,63 @@ real CRA complaint -- close enough to feel like a real Hindu-Canadian
 community charity, distant enough that nobody could read it as a claim
 about a specific real one. See EXAMPLES_PART3.md for the reasoning.
 
-Icons are hand-drawn inline SVG, redrawn from flat-icon references the
-user supplied (a tiered pagoda, a person avatar, a currency-exchange
-loop, a phone-and-banknote transfer) in this diagram's own red
-line-art style, so the set stays visually unified and has no external
-dependency. One reference icon, a horned skull, was not used: every
-open slot in this flow is the overseas recipient organization, and
-demon imagery there would assert the group is monstrous, a claim no
-source material supports and not something this project builds. The
-border-crossing icon keeps its plain question mark instead.
+Four icons are the user's own uploaded reference images (repo-relative
+refs/), embedded directly as base64 so there's no network dependency
+on img.icons8.com, on a small cream backing plate so the full-color
+flat icons stay legible on both the light and dark track. The other
+two (the ending check and the border crossing) are this project's own
+inline SVG, unchanged. One reference image, a horned skull, is not
+used: every open slot in this flow is the overseas recipient
+organization, and demon imagery there would assert the group is
+monstrous, a claim no source material supports and not something this
+project builds.
 
 Carries two disclaimers on purpose: a small persistent badge near the
 masthead (survives a top-cropped screenshot) and the full disclaimer
 at the bottom the user asked for (survives being read in full).
 """
 
+import base64
 import pathlib
 from build_carousel import CREAM, BLACK, RED, FONTS
 
 HERE = pathlib.Path(__file__).parent
 OUT = HERE / "diagram"
+REFS = HERE / "refs"
 
 S = f'stroke="{RED}" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"'
 
 
+def user_icon(filename, size=100, plate=76):
+    """Embed one of the user's own reference PNGs directly (base64,
+    no network dependency), on a small cream backing plate so a
+    full-color flat icon stays legible on both the light and dark
+    track."""
+    data = base64.b64encode((REFS / filename).read_bytes()).decode()
+    return (
+        f'<div style="width:{size}px;height:{size}px;display:flex;'
+        f'align-items:center;justify-content:center;">'
+        f'<div style="width:{plate}px;height:{plate}px;border-radius:50%;'
+        f'background:{CREAM};display:flex;align-items:center;justify-content:center;">'
+        f'<img src="data:image/png;base64,{data}" width="{int(plate*0.62)}" '
+        f'height="{int(plate*0.62)}" style="display:block;"/></div></div>'
+    )
+
+
 def icon_person(size=100):
-    """A donor: simple avatar, circle head on a rounded-shoulder body.
-    Matches the flat-icon avatar the user referenced."""
-    return f"""<svg width="{size}" height="{size}" viewBox="0 0 64 64">
-      <circle cx="32" cy="21" r="12" {S}/>
-      <path d="M10 56c0-13.3 9.8-21 22-21s22 7.7 22 21" {S}/>
-    </svg>"""
+    return user_icon("icon-person.png", size)
 
 
 def icon_temple(size=100):
-    """A tiered pagoda/mandir: three stacked, flared roof tiers over a
-    plinth, topped with a finial. Matches the tiered pavilion the user
-    referenced. Architecture only, no deity imagery."""
-    return f"""<svg width="{size}" height="{size}" viewBox="0 0 64 64">
-      <line x1="32" y1="3" x2="32" y2="9" {S}/>
-      <circle cx="32" cy="3" r="1.8" fill="{RED}" stroke="none"/>
-      <path d="M26 9h12l5 7H21Z" {S}/>
-      <path d="M22 16h20v8H22Z" {S}/>
-      <path d="M20 24h24l6 8H14Z" {S}/>
-      <path d="M17 32h30v9H17Z" {S}/>
-      <path d="M13 41h38l4 6H9Z" {S}/>
-      <path d="M12 47h40v9H12Z" {S}/>
-      <line x1="8" y1="56" x2="56" y2="56" {S}/>
-    </svg>"""
+    return user_icon("icon-temple.png", size)
 
 
 def icon_exchange(size=100):
-    """A currency exchange: two curved arrows forming a loop, a coin
-    at the centre. Matches the swap icon the user referenced -- used
-    for the charity itself, which receives and redirects funds."""
-    return f"""<svg width="{size}" height="{size}" viewBox="0 0 64 64">
-      <path d="M14 24a18 18 0 0 1 30-9" {S}/>
-      <path d="M38 8l7 6-8 4" {S}/>
-      <path d="M50 40a18 18 0 0 1-30 9" {S}/>
-      <path d="M26 56l-7-6 8-4" {S}/>
-      <circle cx="32" cy="32" r="9" {S}/>
-      <text x="32" y="37" font-family="Poppins,sans-serif" font-weight="700"
-            font-size="13" fill="{RED}" text-anchor="middle">$</text>
-    </svg>"""
+    return user_icon("icon-exchange.png", size)
 
 
 def icon_transfer(size=100):
-    """A phone receiving a transfer: a handset with a banknote in
-    flight toward it and short motion lines. Matches the mobile-money
-    icon the user referenced -- used for the grant moving onward."""
-    return f"""<svg width="{size}" height="{size}" viewBox="0 0 64 64">
-      <rect x="30" y="14" width="20" height="36" rx="3" {S}/>
-      <line x1="37" y1="44" x2="43" y2="44" {S}/>
-      <rect x="6" y="24" width="18" height="12" rx="2"
-            transform="rotate(-18 15 30)" {S}/>
-      <circle cx="15" cy="30" r="3" transform="rotate(-18 15 30)" {S}/>
-      <path d="M25 22l4-3M27 28l4.5-1.5M25 34l4-1" {S} opacity="0.6"/>
-    </svg>"""
+    return user_icon("icon-transfer.png", size)
 
 
 def icon_border(size=100):
