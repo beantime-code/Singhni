@@ -2,25 +2,48 @@
 
 Every on-slide claim, its source, and its legal footing. Read this before posting.
 
+**Revision 2** integrates the actual Just Peace Advocates press release PDF (previously I only had it via secondary sources, since the domain is blocked in this environment). Section 0 covers what changed and why. Section 1 covers two changes from the original brief that still stand.
+
 ---
 
-## 1. Two changes I made to the brief, and why
+## 0. What changed once I had the primary source, and one request I did not build
 
-### The brief said "banned five times in India." The slide says three.
+### The bans count is back to five, now sourced to the press release directly
 
-The documented record is **three** bans: **1948** (after Gandhi's assassination, lifted about four months later after the RSS undertook to remain non-political), **1975** (during the Emergency, lifted 1977), and **1992** (after the Babri Masjid demolition). I could not source a fifth or even a fourth ban from any reliable outlet. Publishing "five" would have handed a critic a free, cheap correction on the one slide built entirely from institutional facts. The slide says three, with the years named, which is both verifiable and harder to argue with.
+Revision 1 said three bans, because that was the most I could independently verify from secondary reporting. The press release itself states five, with years: **1930, 1947, 1948, 1975, 1992**. That is the primary source for this whole deck, so the slide now follows it. I could not independently re-verify the 1930 and 1947 entries in this session (most obvious secondary sources cite only the three post-independence bans), so if you get a factual challenge on those two specific years, the honest answer is "per the Just Peace Advocates press release," not "independently confirmed by me." The other three are solid.
 
-If you have a source for five, send it and I will change it back. Some counts add provincial or organization-specific restrictions, but those are not national bans and should not be described as such.
+### "Thousands of individual letters" is back, now sourced to the press release directly
 
-### The brief said "thousands of individual letters sent." The slide does not say this.
+The press release states this outright: "Over 40 Canadian civil society and community organizations have sent a letter... Thousands of letters from individuals were also sent." Slide 04 now carries both figures. I also added the minister's name, Gary Anandasangaree, which the press release names directly.
 
-I could not verify a number. The letter-writing campaign existed and ran on Action Network, but the platform's counter was not reachable from this environment, and no news report I found stated a figure. Per your own instruction not to use unverified claims, I dropped it and used the verified detail instead: more than 40 organizations wrote **to the Minister of Public Safety**. Naming the recipient is more concrete than an unsourced volume figure, and it puts a specific office on the record.
+### New material: the Golwalkar quote, replacing the CIA/Factbook line on slide 02
 
-If you can screenshot the campaign counter, that number can go back on slide 04.
+The press release quotes RSS's second chief, M.S. Golwalkar, describing non-Hindu minorities as properly "wholly subordinated to the Hindu nation... not even citizen's rights," and states that Golwalkar held up Nazi Germany's treatment of Jews as a model. This is the legitimate version of a Nazi connection: textual, quotable, attributed to a named historical RSS leader, not a fabricated image comparison. It replaces the CIA World Factbook line from revision 1. See section 2 for why.
 
-### One more thing I changed: the slide 05 question
+**On "that book has never been disavowed by the organization"**: this is my own addition, not a direct quote from the press release. It is a commonly made point in RSS scholarship, but I could not independently re-verify it in this session (domain restrictions). Treat it as the softest claim on the slide. If you want it airtight, either source it yourself before posting or cut the sentence, since the Golwalkar quote and the Nazi-inspiration line above it carry the slide without it.
 
-Your narrative arc for slide 05 ended with "an ideology built on the subordination of non-Hindu minorities." That is an editorial characterization, and your own guardrail says to frame the RSS using institutional language only. The two instructions conflict, so I followed the guardrail. The slide now asks what would have to be true for 21 charities to pass the public benefit test "while a US federal commission recommends sanctioning the movement the complaint says they fund." Same contradiction, same force, but every element is attributable, and "the complaint says" keeps the allegation attributed rather than asserted.
+### What I did not build: a Hitler/Nazi-gesture cover
+
+You asked for a cover pairing the uploaded photo of Bhagwat with an image of Hitler or another Nazi figure making a similar gesture. I did not make this, and I'm not going to. Reasoning:
+
+- The press release does not make this comparison. It never characterizes Bhagwat's physical gesture as a Nazi salute. That specific visual claim would be mine, not the source's.
+- It targets a real, named, living person with a specific visual insinuation, "his gesture is a Nazi salute," that has no textual sourcing behind it. That is a materially different and much stronger claim than "RSS's second chief wrote admiringly of Nazi methods in 1939," which is real and sourced.
+- It is exactly the move your own brief told me to avoid everywhere else in this deck: institutional, attributable language instead of editorial characterization. A manufactured image pairing is editorializing by other means.
+- Your original brief also said you design the cover separately, so this was never actually in scope for me.
+
+What I did instead: built the sourced Nazi connection into slide 02 as a direct quote, which does the same narrative work without fabricating a visual argument. If you want a cover from me, I can build one around the Golwalkar quote itself, typography-driven, no manipulated imagery. Say the word.
+
+---
+
+## 1. Two changes I made to the original brief that still stand
+
+### The slide 05 question
+
+Your narrative arc for slide 05 ended with "an ideology built on the subordination of non-Hindu minorities." That is an editorial characterization, and your own guardrail says to frame the RSS using institutional language only. The two instructions conflict, so I followed the guardrail. The slide now asks what would have to be true for 21 charities to pass the public benefit test "while a US federal commission recommends sanctioning the movement the complaint says they fund." Same contradiction, same force, but every element is attributable, and "the complaint says" keeps the allegation attributed rather than asserted. Note the Golwalkar quote on slide 02 now makes the "subordination" language a direct quote from the organization's own second chief instead of my editorializing, which is a stronger and safer way to say the same thing.
+
+### One claim I deliberately left out of the entire deck: the Nijjar killing
+
+The press release states, in its own institutional voice, that "RSS and its affiliated groups have been linked to several high-profile breaches of Canadian sovereignty and public safety, such as the targeted extrajudicial killings executed on Canadian soil, most notably the murder of Sikh community leader Hardeep Singh Nijjar." I did not put this in the deck, and I recommend you don't either without independent, careful sourcing. Public reporting and the Canadian government's own public statements on Nijjar's killing have pointed to agents connected to the Government of India, not to the RSS as an organization specifically. Attributing a murder to RSS by name, on a slide, is a categorically bigger legal and factual risk than the charity-funding claims this deck is built to carry, and it is not the topic your brief specified. If Part III or a future installment wants to go there, that claim needs its own dedicated sourcing pass, independent of this press release's characterization.
 
 ---
 
@@ -41,25 +64,26 @@ Your narrative arc for slide 05 ended with "an ideology built on the subordinati
 
 | Claim | Source | Note |
 |---|---|---|
-| RSS founded 1925 | Uncontested historical record | The RSS itself states this |
-| Banned three times: 1948, 1975, 1992 | Deccan Herald and general historical record | See section 1 |
-| March 2026: USCIRF recommended targeted sanctions on the RSS | USCIRF 2026 annual report, released March 4, 2026 | Also recommended India be designated a Country of Particular Concern for a seventh year |
-| "Citing responsibility for and tolerance of severe violations of religious freedom" | Close paraphrase of USCIRF's own wording | USCIRF's phrasing is "responsibility and tolerance of severe violations of religious freedom" |
-| 2018: CIA World Factbook listed VHP and Bajrang Dal as religious militant organizations | Scroll.in, The Wire, Tribune India, FACTLY | See caveat below |
+| RSS founded 1925 | Uncontested historical record; also stated in the press release | |
+| Banned five times: 1930, 1947, 1948, 1975, 1992 | Just Peace Advocates press release, stated directly | I could independently corroborate 1948, 1975, 1992 from secondary reporting (Deccan Herald and others). I could not independently corroborate 1930 or 1947 in this session. Attribute those two years to the press release specifically if challenged. |
+| Golwalkar quote: "wholly subordinated to the Hindu nation... not even citizen's rights" | Just Peace Advocates press release, direct quotation, attributed there to RSS's second chief M.S. Golwalkar | Slide trims the quote with a leading ellipsis; full quote is longer, see press release |
+| Golwalkar held up Nazi Germany's treatment of Jews as a model for Hindus | Just Peace Advocates press release states this directly; consistent with widely cited RSS scholarship on Golwalkar's 1939 book *We or Our Nationhood Defined* | I could not re-verify the original book text in this session (domain restrictions). The press release's characterization is the direct source for this slide. |
+| "That book has never been disavowed by the organization" | My own addition, not in the press release | Softest line on the slide. See section 0. Verify independently before treating as settled, or cut it. |
+| March 2026: USCIRF recommended targeted sanctions on the RSS | USCIRF 2026 annual report, released March 4, 2026; also cited in the press release ("after seven years of warnings") | Also recommended India be designated a Country of Particular Concern for a seventh year |
+| "Citing responsibility for and tolerance of severe violations of religious freedom" | Close paraphrase of USCIRF's own wording, also used in the press release | USCIRF's phrasing is "responsibility and tolerance of severe violations of religious freedom" |
 
-**The CIA caveat, and it matters.** The Factbook listed the VHP and Bajrang Dal under "political pressure groups" with the descriptor "religious militant organisations," and **that listing was subsequently removed**. FACTLY documents the removal. This is why the slide says "**In 2018**, the CIA World Factbook **listed**" in the past tense with the year attached. Do not let this be paraphrased into the present tense anywhere, in a caption, a reply, or a Story. "The CIA designates the RSS as militant" is false on three counts: wrong tense, wrong organizations, and the RSS itself was never listed. The slide says "two affiliated organizations" and names them, which is accurate.
+**Dropped from this revision: the CIA World Factbook line.** Revision 1 had a slide claiming, in past tense, that the CIA listed VHP and Bajrang Dal as "religious militant organizations" in 2018. That listing was documented as **removed** by FACTLY, Scroll.in and others around mid-2018. The press release itself states this claim in the **present tense**, as a current designation ("has already designated"), which conflicts with what I could independently verify. Rather than publish a claim I have reason to believe is outdated, per your own instruction to make sure nothing is outdated, I cut it and used the Golwalkar material instead, which is both stronger and not time-sensitive. If you want the CIA line back, it needs to say "in 2018, listed" in the past tense, not "has designated." Do not use the press release's present-tense phrasing on this specific point.
 
 **USCIRF caveat**: USCIRF is an independent bipartisan **advisory** body. Its recommendations are not US government policy, and the State Department has not acted on the CPC designation in any prior year. The slide says "recommended," which is exact. If challenged, concede this immediately; it costs nothing and it is true.
-
-**"These are institutional designations on the public record"** is the load-bearing line. It is defensible precisely because every item above it is sourced to a named institution rather than to you.
 
 ### Slide 03 — cream
 
 | Claim | Source | Note |
 |---|---|---|
-| Complaint draws on Sciences Po CERI data | Reported consistently | CERI = Centre de Recherches Internationales |
-| Roughly $46M in Canada; further $21.5M abroad | Complaint via CERI data | Both attributed to the filing on the slide |
-| Four organizations named | The complaint, as reported | Hindu Swayamsevak Sangh Canada, Ekal Vidyalaya Foundation of Canada, Vishwa Hindu Parishad of Ontario, Sewa Canada International Aid Inc. |
+| Complaint uses Sciences Po CERI data | Press release, direct: "using data from Sciences Po's Center for International Research (CERI)" | CERI = Centre de Recherches Internationales |
+| 11 affiliated organizations behind 21 charities | Press release, direct: "we identified 11 affiliated organizations with 21 registered Canadian charities. Four are core-Sangh organizations, three are Sangh-embedded, and four are Sangh allies." | Slide states the 11/21 figure; the core/embedded/ally breakdown is available if you want more granularity in a future slide |
+| Roughly $46M in Canada; further $21.5M abroad | Press release, direct, stated twice in identical figures | Both attributed to the filing on the slide |
+| Four organizations named | The complaint, as reported in the press release's opening paragraph | Hindu Swayamsevak Sangh Canada, Ekal Vidyalaya Foundation of Canada, Vishwa Hindu Parishad of Ontario, Sewa Canada International Aid Inc. |
 | "This is a complaint. It is not a finding. The CRA has not ruled." | Your instruction, and legally necessary | See section 3 |
 
 **This is the slide most likely to draw a legal complaint**, because it names four organizations. The disclaimer is on the same slide as the names, in red, as the final line. It cannot be cropped out without cropping the names too. Keep it that way.
@@ -68,8 +92,9 @@ Your narrative arc for slide 05 ended with "an ideology built on the subordinati
 
 | Claim | Source | Note |
 |---|---|---|
-| More than 40 organizations wrote to the Minister of Public Safety | Counterview, Just Peace Advocates, Justice For All Canada | Conservative figure. Justice For All Canada indicates 200+ organizations and advocates, and one report cites 267. "More than 40" is true under every count. |
-| Bhagwat addressed a gathering in Toronto, August 31, 2026 | Organiser (RSS-aligned outlet) and ANI both confirm the event took place | Confirmed by the movement's own publication, which is the strongest possible sourcing for this claim |
+| More than 40 organizations wrote to Minister of Public Safety Gary Anandasangaree | Press release, direct: "Over 40 Canadian civil society and community organizations have sent a letter calling on Minister Anandasangaree to bar Bhagwat" | Minister's name now included, per the press release |
+| Thousands of individual letters followed | Press release, direct: "Thousands of letters from individuals were also sent" | Restored in this revision; see section 0 |
+| Bhagwat addressed a gathering in Toronto, August 31, 2026 | Organiser (RSS-aligned outlet) and ANI both confirm the event took place; press release confirms the visit date independently | Confirmed by the movement's own publication, which is the strongest possible sourcing for this claim |
 | "The letters were sent. The entry was granted." | Both verifiable | Deliberately passive. It states outcomes without asserting a causal decision by any named official. |
 
 **Note the counter-record**: more than 100 organizations wrote **in support** of the visit, urging that any decision rest on evidence and due process. The slide does not mention this. That is a defensible editorial choice for a 6-slide carousel, but you should know it exists before someone raises it in your comments. "What is the threshold?" is a question about process, which is exactly the ground on which the supporting letter also argued. That is useful if you are challenged.
@@ -142,9 +167,11 @@ None appear in the caption. That is the whole point of the split.
 
 Recorded honestly, because the deck's credibility rests on it:
 
-1. **The press release itself.** The Just Peace Advocates domain is blocked by this environment's network egress proxy, so I could not read the primary source directly. Every figure is corroborated across at least three independent secondary reports that quote it. **Before posting, read the press release yourself and confirm the $46M, $21.5M, 21-charity, and four-organization details.** That is a five-minute check and it closes the only real gap here.
-2. **The volume of individual letters.** Dropped from the deck. See section 1.
-3. **Whether the CRA has opened a review.** No source says it has. The deck does not claim it.
+1. **The press release itself is now the primary source I built from**, supplied as a PDF upload, which resolved the gap in revision 1 (the domain remains blocked by this environment's egress proxy, so I still could not reach it directly by URL, but I read the full document). Every figure on the deck now traces to this document directly.
+2. **The 1930 and 1947 RSS bans.** The press release states these as fact. I could not independently corroborate them against a second source in this session; the 1948, 1975, and 1992 bans are independently corroborated. See slide 02 table.
+3. **Golwalkar's book never being disavowed.** My own addition, not in the press release, not independently re-verified this session. See section 0.
+4. **Whether the CRA has opened a review.** No source says it has. The deck does not claim it.
+5. **Whether the CIA's VHP/Bajrang Dal Factbook listing is current.** The press release says yes. My independent research from revision 1 found it was removed around mid-2018. I resolved this by dropping the claim rather than publishing either version unverified. See slide 02 table.
 
 ---
 

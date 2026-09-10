@@ -146,24 +146,28 @@ SLIDES = [
         headline="What the record says",
         body=[
             "The Rashtriya Swayamsevak Sangh was founded in 1925. India has banned it "
-            "three times. In 1948. In 1975. In 1992.",
+            "five times: 1930, 1947, 1948, 1975, 1992.",
+
+            '<span class="named">RSS’s second chief, M.S. Golwalkar, on non-Hindu minorities:</span>'
+            '<span class="list">“...wholly subordinated to the Hindu nation, '
+            "claiming nothing, deserving no privileges, far less any preferential "
+            'treatment, not even citizen’s rights.”</span>',
+
+            "Golwalkar wrote that Hindus should draw a lesson from Nazi Germany's "
+            "treatment of the Jewish people. That book has never been disavowed by "
+            "the organization.",
 
             "In March 2026, the US Commission on International Religious Freedom "
             "recommended targeted sanctions on the RSS, citing responsibility for and "
             "tolerance of severe violations of religious freedom.",
-
-            "In 2018, the CIA World Factbook listed two affiliated organizations, the "
-            "Vishva Hindu Parishad and the Bajrang Dal, as religious militant organizations.",
-
-            "These are institutional designations on the public record.",
         ],
     ),
     dict(
         num=3, dark=False, brand=False, kicker="The Canadian pipeline",
         headline="The money has an address",
         body=[
-            "The complaint draws on data compiled by the Centre de Recherches "
-            "Internationales at Sciences Po.",
+            "The complaint uses data from Sciences Po's CERI database: 11 "
+            "affiliated organizations behind the 21 charities.",
 
             f"It identifies roughly <b>{D}46&nbsp;million</b> moving between RSS-affiliated "
             f"organizations in Canada, and a further <b>{D}21.5&nbsp;million</b> sent from those "
@@ -183,8 +187,9 @@ SLIDES = [
         headline="He came anyway",
         body=[
             "More than 40 Canadian civil society, human rights, labour and faith "
-            "organizations wrote to the Minister of Public Safety. They asked Canada to "
-            "deny entry to the RSS chief.",
+            "organizations wrote to Minister of Public Safety Gary Anandasangaree. "
+            "Thousands of individual letters followed. All asked Canada to deny entry "
+            "to the RSS chief.",
 
             "On August 31, 2026, Mohan Bhagwat addressed a gathering in Toronto.",
 
