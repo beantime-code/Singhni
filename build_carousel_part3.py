@@ -158,8 +158,8 @@ def build():
             "company anonymously. A federal beneficial ownership registry only "
             "came into force in January 2024.",
 
-            "Transparency International dropped Canada to 12th on its "
-            "corruption index. It named snow washing as a reason.",
+            "Transparency International's 2025 index put Canada 16th of 182. "
+            "Its lowest ranking ever recorded.",
 
             '<span class="q">The word exists because the problem does.</span>',
         ],
