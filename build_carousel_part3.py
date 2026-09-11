@@ -115,34 +115,34 @@ def build():
         "Nobody builds<br>this by accident.",
         [
             f"<b>{D}46 million</b> moved between organizations inside Canada. "
-            f"A further <b>{D}21.5 million</b> left the country. Nobody has "
-            "ruled any of it illegal.",
+            f"Another <b>{D}21.5 million</b> left the country.",
 
-            "That is not a story about one bad charity. It is a structure. "
-            "It took decades to build.",
+            "Nobody has ruled any of it illegal. That is the point.",
 
-            "Here is how the machine works, in plain language.",
+            "This is not about one bad charity. It is about a structure, and "
+            "it took decades to build.",
 
-            '<span class="q">Once you see the shape, you cannot unsee it.</span>',
+            '<span class="q">Here is how it works. In plain language.</span>',
         ],
         brand_text="NO PLACE / PART III", total=TOTAL,
     )
 
     # 02 dark — the textbook mechanism
     s2 = _shell(2, True,
-        '<div class="kicker">The textbook</div>'
-        "<h1>Three steps.<br>Every time.</h1>"
+        '<div class="kicker">Start here</div>'
+        "<h1>What laundering<br>actually is.</h1>"
         '<div class="rule"></div>'
         '<div class="body">'
-        '<p><span class="step"><span class="stepnum">01 &nbsp;PLACEMENT</span>'
-        "Get the money into the banking system.</span>"
-        '<span class="step"><span class="stepnum">02 &nbsp;LAYERING</span>'
-        "Move it between accounts and entities until the trail goes cold.</span>"
-        '<span class="step"><span class="stepnum">03 &nbsp;INTEGRATION</span>'
-        "Bring it back out looking earned.</span></p>"
-        "<p>That is the standard model of money laundering. Every bank "
-        "compliance officer on earth is trained on it.</p>"
-        '<p><span class="q">Hold that shape in your head.</span></p>'
+        "<p>Dirty money has one problem. It cannot be spent. Not openly, "
+        "not in any amount that matters.</p>"
+        '<p><span class="step"><span class="stepnum">01 &nbsp;GET IT IN</span>'
+        "Put it somewhere a bank will accept it.</span>"
+        '<span class="step"><span class="stepnum">02 &nbsp;MOVE IT</span>'
+        "Pass it between accounts and companies until nobody can trace "
+        "where it started.</span>"
+        '<span class="step"><span class="stepnum">03 &nbsp;TAKE IT OUT</span>'
+        "Withdraw it at the far end, looking like ordinary income.</span></p>"
+        '<p><span class="q">Three steps. Every country, every time.</span></p>'
         "</div>")
 
     # 03 cream — why Canada
@@ -150,18 +150,17 @@ def build():
         3, False, False,
         "They call it<br>snow washing.",
         [
-            "Criminal Intelligence Service Canada estimates that between "
-            f"<b>{D}45 billion</b> and <b>{D}113 billion</b> is laundered in this "
-            "country every year.",
+            "Canada is an easy place to hide money. That is not an insult. "
+            "It is a nickname the industry uses.",
 
-            "For years Canada was one of the easiest places on earth to own a "
-            "company anonymously. A federal beneficial ownership registry only "
-            "came into force in January 2024.",
+            f"Police estimate between <b>{D}45 billion</b> and <b>{D}113 billion</b> "
+            "is laundered here every year.",
 
-            "Transparency International's 2025 index put Canada 16th of 182. "
-            "Its lowest ranking ever recorded.",
+            "For years you could own a Canadian company without your name "
+            "appearing anywhere. That only changed in January 2024.",
 
-            '<span class="q">The word exists because the problem does.</span>',
+            '<span class="q">Transparency International now ranks Canada 16th '
+            "of 182. Its lowest ranking ever.</span>",
         ],
         kicker="Why here", total=TOTAL,
     )
@@ -171,19 +170,18 @@ def build():
         4, True, False,
         "The part<br>nobody checks.",
         [
-            "A registered charity can issue a tax receipt. That means the "
-            "public tops up every donation through tax it never collects.",
+            "A registered charity can hand you a tax receipt. That receipt "
+            "means the rest of the country helps pay for your donation, "
+            "through tax it never collects.",
 
-            "Charities can pass money onward to groups that are not themselves "
-            "Canadian charities. The term for those groups is "
-            "<b>non-qualified donees</b>.",
+            "That charity can then pass the money to a group that is not a "
+            "charity at all. Including one in another country.",
 
-            "Until June 2022 a charity had to keep direction and control over "
-            "that money. Parliament replaced it with a grant regime, reported "
-            "on a form called the T3010.",
+            "Until June 2022 it had to stay in control of how that money was "
+            "spent. Parliament removed that rule. Now it files a form.",
 
-            "Canada's own risk assessments name charities as the non-profits "
-            "most exposed to abuse.",
+            '<span class="q">Canada\'s own risk reports name charities as the '
+            "most exposed of all non-profits.</span>",
         ],
         kicker="The charity layer", total=TOTAL,
     )
@@ -196,21 +194,20 @@ def build():
         top=dict(
             label="United States",
             body=[
-                "Sciences Po's CERI database maps <b>112</b> RSS-linked "
-                "organizations in the US, against 14 in Canada. Researchers "
-                "found 30 people holding simultaneous positions across the US "
-                "branch and other Sangh-linked bodies. One group, Sewa "
-                f"International, disbursed more than <b>{D}17.3 million</b> to "
+                "Researchers at Sciences Po mapped <b>112</b> linked "
+                "organizations in the United States. Fourteen in Canada. "
+                "Thirty people held posts in more than one at the same time. "
+                f"One US group sent more than <b>{D}17.3 million</b> to "
                 "recipients in India between 2002 and 2012.",
             ],
         ),
         bottom=dict(
             label="United Kingdom",
             body=[
-                "The Charity Commission opened a statutory inquiry into Hindu "
-                "Swayamsevak Sangh (UK) in 2015. Its 2016 report found "
-                "mismanagement in the charity's administration. It also found "
-                "no evidence of formal RSS links beyond one speaker's remarks.",
+                "Britain's charity regulator investigated the UK branch in "
+                "2015. Its 2016 report found mismanagement. It also found no "
+                "formal link to the parent organization beyond one speaker's "
+                "remarks.",
             ],
         ),
     )
@@ -220,10 +217,10 @@ def build():
         6, True, False,
         "Nobody has<br>been charged.",
         [
-            "The CRA complaint does not allege money laundering. It alleges "
-            "something narrower. That 21 charities may fail the public benefit "
-            "test, may not be spending on their own charitable activities, and "
-            "may have filed inaccurate returns.",
+            "Read this slowly. The complaint does not accuse anyone of money "
+            "laundering. It says something narrower: that 21 charities may not "
+            "be spending on their own charitable work, and may have filed "
+            "inaccurate returns.",
 
             "No court has ruled. No regulator has found wrongdoing. Every "
             "organization named is entitled to due process.",
