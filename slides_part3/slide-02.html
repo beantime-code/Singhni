@@ -33,6 +33,66 @@ h1{font-family:'Poppins',sans-serif;font-weight:700;font-size:74px;
 .stepnum{font-family:'Poppins',sans-serif;font-weight:700;font-size:22px;
   letter-spacing:2px;color:#B5261E;display:block;margin-bottom:4px;}
 
+/* shared by the two data slides: a shorter headline so the graphic
+   gets the room instead */
+h1.sm{font-size:58px;line-height:1.05;margin-bottom:26px;}
+.kickrow{display:flex;align-items:center;justify-content:space-between;
+  gap:20px;margin-bottom:22px;}
+.kickrow .kicker{margin-bottom:0;}
+.badge{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;
+  letter-spacing:1.6px;color:#B5261E;border:1.8px solid #B5261E;
+  border-radius:20px;padding:6px 14px;white-space:nowrap;}
+
+/* 05 - the donor journey */
+.track{border-radius:6px;padding:24px 24px 26px 24px;margin-bottom:14px;}
+.track.light{background:rgba(0,0,0,0.05);border:2px solid rgba(0,0,0,0.14);}
+.track.dark{background:#000000;color:#EDE8DF;}
+.tracklabel{font-family:'Poppins',sans-serif;font-weight:700;font-size:16px;
+  letter-spacing:2px;color:#B5261E;margin-bottom:6px;}
+.trackhead{font-family:'Poppins',sans-serif;font-weight:700;font-size:31px;
+  margin-bottom:18px;}
+.trackrow{display:flex;align-items:flex-start;justify-content:center;gap:0;}
+.node{display:flex;flex-direction:column;align-items:center;width:190px;}
+.nodecap{font-family:'Poppins',sans-serif;font-weight:700;font-size:17px;
+  text-align:center;margin-top:8px;line-height:1.28;}
+.nodename{display:block;min-height:44px;}
+.noderole{display:block;font-weight:600;font-size:14.5px;opacity:0.66;
+  margin-top:2px;}
+.arrow{display:flex;align-items:flex-start;padding-top:38px;width:30px;
+  flex:0 0 30px;opacity:0.85;}
+.bridge{font-family:'Lora',Georgia,serif;font-style:italic;font-size:22px;
+  text-align:center;margin:0 0 14px 0;}
+.foot{border:2px solid #B5261E;border-radius:4px;padding:16px 20px;}
+.footlabel{font-family:'Poppins',sans-serif;font-weight:700;font-size:13.5px;
+  letter-spacing:2px;color:#B5261E;margin-bottom:6px;}
+.footbody{font-family:'Lora',Georgia,serif;font-size:17px;line-height:1.38;}
+.footbody b{font-weight:600;}
+
+/* 07 - the budget comparison */
+.row{margin-bottom:46px;}
+.rowlabel{font-family:'Poppins',sans-serif;font-weight:700;font-size:30px;
+  margin-bottom:14px;}
+.rowsub{display:block;font-family:'Poppins',sans-serif;font-weight:600;
+  font-size:16px;letter-spacing:0.6px;text-transform:uppercase;
+  color:rgba(0,0,0,0.55);margin-top:5px;}
+.barwrap{position:relative;height:28px;}
+.databar{position:absolute;left:0;top:0;height:28px;background:#B5261E;
+  border-radius:0 4px 4px 0;}
+.barval{position:absolute;top:50%;transform:translateY(-50%);
+  font-family:'Poppins',sans-serif;font-weight:700;font-size:27px;
+  white-space:nowrap;}
+.plain{background:#000000;color:#EDE8DF;border-radius:4px;
+  padding:26px 30px 24px 30px;margin-top:40px;}
+.plainlabel{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;
+  letter-spacing:2px;color:#B5261E;margin-bottom:12px;}
+.plainline{font-family:'Lora',Georgia,serif;font-size:23px;line-height:1.38;
+  margin-bottom:9px;}
+.plainq{font-family:'Poppins',sans-serif;font-weight:700;font-size:27px;
+  line-height:1.26;color:#B5261E;margin-top:16px;}
+.plainfoot{font-family:'Lora',Georgia,serif;font-size:15px;line-height:1.36;
+  opacity:0.7;margin-top:14px;padding-top:11px;
+  border-top:1px solid rgba(237,232,223,0.25);}
+
 .pips{position:absolute;left:18px;bottom:154px;width:1062px;
   display:flex;justify-content:center;gap:12px;}
 .pip{width:10px;height:10px;border-radius:50%;display:block;}
@@ -49,7 +109,7 @@ h1{font-family:'Poppins',sans-serif;font-weight:700;font-size:74px;
   <div class="kicker">Start here</div><h1>What laundering<br>actually is.</h1><div class="rule"></div><div class="body"><p>Dirty money has one problem. It cannot be spent. Not openly, not in any amount that matters.</p><p><span class="step"><span class="stepnum">01 &nbsp;GET IT IN</span>Put it somewhere a bank will accept it.</span><span class="step"><span class="stepnum">02 &nbsp;MOVE IT</span>Pass it between accounts and companies until nobody can trace where it started.</span><span class="step"><span class="stepnum">03 &nbsp;TAKE IT OUT</span>Withdraw it at the far end, looking like ordinary income.</span></p><p><span class="q">Three steps. Every country, every time.</span></p></div>
   <div class="spacer"></div>
 </div>
-<div class="pips"><span class="pip" style="background:rgba(237,232,223,0.25)"></span><span class="pip" style="background:#B5261E"></span><span class="pip" style="background:rgba(237,232,223,0.25)"></span><span class="pip" style="background:rgba(237,232,223,0.25)"></span><span class="pip" style="background:rgba(237,232,223,0.25)"></span><span class="pip" style="background:rgba(237,232,223,0.25)"></span><span class="pip" style="background:rgba(237,232,223,0.25)"></span></div>
+<div class="pips"><span class="pip" style="background:rgba(237,232,223,0.25)"></span><span class="pip" style="background:#B5261E"></span><span class="pip" style="background:rgba(237,232,223,0.25)"></span><span class="pip" style="background:rgba(237,232,223,0.25)"></span><span class="pip" style="background:rgba(237,232,223,0.25)"></span><span class="pip" style="background:rgba(237,232,223,0.25)"></span><span class="pip" style="background:rgba(237,232,223,0.25)"></span><span class="pip" style="background:rgba(237,232,223,0.25)"></span><span class="pip" style="background:rgba(237,232,223,0.25)"></span></div>
 <div class="footer">
   <span>We need to talk about Canada</span>
   <span class="num">02</span>
