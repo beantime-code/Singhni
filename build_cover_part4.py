@@ -23,11 +23,9 @@ about a machine. Part IV is about a debt, so this one is sober: no
 gold, no rays, no billing block gag. Series typography, series colours,
 nothing decorative.
 
-The cover names no individual martyr. See BULLETPROOFING_PART4_PART5.md
-for why: the sawing and the cauldron are unambiguous depictions of the
-November 1675 Delhi martyrdoms, but I cannot identify the third scene or
-the elder leading the jatha with enough confidence to print a name on a
-cover. Collective attribution is accurate; a wrong name is not.
+All four paintings are by Kirpal Singh, per the user, so the credit
+line attributes the artist by name rather than describing the scenes
+collectively. See BULLETPROOFING_PART4_PART5.md section 3b.
 """
 
 import base64
@@ -146,8 +144,7 @@ body{{background:{BLACK};color:{CREAM};overflow:hidden;
 </div>
 
 <div class="foot">
-  <div class="credit">Traditional depictions of Sikh martyrdom and of the
-  Khalsa in arms. Artists unattributed.</div>
+  <div class="credit">Depictions of Shaheed Sikhs by Kirpal Singh.</div>
   <div class="billing">The argument belongs to Santbir Singh
   &nbsp;&middot;&nbsp; @projectaananta</div>
 </div>

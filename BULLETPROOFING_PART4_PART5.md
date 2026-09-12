@@ -75,22 +75,13 @@ Every figure traces to Santbir Singh's piece and the sources he cites. The deck 
 
 ## 3b. The Part IV cover
 
-Four paintings, equal cells, black ground, series red. Three things you should decide on before posting.
+Four paintings, equal cells, black ground, series red.
 
-### I did not name anyone on it, and here is why
+### Attribution
 
-Two of the four I am confident about. The sawing scene and the cauldron are the standard depictions of the **Delhi martyrdoms of November 1675**: Bhai Mati Das sawn alive at Chandni Chowk, and Bhai Dayala boiled in a cauldron. Those are among the most reproduced images in Sikh iconography and the compositions are unmistakable.
+All four are by **Kirpal Singh**, confirmed by the user. The credit line reads "Depictions of Shaheed Sikhs by Kirpal Singh." I had guessed at individual scenes before that confirmation (the sawing and the cauldron as the November 1675 Delhi martyrdoms of Bhai Mati Das and Bhai Dayala; the other two more tentatively) but a per-panel identification is no longer needed now the artist credit covers all four, and I'd rather not print guesses about which specific martyrdom each panel depicts when a plain artist credit is both accurate and sufficient.
 
-The other two I am not confident about.
-
-| Panel | My best read | Confidence |
-|---|---|---|
-| Top right, the court scene with a figure in red among guards | Possibly Bhai Sati Das, wrapped in cotton and set alight, in the same 1675 sequence. The seated official would be the Qazi. | Low. I can see a composition; I cannot identify it. |
-| Bottom right, an elder in blue with a long white beard leading an armed jatha | Baba Deep Singh leading the march to Amritsar is the most likely candidate. Baba Banda Singh Bahadur and Akali Phula Singh are also plausible. | Low to moderate. |
-
-So the cover carries a collective credit, "traditional depictions of Sikh martyrdom and of the Khalsa in arms," and names nobody. A collective credit is accurate. A wrong name on a cover, in this community, on this subject, is the kind of error that ends a series' credibility in one comment thread.
-
-**Tell me who they are and I will put precise captions on.** You know this material better than I do, and named panels would make the cover stronger, not weaker.
+Kirpal Singh died in 1990, so this is the same copyright posture as the Kirpal Singh painting used on Part IV slide 02: in copyright, widely reproduced in community contexts, used here for commentary on the tradition it depicts, credited rather than passed off as uncredited or public domain.
 
 ### The sawing panel carries real reach risk
 
@@ -99,12 +90,6 @@ It shows blood. It is a painting, not a photograph, and devotional and historica
 What I did about it: the panel sits in the lower row, under the heaviest part of the shared bottom gradient, and the grade pulls the vermillion down without desaturating the paintings into something disrespectful. The first draft of this cover gave that image a full-width hero band, which isolated the blood at the largest scale on the page. That version is gone.
 
 If you would rather not take the risk at all, say so and I will swap that cell for a fourth non-graphic scene. The grid does not depend on it.
-
-### Copyright
-
-Almost certainly in copyright. Paintings in this style are usually by twentieth-century artists, Kirpal Singh, Devender Singh, Bodhraj and Jarnail Singh among them, and Kirpal Singh died in 1990. I could not identify the artist of any of the four, which is why the credit line says "artists unattributed" rather than inventing an attribution.
-
-Same posture as the Kirpal Singh painting on slide 02: widely reproduced in community contexts, used here for commentary on the tradition it depicts, flagged rather than quietly used. If you can identify any artist, the credit line should name them.
 
 ---
 
