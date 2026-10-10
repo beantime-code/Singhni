@@ -52,6 +52,8 @@ to roll back. Everything below lives in `ishpreet_mod/` (git: `beantime-code/Sin
   3. k26 via route R1 (Aveline skirt bones as an addon skeleton) or R2 (Aveline's skirt as shipped).
 
 ## 3. Sword as a true 4th style (then Heavy, Long)
+- **Starting a new session for this?** `SWORD_SESSION_START.md` has what to attach, what to read, the work order and a
+  prompt to paste.
 - **Plan:** `SWORD_STYLE_PLAN.md` (the 4-link model and experiments E0–E4). **Findings:** `FIGHT_GRAPH_FINDINGS.md`.
 - **Verified:**
   - **Animations:** all 55 bones animated by the Unity sword clips exist in Syndicate's male and female base skeletons,
