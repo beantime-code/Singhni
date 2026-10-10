@@ -10,7 +10,33 @@ Tools: Studio → **8 · Performance**.
   backups.
 - **ReShade check:** whether it actually loads.
 
+## 0. Baseline measured 2026-10-10 (user's Metal HUD screenshot): it changes the plan
+**Setup:** MacBook Pro 16″ **M2 Pro**, CrossOver **25.1.0.38617** (ships **D3DMetal 2.1**; the HUD shows
+"Rosetta x86_64 v2.1 D3D11"), 1728×1080 (exactly 2:1 of the 3456-wide panel, "1.0x Direct"), display 60 Hz,
+quiet street. MSync and the cloth fix were not applied yet.
+
+| FPS avg (min–max) | Frame ("Pre") | GPU time | Draw calls / frame | Render encoders / frame | GPU memory |
+|---|---|---|---|---|---|
+| 22.6 (17.0–32.8) | 44.3 ms (30.5–58.9) | 28.2 ms (13.5–41.0) | **69,288** | 158 | 6.39 GB |
+
+**Reading:**
+- **GPU-bound and CPU-bound at once.** The GPU alone needs 28 ms, a ceiling of about 35 fps even with an infinitely
+  fast CPU. The other ~16 ms per frame is the GPU waiting for the CPU, translation and sync.
+- **The draw-call count is the root cause:** 69k per frame on a quiet street. Each draw is translated D3D11 → Metal
+  under Rosetta (CPU). The 158 render passes are also costly on a tile-based GPU (GPU).
+- **§1's "spend spare GPU time on looks" doesn't apply at the current settings.** First cut GPU time with the
+  settings that cost the most and show the least (§3, and NVIDIA-only options), and cut draw calls (environment
+  draw distance, shadow cascades).
+- **Realistic target on D3DMetal 2.1:** a steady 30–40 fps that looks clean. For 60, the GPU work must roughly halve:
+  the biggest single lever is **CrossOver 26 (D3DMetal 3.0)**, measured with the HUD before and after.
+- **Pacing:** the 16″ panel is 120 Hz ProMotion, so a 40 fps cap divides it evenly (3 refreshes per frame) and feels
+  smoother than an unsteady 30–45.
+- **Next measurement:** the same spot after MSync + cloth, then after each settings change. The user is sending the
+  current AC.ini/graphics settings.
+
 ## 1. The principle: Syndicate on Mac is CPU-bound, so the GPU has room to spare
+(Revised by §0: on the user's M2 Pro at current settings it's *both*. The method below still applies once GPU time is
+under about 14 ms.)
 - Syndicate's engine is heavy on the CPU (crowds, streaming, simulation). Players hit stutter and high CPU even on
   Windows PCs, and Ubisoft's own advice was to cap the frame rate
   ([Steam thread](https://steamcommunity.com/app/368500/discussions/1/4326348922706146537/),
