@@ -1,0 +1,14 @@
+{
+ "files": {
+  "11": "7c7f4fe022e0b254e273dd7dcd828ef1074a7465ccc428678914daea1b211126",
+  "12": "8cd561520d71b01a7a5407a951f1f1763ebce7b144fe7c7916f13a97f28d22e5",
+  "21": "7f293d36c5916b68d7675ba50e3179e4c3e16391735d8ba47dba1cbdfa130919",
+  "22": "54271134fed1889ff6e48d4f73fb078643ee2fc354e258082eb41ab8d5676ff6",
+  "31": "64542a96a8e41e7f9343d5c5b3f741eb459ac323fdc697120772e2ff985c83ab"
+ },
+ "packs": [
+  "selftest_lzo2a_pack",
+  "selftest_lzo1c_pack",
+  "selftest_lzo1x_pack"
+ ]
+}

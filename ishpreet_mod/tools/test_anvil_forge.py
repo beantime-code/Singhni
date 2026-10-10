@@ -14,7 +14,7 @@ import tempfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import anvil_forge as af  # noqa: E402
 
-WORK = {'lzo1x_1_compress': 1 << 16, 'lzo2a_999_compress': 1 << 19, 'lzo1c_1_compress': 1 << 17}
+WORK = {'lzo1x_1_compress': 1 << 22, 'lzo2a_999_compress': 1 << 22, 'lzo1c_1_compress': 1 << 22}
 COMP = {1: 'lzo1x_1_compress', 2: 'lzo2a_999_compress', 5: 'lzo1c_1_compress'}
 
 
@@ -22,7 +22,7 @@ def compress(mode, data):
     lib = af.lzo_lib()
     fn = getattr(lib, COMP[mode])
     fn.argtypes = [ctypes.c_char_p, ctypes.c_size_t, ctypes.c_char_p, ctypes.POINTER(ctypes.c_size_t), ctypes.c_void_p]
-    out = ctypes.create_string_buffer(len(data) + len(data) // 16 + 128)
+    out = ctypes.create_string_buffer(2 * len(data) + 1024)
     n = ctypes.c_size_t(0)
     wrk = ctypes.create_string_buffer(WORK[COMP[mode]])
     assert fn(data, len(data), out, ctypes.byref(n), wrk) == 0

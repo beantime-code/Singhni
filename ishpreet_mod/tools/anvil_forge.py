@@ -3,9 +3,8 @@
 Lists the data files (packs) in a forge, decompresses them, and splits them into their files, so a Unity
 DataPC.forge can be indexed and searched directly on the Mac.
 
-Needs the LZO library, which has all three Anvil variants:
-    macOS:  brew install lzo        Linux:  apt install liblzo2-2
-Python 3.8+, standard library only.
+No installs needed: stock python3 (3.8+). It uses liblzo2 if present (`brew install lzo`, ~10x faster),
+otherwise the pure-Python decoders in lzo_py.py (fuzz-tested identical to liblzo2).
 
     python3 anvil_forge.py list    DataPC.forge [--grep Sword]          # packs: id, size, type, name
     python3 anvil_forge.py index   DataPC.forge out.csv [--grep Fight]  # every file in matching packs: ids, types, names
@@ -33,16 +32,26 @@ import re
 import struct
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 MAGIC = b'\x33\xAA\xFB\x57\x99\xFA\x04\x10'
 LZO_FUNCS = {0: 'lzo1x_decompress_safe', 1: 'lzo1x_decompress_safe',
              2: 'lzo2a_decompress_safe', 5: 'lzo1c_decompress_safe'}
 
 _lzo = None
+_lzo_missing = False
 
 
-def lzo_lib():
-    global _lzo
-    if _lzo is None:
+def lzo_backend():
+    """'liblzo2' or 'python'."""
+    if os.environ.get('ANVIL_LZO') == 'python':
+        return 'python'
+    return 'liblzo2' if lzo_lib(required=False) else 'python'
+
+
+def lzo_lib(required=True):
+    global _lzo, _lzo_missing
+    if _lzo is None and not _lzo_missing:
         cands = [ctypes.util.find_library('lzo2'), '/opt/homebrew/lib/liblzo2.dylib',
                  '/usr/local/lib/liblzo2.dylib', 'liblzo2.so.2']
         for c in cands:
@@ -54,7 +63,10 @@ def lzo_lib():
             except OSError:
                 pass
         if _lzo is None:
-            sys.exit('LZO library not found: brew install lzo')
+            _lzo_missing = True
+            if required:
+                sys.exit('LZO library not found: brew install lzo')
+            return None
         for f in set(LZO_FUNCS.values()):
             fn = getattr(_lzo, f)
             fn.argtypes = [ctypes.c_char_p, ctypes.c_size_t, ctypes.c_char_p,
@@ -68,6 +80,9 @@ def decompress(mode, src, raw_len):
         return src  # stored
     if mode not in LZO_FUNCS:
         raise ValueError(f'compression mode {mode} not supported')
+    if os.environ.get('ANVIL_LZO') == 'python' or lzo_lib(required=False) is None:
+        import lzo_py
+        return lzo_py.decompress(mode, src, raw_len)
     dst = ctypes.create_string_buffer(raw_len)
     out_len = ctypes.c_size_t(raw_len)
     r = getattr(lzo_lib(), LZO_FUNCS[mode])(src, len(src), dst, ctypes.byref(out_len), None)
@@ -95,6 +110,9 @@ class Reader:
         return len(self.b) - self.p
 
 
+LAST_SECTIONS = []  # (mode, format, nblocks) of the last pack read, for debugging
+
+
 def read_section(r):
     """r is positioned just after MAGIC. Returns (format, [raw blocks])."""
     r.take(2)
@@ -115,33 +133,59 @@ def read_section(r):
             r.take(4)
             blocks.append(decompress(mode, r.take(packed), raw))
     else:
-        raise ValueError(f'unknown section format {fmt}')
+        raise ValueError(f'unknown section format {fmt} (compression mode {mode})')
+    LAST_SECTIONS.append((mode, fmt, len(blocks)))
     return fmt, blocks
 
 
 class Forge:
     def __init__(self, path):
         self.path = path
+        self.file_size = os.path.getsize(path)
         with open(path, 'rb') as f:
-            head = f.read(1 << 20)
+            head = f.read(64)
+        self.diag = {'file_size': self.file_size, 'head_hex': head.hex()}
         if head[:8] != b'scimitar':
-            raise ValueError('not a forge file')
+            raise ValueError(f'not a forge file (starts with {head[:8]!r})')
         self.version, off_a = struct.unpack_from('<iQ', head, 9)
+        self.diag.update(version=self.version, off_a=off_a)
         with open(path, 'rb') as f:
-            f.seek(off_a + 36)
-            off_b, = struct.unpack('<Q', f.read(8))
+            f.seek(off_a)
+            block_a = f.read(64)
+            if len(block_a) < 44:
+                raise ValueError(f'forge header points past the end of the file (offset {off_a}, file is '
+                                 f'{self.file_size} bytes): truncated or corrupt forge, or version '
+                                 f'{self.version} uses a different layout')
+            off_b, = struct.unpack_from('<Q', block_a, 36)
             f.seek(off_b)
-            count, _, idx_off, _, _, name_off, _ = struct.unpack('<iiQQQQQ', f.read(48))
+            block_b = f.read(48)
+            if len(block_b) < 48:
+                raise ValueError(f'pack table header points past the end of the file (offset {off_b}): '
+                                 f'truncated or corrupt forge, or version {self.version} uses a different layout')
+            count, pad, idx_off, unk1, unk2, name_off, unk3 = struct.unpack('<iiQQQQQ', block_b)
+            self.diag.update(block_a_hex=block_a.hex(), off_b=off_b, block_b_hex=block_b.hex(), count=count,
+                             idx_off=idx_off, name_off=name_off, unk=[pad, unk1, unk2, unk3])
+            if not (0 < count < 10_000_000) or idx_off >= self.file_size or name_off >= self.file_size:
+                raise ValueError(f'implausible pack table (count {count}, index @{idx_off}, names @{name_off}); '
+                                 f'forge version {self.version} may use a different layout')
             f.seek(idx_off)
             idx = f.read(20 * count)
             f.seek(name_off)
             names = f.read(192 * count)
         self.packs = []
+        bad_size = bad_off = 0
         for i in range(count):
             data_off, pack_id, size = struct.unpack_from('<QQI', idx, 20 * i)
+            nsize, = struct.unpack_from('<I', names, 192 * i)
             ptype, = struct.unpack_from('<I', names, 192 * i + 16)
             name = names[192 * i + 44:192 * i + 172].split(b'\0', 1)[0].decode('utf-8', 'replace')
+            bad_size += nsize != size
+            bad_off += data_off + size > self.file_size
             self.packs.append({'id': pack_id, 'offset': data_off, 'size': size, 'type': ptype, 'name': name})
+        self.diag.update(size_mismatches=bad_size, out_of_file=bad_off)
+        if count and (bad_size > count // 10 or bad_off > count // 10):
+            raise ValueError(f'pack table looks wrong: {bad_size} size mismatches, {bad_off} entries past end of '
+                             f'file out of {count}')
 
     def raw_pack(self, p):
         with open(self.path, 'rb') as f:
@@ -151,6 +195,7 @@ class Forge:
     def pack_files(self, p):
         """Yield dicts (id, type, name, data) for the files inside pack p."""
         raw = self.raw_pack(p)
+        del LAST_SECTIONS[:]
         if not raw.startswith(MAGIC):
             if MAGIC in raw:
                 raise ValueError('compression marker in the middle of an uncompressed pack')

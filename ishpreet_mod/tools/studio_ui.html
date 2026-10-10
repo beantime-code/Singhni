@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ishpreet Studio</title>
+<style>
+:root{--bg:#f6f5f2;--panel:#fff;--ink:#1d1d1f;--mute:#6b6b70;--line:#e3e1dc;--accent:#2f5bd3;--ok:#1f8a4c;--bad:#c23b32;--warn:#a86a00;--code:#f0efeb}
+@media (prefers-color-scheme:dark){:root{--bg:#141416;--panel:#1d1d20;--ink:#ececef;--mute:#9a9aa2;--line:#2e2e33;--accent:#7a9cff;--ok:#4cc985;--bad:#ff6b5e;--warn:#e0a63a;--code:#26262a}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:2}
+header h1{font-size:16px;margin:0;font-weight:600}#status{color:var(--mute);font-size:12px}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav button{background:none;border:0;padding:6px 12px;border-radius:6px;color:var(--mute);cursor:pointer;font:inherit}
+nav button.on{background:var(--code);color:var(--ink);font-weight:600}
+main{max-width:1200px;margin:0 auto;padding:20px}section{display:none}section.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+.card h2{font-size:14px;margin:0 0 10px}.hint{color:var(--mute);font-size:12.5px;margin:4px 0 10px}
+label{display:block;font-size:12px;color:var(--mute);margin:8px 0 3px}
+input[type=text],select{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}.row>*{flex:1;min-width:180px}.row>.btns{flex:0 0 auto;min-width:0}
+button.b{padding:7px 14px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;font:inherit;white-space:nowrap}
+button.p{background:var(--accent);border-color:var(--accent);color:#fff}button.b:disabled{opacity:.5;cursor:wait}
+table{width:100%;border-collapse:collapse;font-size:12.5px}th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:500;position:sticky;top:0;background:var(--panel)}tr.click{cursor:pointer}tr.click:hover{background:var(--code)}tr.sel{background:var(--code)}
+.scroll{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+code,pre,.mono{font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}pre{background:var(--code);padding:10px;border-radius:8px;overflow:auto;max-height:420px;white-space:pre-wrap;word-break:break-all;margin:8px 0 0}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}.pill{display:inline-block;padding:1px 8px;border-radius:99px;background:var(--code);font-size:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:800px){.grid2{grid-template-columns:1fr}header{flex-wrap:wrap}}
+#log{max-height:560px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Ishpreet Studio</h1>
+  <nav id="tabs">
+    <button data-t="setup" class="on">1 · Setup</button>
+    <button data-t="browse">2 · Browse forges</button>
+    <button data-t="search">3 · Search</button>
+    <button data-t="bones">4 · Skeletons</button>
+    <button data-t="bundle">5 · Bundle for Claude</button>
+    <button data-t="debug">Debug log</button>
+  </nav>
+  <span id="status"></span>
+</header>
+<main>
+
+<section id="setup" class="on">
+  <div class="card">
+    <h2>Folders</h2>
+    <p class="hint">Point these at the game folders that hold the <code>.forge</code> files. "Find automatically" searches your CrossOver bottles.</p>
+    <label>Assassin's Creed Unity folder</label><input type="text" id="unity_dir">
+    <label>Assassin's Creed Syndicate folder</label><input type="text" id="syn_dir">
+    <label>Duleep_Files folder</label><input type="text" id="duleep_dir">
+    <label>Output folder (extracted files, bundles, log)</label><input type="text" id="out_dir">
+    <div class="row" style="margin-top:12px"><div class="btns">
+      <button class="b" onclick="detectDirs()">Find automatically</button>
+      <button class="b p" onclick="saveCfg()">Save</button>
+    </div></div>
+    <div id="detectOut" class="hint"></div>
+  </div>
+  <div class="card">
+    <h2>Self-test</h2>
+    <p class="hint">Decodes a small test forge shipped with the tools, with every LZO variant the games use. Run this first: if it fails, nothing else will work, and the Debug log says why.</p>
+    <button class="b p" onclick="selftest()">Run self-test</button>
+    <div id="selftestOut" style="margin-top:10px"></div>
+  </div>
+  <div class="card"><h2>Environment</h2><pre id="envOut"></pre></div>
+</section>
+
+<section id="browse">
+  <div class="card">
+    <div class="row">
+      <div style="flex:0 0 160px"><label>Game</label><select id="bGame" onchange="loadForges()"><option value="unity">Unity</option><option value="syn">Syndicate</option></select></div>
+      <div><label>Forge</label><select id="bForge"></select></div>
+      <div><label>Pack name filter (regex, optional)</label><input type="text" id="bGrep" placeholder="e.g. Fight_Sword|BaseSkeleton"></div>
+      <div class="btns"><button class="b p" onclick="openForge()">Open</button></div>
+    </div>
+    <div id="forgeInfo" class="hint"></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h2>Packs <span id="packCount" class="pill"></span></h2><div class="scroll"><table id="packs"><thead><tr><th>Name</th><th>Size</th><th>ID</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="card"><h2>Files in pack <span id="packName" class="pill"></span></h2>
+      <div class="row"><div><label>Only files matching (regex, optional)</label><input type="text" id="fRx"></div>
+        <div class="btns"><button class="b" id="extractBtn" onclick="extractPack()" disabled>Extract to output folder</button></div></div>
+      <div class="scroll" style="margin-top:10px"><table id="files"><thead><tr><th>Name</th><th>Type</th><th>Size</th></tr></thead><tbody></tbody></table></div>
+      <pre id="fileDetail" class="mono"></pre>
+    </div>
+  </div>
+</section>
+
+<section id="search">
+  <div class="card">
+    <h2>Find a pack in every forge</h2>
+    <p class="hint">Searches pack names across all forges of a game. Only the headers are read, so it's quick.</p>
+    <div class="row">
+      <div style="flex:0 0 160px"><label>Game</label><select id="sGame"><option value="unity">Unity</option><option value="syn">Syndicate</option></select></div>
+      <div><label>Pack name (regex)</label><input type="text" id="sGrep" placeholder="e.g. ^ACU_BaseSkeleton_Male$"></div>
+      <div class="btns"><button class="b p" onclick="searchAll()">Search</button></div>
+    </div>
+  </div>
+  <div class="card"><div class="scroll"><table id="hits"><thead><tr><th>Forge</th><th>Pack</th><th>Size</th><th>ID</th></tr></thead><tbody></tbody></table></div><div id="searchErr" class="hint"></div></div>
+</section>
+
+<section id="bones">
+  <div class="card">
+    <h2>Compare two skeletons</h2>
+    <p class="hint">Pick skeleton files you extracted (type 24AECB7C). Check the tool first: run A = a Syndicate skeleton with the known bone list. Trust the comparison only if that finds at least 95%.</p>
+    <label>Skeleton A</label><select id="boneA"></select>
+    <label>Skeleton B (optional)</label><select id="boneB"></select>
+    <label>Known bone list for A (optional)</label><input type="text" id="boneKnown">
+    <div class="row" style="margin-top:12px"><div class="btns"><button class="b" onclick="loadExtracted()">Refresh file list</button> <button class="b p" onclick="bones()">Compare</button></div></div>
+    <pre id="bonesOut"></pre>
+  </div>
+</section>
+
+<section id="bundle">
+  <div class="card">
+    <h2>Bundle for Claude</h2>
+    <p class="hint">Collects, under 28 MB:
+      <br>· the Unity and Syndicate skeletons (male and female)
+      <br>· the Aveline skirt pack, plus the Aveline and Élise outfit skeletons
+      <br>· three Unity sword clips
+      <br>· your known Élise bone list
+      <br>· the forge header diagnostics and this log
+      <br>Then drag the zip into the cloud chat. It only reads the forges, never writes to them.</p>
+    <button class="b p" id="bundleBtn" onclick="bundle()">Build bundle</button>
+    <div id="bundleOut" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<section id="debug">
+  <div class="card">
+    <h2>Debug log</h2>
+    <p class="hint">Every action, with timings and full error tracebacks. It's also saved to <code>studio_log.txt</code> in the output folder, and included in the bundle.</p>
+    <div class="row"><div class="btns"><button class="b" onclick="copyLog()">Copy log</button> <button class="b" onclick="hexForm()">Hex view of a forge…</button></div></div>
+    <div id="hexBox" style="display:none" class="row"><div style="flex:0 0 140px"><label>Game</label><select id="hGame"><option value="unity">Unity</option><option value="syn">Syndicate</option></select></div>
+      <div><label>Forge file name</label><input type="text" id="hForge" placeholder="DataPC.forge"></div><div style="flex:0 0 140px"><label>Offset</label><input type="text" id="hOff" value="0"></div>
+      <div class="btns"><button class="b p" onclick="hexView()">Show 512 bytes</button></div></div>
+    <pre id="hexOut" style="display:none"></pre>
+    <pre id="log"></pre>
+  </div>
+</section>
+</main>
+<script>
+const TOKEN='__TOKEN__';let cur={game:null,forge:null,pack:null};let logNext=0;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mb=n=>n>=1e6?(n/1e6).toFixed(1)+' MB':n>=1e3?(n/1e3).toFixed(1)+' KB':n+' B';
+async function api(name,args={},btn){if(btn)btn.disabled=true;$('status').textContent=name+'…';
+  try{const r=await fetch('/api/'+name,{method:'POST',headers:{'X-Token':TOKEN,'Content-Type':'application/json'},body:JSON.stringify(args)});
+    const j=await r.json();$('status').textContent=j.error?('⚠ '+name+' failed: see Debug log'):'';pollLog();return j}
+  catch(e){$('status').textContent='⚠ lost connection to Studio: is its window still open?';throw e}finally{if(btn)btn.disabled=false}}
+function errBox(j){return `<div class="bad"><b>${esc(j.error)}</b></div><pre>${esc(j.traceback||'')}</pre>`}
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button,section').forEach(x=>x.classList.remove('on'));b.classList.add('on');$(b.dataset.t).classList.add('on');
+  if(b.dataset.t==='browse'&&!$('bForge').options.length)loadForges();if(b.dataset.t==='bones')loadExtracted()});
+async function env(){const j=await api('env');$('envOut').textContent=JSON.stringify(j,null,1);for(const k of ['unity_dir','syn_dir','duleep_dir','out_dir'])$(k).value=j.config[k]||'';
+  if(!$('boneKnown').value&&j.config.duleep_dir)$('boneKnown').value=j.config.duleep_dir+'/Evie/elise_skel_bones.json'}
+async function saveCfg(){const a={};for(const k of ['unity_dir','syn_dir','duleep_dir','out_dir'])a[k]=$(k).value;const j=await api('set_config',a);if(!j.error){$('detectOut').innerHTML='<span class="ok">Saved.</span>';$('bForge').innerHTML='';env()}}
+async function detectDirs(){const j=await api('detect');let h='';for(const k of ['unity_dir','syn_dir']){if(j[k]&&j[k].length){$(k).value=j[k][0];h+=`<div class="ok">Found ${k==='unity_dir'?'Unity':'Syndicate'}: ${esc(j[k][0])}</div>`}else h+=`<div class="warn">${k==='unity_dir'?'Unity':'Syndicate'} not found in CrossOver bottles: paste its folder path.</div>`}$('detectOut').innerHTML=h+'<div>Click Save to keep these.</div>'}
+async function selftest(){const j=await api('selftest');if(j.error){$('selftestOut').innerHTML=errBox(j);return}
+  $('selftestOut').innerHTML=j.results.map(r=>`<div class="${r.ok?'ok':'bad'}">${r.ok?'✓':'✗'} ${esc(r.backend)} decoder: ${r.files} files in ${r.seconds}s</div>`).join('')+(j.results.some(r=>r.backend==='liblzo2')?'':'<div class="hint">Using the built-in decoder. It works, but runs about 10x slower than Homebrew\'s lzo (optional).</div>')}
+async function loadForges(){const g=$('bGame').value;const j=await api('forges',{game:g});if(j.error){$('forgeInfo').innerHTML=errBox(j);return}
+  $('bForge').innerHTML=j.forges.map(f=>`<option value="${esc(f.name)}">${esc(f.name)} (${mb(f.size)})</option>`).join('');$('forgeInfo').textContent=j.forges.length+' forges'}
+async function openForge(){const a={game:$('bGame').value,forge:$('bForge').value,grep:$('bGrep').value,limit:2000};const j=await api('open',a);
+  if(j.error){$('forgeInfo').innerHTML=errBox(j);return}cur.game=a.game;cur.forge=a.forge;
+  $('forgeInfo').innerHTML=`version ${j.diag.version}, ${j.total} packs. Table checks: ${j.diag.size_mismatches} size mismatches, ${j.diag.out_of_file} out of file `+(j.diag.size_mismatches||j.diag.out_of_file?'<span class="warn">(unexpected: send a bundle)</span>':'<span class="ok">✓</span>');
+  $('packCount').textContent=j.matched+(j.matched>j.packs.length?' (showing '+j.packs.length+')':'');
+  $('packs').tBodies[0].innerHTML=j.packs.map(p=>`<tr class="click" data-id="${p.id}"><td>${esc(p.name)}</td><td>${mb(p.size)}</td><td class="mono">${p.id}</td></tr>`).join('');
+  $('packs').tBodies[0].querySelectorAll('tr').forEach(tr=>tr.onclick=()=>{$('packs').tBodies[0].querySelectorAll('tr').forEach(x=>x.classList.remove('sel'));tr.classList.add('sel');openPack(tr.dataset.id)})}
+async function openPack(id){cur.pack=id;$('files').tBodies[0].innerHTML='<tr><td>Decompressing…</td></tr>';$('fileDetail').textContent='';const j=await api('pack',{game:cur.game,forge:cur.forge,pack_id:id});
+  if(j.error){$('files').tBodies[0].innerHTML='';$('fileDetail').innerHTML=`decode error: ${esc(j.error)}\nsections read: ${esc(JSON.stringify(j.sections))}\nfirst 64 bytes: ${j.raw_head}`;$('extractBtn').disabled=true;return}
+  $('packName').textContent=j.pack;$('extractBtn').disabled=false;
+  $('files').tBodies[0].innerHTML=j.files.map((f,i)=>`<tr class="click" data-i="${i}"><td>${esc(f.name)}</td><td>${esc(f.type_name||f.type)}</td><td>${mb(f.size)}</td></tr>`).join('');
+  $('fileDetail').textContent=`compression sections (mode, format, blocks): ${JSON.stringify(j.sections)} · ${j.seconds}s`;
+  $('files').tBodies[0].querySelectorAll('tr').forEach(tr=>tr.onclick=()=>{const f=j.files[tr.dataset.i];$('fileDetail').textContent=`${f.name}\nid ${f.id}  type ${f.type} ${f.type_name}  ${f.size} bytes\nfirst 48 bytes: ${f.head.replace(/(..)/g,'$1 ')}`})}
+async function extractPack(){const j=await api('extract',{game:cur.game,forge:cur.forge,pack_id:cur.pack,files:$('fRx').value},$('extractBtn'));
+  $('fileDetail').textContent=j.error?('error: '+j.error):`wrote ${j.written.length} files:\n`+j.written.map(w=>w.path).join('\n')}
+async function searchAll(){$('hits').tBodies[0].innerHTML='<tr><td>Searching…</td></tr>';const j=await api('search',{game:$('sGame').value,grep:$('sGrep').value});
+  if(j.error){$('hits').tBodies[0].innerHTML='';$('searchErr').innerHTML=errBox(j);return}
+  $('hits').tBodies[0].innerHTML=j.hits.map(h=>`<tr><td>${esc(h.forge)}</td><td>${esc(h.name)}</td><td>${mb(h.size)}</td><td class="mono">${h.id}</td></tr>`).join('')||'<tr><td>No matches</td></tr>';
+  $('searchErr').innerHTML=j.errors.length?`<span class="warn">${j.errors.length} forges could not be read (see Debug log)</span>`:''}
+async function loadExtracted(){const j=await api('extracted');const opts='<option value="">-</option>'+(j.files||[]).filter(f=>/24AECB7C|Skeleton|Body/i.test(f)).map(f=>`<option value="${esc(f)}">${esc(f.split('/extracted/')[1]||f)}</option>`).join('');$('boneA').innerHTML=opts;$('boneB').innerHTML=opts}
+async function bones(){const j=await api('bones',{a:$('boneA').value,b:$('boneB').value,known:$('boneKnown').value});
+  if(j.error){$('bonesOut').innerHTML=esc(j.error);return}let s=`A: ${j.a_bones} bones (hash offset ${j.offset})\n`;
+  if('known' in j)s+=`validation: ${j.known_found}/${j.known} known bones found (${j.known_pct}%) → ${j.trusted?'TRUSTED':'NOT trusted, send a bundle'}\n`;
+  if('shared' in j)s+=`B: ${j.b_bones} bones\nshared ${j.shared}; only in A ${j.only_a.length}; only in B ${j.only_b.length}\nA bones present in B: ${j.a_in_b_pct}%\nonly in A: ${j.only_a.join(' ')}\n`;$('bonesOut').textContent=s}
+async function bundle(){$('bundleOut').innerHTML='Working… (the first run opens several large forges and can take a minute)';const j=await api('bundle',{},$('bundleBtn'));
+  if(j.error){$('bundleOut').innerHTML=errBox(j);return}
+  $('bundleOut').innerHTML=`<div class="${j.size<28e6?'ok':'bad'}"><b>${esc(j.path)}</b> (${mb(j.size)})</div><button class="b" style="margin:8px 0" onclick='api("reveal",{path:${JSON.stringify(j.path)}})'>Show in Finder</button>`+
+  '<table><thead><tr><th>Item</th><th>Status</th><th>Forge / pack</th></tr></thead><tbody>'+j.items.map(i=>`<tr><td>${esc(i.label)}</td><td class="${i.status==='ok'?'ok':'warn'}">${esc(i.status)}${i.error?'<br><span class="bad">'+esc(i.error)+'</span>':''}</td><td>${esc(i.forge||'')}<br>${esc(i.pack||'')}</td></tr>`).join('')+'</tbody></table>'}
+async function pollLog(){const j=await fetch('/api/log',{method:'POST',headers:{'X-Token':TOKEN},body:JSON.stringify({since:logNext})}).then(r=>r.json()).catch(()=>null);if(!j)return;
+  if(j.lines.length){const el=$('log');el.textContent+=j.lines.join('\n')+'\n';el.scrollTop=el.scrollHeight}logNext=j.next}
+function copyLog(){navigator.clipboard.writeText($('log').textContent)}
+function hexForm(){$('hexBox').style.display='flex'}
+async function hexView(){const j=await api('hex',{game:$('hGame').value,forge:$('hForge').value,offset:$('hOff').value});const o=$('hexOut');o.style.display='block';
+  if(j.error){o.textContent=j.error;return}let s='';for(let i=0;i<j.hex.length;i+=32){const off=(j.offset+i/2).toString(16).padStart(8,'0');const b=j.hex.slice(i,i+32).replace(/(..)/g,'$1 ');
+  const asc=j.hex.slice(i,i+32).match(/../g).map(h=>{const c=parseInt(h,16);return c>31&&c<127?String.fromCharCode(c):'.'}).join('');s+=off+'  '+b.padEnd(48)+' '+asc+'\n'}o.textContent=s}
+env();pollLog();setInterval(pollLog,3000);
+</script>
+</body>
+</html>

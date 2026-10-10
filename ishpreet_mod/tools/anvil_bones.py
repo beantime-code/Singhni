@@ -45,6 +45,40 @@ def load_known(path):
     return out
 
 
+def analyze(a_path, b_path=None, known_path=None, offset=None):
+    """Returns a dict with the chosen offset, bone counts, validation and overlap figures."""
+    ca = candidates(a_path)
+    cb = candidates(b_path) if b_path else None
+    known = load_known(known_path) if known_path else None
+    if offset is not None:
+        off = offset
+    elif known:
+        off = max(ca, key=lambda o: len(known & set(ca[o])))
+    elif cb:
+        # most shared bones; on a tie prefer the offset with the most distinct values (a misaligned read
+        # of the same hashes collapses many of them into the same number)
+        # then prefer values that vary in their lowest AND highest byte: name hashes are random 32-bit values,
+        # while a read shifted into neighbouring padding keeps one end constant
+        off = max(ca, key=lambda o: (len(set(ca[o]) & set(cb[o])),
+                                     min(len({v & 0xFF for v in ca[o]}), len({v >> 24 for v in ca[o]})),
+                                     len(set(ca[o]) | set(cb[o]))))
+    else:
+        raise ValueError('give a known bone list or a second skeleton so the hash offset can be determined')
+    a = ca[off]
+    res = {'offset': off, 'a_bones': len(a), 'a_hashes': [f'{h:08X}' for h in a]}
+    if known:
+        hit = len(known & set(a))
+        res.update(known=len(known), known_found=hit, known_pct=round(100 * hit / max(len(known), 1), 1),
+                   trusted=hit >= 0.95 * len(known))
+    if cb:
+        b = cb[off]
+        sa, sb = set(a), set(b)
+        res.update(b_bones=len(b), shared=len(sa & sb), only_a=[f'{h:08X}' for h in sorted(sa - sb)],
+                   only_b=[f'{h:08X}' for h in sorted(sb - sa)],
+                   a_in_b_pct=round(100 * len(sa & sb) / max(len(sa), 1), 1))
+    return res
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('a')
@@ -52,30 +86,19 @@ def main():
     ap.add_argument('--known', help='JSON list/dict of bone hashes known to be in skeleton a')
     ap.add_argument('--offset', type=int)
     args = ap.parse_args()
-    ca = candidates(args.a)
-    cb = candidates(args.b) if args.b else None
-    known = load_known(args.known) if args.known else None
-    if args.offset is not None:
-        off = args.offset
-    elif known:
-        off = max(ca, key=lambda o: len(known & set(ca[o])))
-    elif cb:
-        off = max(ca, key=lambda o: len(set(ca[o]) & set(cb[o])))
-    else:
-        sys.exit('give --known or a second skeleton so the hash offset can be determined')
-    a = ca[off]
-    print(f'{args.a}: {len(a)} bones (hash offset {off})')
-    if known:
-        hit = len(known & set(a))
-        print(f'validation: {hit}/{len(known)} known bones found ({100 * hit / max(len(known), 1):.1f}%)')
-    if cb:
-        b = cb[off]
-        sa, sb = set(a), set(b)
-        print(f'{args.b}: {len(b)} bones')
-        print(f'shared {len(sa & sb)}; only in A {len(sa - sb)}; only in B {len(sb - sa)}')
-        print(f'A bones present in B: {100 * len(sa & sb) / max(len(sa), 1):.1f}%')
-        for h in sorted(sa - sb):
-            print(f'  only A: {h:08X}')
+    try:
+        r = analyze(args.a, args.b, args.known, args.offset)
+    except ValueError as e:
+        sys.exit(str(e))
+    print(f"{args.a}: {r['a_bones']} bones (hash offset {r['offset']})")
+    if 'known' in r:
+        print(f"validation: {r['known_found']}/{r['known']} known bones found ({r['known_pct']}%)")
+    if 'shared' in r:
+        print(f"{args.b}: {r['b_bones']} bones")
+        print(f"shared {r['shared']}; only in A {len(r['only_a'])}; only in B {len(r['only_b'])}")
+        print(f"A bones present in B: {r['a_in_b_pct']}%")
+        for h in r['only_a']:
+            print(f'  only A: {h}')
 
 
 if __name__ == '__main__':
