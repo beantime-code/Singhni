@@ -253,6 +253,99 @@ class Forge:
         return files
 
 
+def block_checksum(stored):
+    """Per-block checksum: Adler-32 seeded with 0, over the bytes as stored (confirmed on Syndicate blocks)."""
+    import zlib
+    return zlib.adler32(stored, 0) & 0xFFFFFFFF
+
+
+def _section_spans(raw, pos):
+    """Parse one compressed section at raw[pos] (MAGIC included). Returns (end, cver, mode, fmt, raw_sizes, data)."""
+    r = Reader(raw, pos)
+    if r.take(8) != MAGIC:
+        raise ValueError(f'no section marker at {pos}')
+    cver, = r.s('H')
+    mode, = r.s('B')
+    r.take(3)
+    fmt, = r.s('B')
+    if fmt != 128:
+        raise ValueError('only format-128 packs can be rebuilt')
+    n, = r.s('I')
+    sizes = [r.s('HH' if cver < 2 else 'II') for _ in range(n)]
+    out = []
+    for raw_len, packed in sizes:
+        r.take(4)
+        out.append(decompress(mode, r.take(packed), raw_len))
+    return r.p, cver, raw[pos:pos + 15], [s[0] for s in sizes], b''.join(out)
+
+
+def _stored_section(cver, header, raw_sizes, data):
+    """A format-128 section whose blocks are stored (packed size == raw size), with correct checksums.
+    header = the original 15 header bytes (marker, version, mode, flags, format), copied unchanged."""
+    if sum(raw_sizes) != len(data):
+        raise ValueError('block sizes do not add up to the data length')
+    fmt_sizes = '<HH' if cver < 2 else '<II'
+    s = header + struct.pack('<I', len(raw_sizes))
+    s += b''.join(struct.pack(fmt_sizes, n, n) for n in raw_sizes)
+    pos = 0
+    for n in raw_sizes:
+        chunk = data[pos:pos + n]
+        s += struct.pack('<I', block_checksum(chunk)) + chunk
+        pos += n
+    return s
+
+
+def rebuild_pack(raw, replacements):
+    """Return a new raw pack in which each {file_id: new_bytes} replaces that file's data.
+
+    Safety rules: each replacement must have exactly the original file's length (so the file table, sizes and
+    offsets stay identical); the file-table section is copied byte for byte; the data section is re-emitted as
+    stored blocks with the original block boundaries and correct checksums. The result is verified by parsing it.
+    """
+    if not raw.startswith(MAGIC):
+        raise ValueError('pack is not compressed: not supported')
+    end1, cver, _, sizes1, table = _section_spans(raw, 0)
+    end2, cver2, header2, sizes2, body = _section_spans(raw, end1)
+    if end2 != len(raw):
+        raise ValueError(f'{len(raw) - end2} trailing bytes after the data section')
+    body = bytearray(body)
+    r = Reader(table)
+    n, = r.s('H')
+    ids = []
+    for _ in range(n):
+        fid, size, extra = r.s('QIH')
+        r.take(2 * extra)
+        ids.append(fid)
+    r = Reader(bytes(body))
+    done = set()
+    for fid in ids:
+        ftype, size, nlen = r.s('3I')
+        r.take(nlen)
+        flag, = r.s('B')
+        if flag == 1:
+            r.take(3)
+            k, = r.s('I')
+            r.take(12 * k)
+        start = r.p
+        r.take(size)
+        if fid in replacements:
+            new = replacements[fid]
+            if len(new) != size:
+                raise ValueError(f'replacement for {fid} is {len(new)} bytes, the original is {size}')
+            body[start:start + size] = new
+            done.add(fid)
+    missing = set(replacements) - done
+    if missing:
+        raise ValueError(f'file ids not in this pack: {sorted(missing)}')
+    out = raw[:end1] + _stored_section(cver2, header2, sizes2, bytes(body))
+    # verify: same table, replaced data where asked, everything else identical
+    chk_end1, _, _, _, chk_table = _section_spans(out, 0)
+    _, _, _, _, chk_body = _section_spans(out, chk_end1)
+    if chk_table != table or chk_body != bytes(body):
+        raise ValueError('verification of the rebuilt pack failed')
+    return out
+
+
 def _match(pat, s):
     return pat is None or re.search(pat, s, re.I)
 

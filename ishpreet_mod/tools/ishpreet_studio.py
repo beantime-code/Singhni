@@ -15,6 +15,7 @@ import os
 import platform
 import re
 import secrets
+import struct
 import subprocess
 import sys
 import threading
@@ -478,8 +479,10 @@ BUNDLE_PLAN = [
      r'^ACVI_CHR_P_EvieFrye_Outfit09_Aveline_(LeftLeg|RightLeg)_BallJointCommonData$', 2),
     ('Aveline outfit skeleton', 'syn', ['DataPC_14_dlc.forge'], r'^ACVI_CHR_P_EvieFrye_Outfit09_Aveline_Body$', 1),
     ('Elise outfit skeleton', 'syn', ['DataPC_14_dlc.forge'], r'^ACVI_CHR_P_EvieFrye_Outfit08_Elise_Body$', 1),
-    ('Syndicate cane kill clip (format comparison)', 'syn', ['DataPC_14_dlc.forge'],
-     r'^ACVI_Fight_xx_CaneHB_MultiKill_Vs2_12-3_Init_Left_V02_Atk$', 1),
+    ('Élise coat cloth settings + colliders (installed)', 'syn', ['DataPC_14_dlc.forge'],
+     r'^ACVI_CHR_P_EvieFrye_Outfit08_(Elise_Coat_ClothSettings|Coat_LiteRagdoll)$', 2),
+    ('Syndicate cane clip (format comparison)', 'syn', ['DataPC_extra.forge', 'DataPC_14_dlc.forge'],
+     r'^ACVI_Fight_xx_Cane', 1),
 ]
 
 
@@ -563,6 +566,9 @@ def act_bundle(a):
         report['known_bones'] = 'included'
     else:
         report['known_bones'] = f'missing: {known}'
+    k25 = os.path.join(out_dir(), 'k25', 'k25_report.json')
+    if os.path.isfile(k25):
+        z.write(k25, 'k25/k25_report.json')
     report['seconds'] = round(time.time() - t0, 1)
     z.writestr('report.json', json.dumps(report, indent=1, default=str))
     with LOG_LOCK:
@@ -574,6 +580,107 @@ def act_bundle(a):
         f.write(data)
     log('info', f'bundle written: {path} ({len(data) / 1e6:.1f} MB)')
     return {'path': path, 'size': len(data), 'items': report['items']}
+
+
+# ----------------------------------------------------------------------------------- k25: Aveline skirt colliders
+
+BONE_NAMES = ['Reference', 'Hips', 'Pelvis', 'Spine', 'Spine1', 'Spine2', 'Spine3', 'Neck', 'Neck1', 'Head'] + [
+    s + p for s in ('Left', 'Right') for p in ('UpLeg', 'Leg', 'Foot', 'ToeBase', 'Clavicle', 'Arm', 'ForeArm',
+                                               'Hand', 'UpLegRoll', 'LegRoll', 'ArmRoll', 'ForeArmRoll')]
+
+
+def bone_name(h):
+    """Anvil bone IDs are CRC32 of the bone name (confirmed on the user's skeletons)."""
+    import zlib
+    for n in BONE_NAMES:
+        if zlib.crc32(n.encode()) == h:
+            return n
+    return f'{h:08X}'
+
+
+def _find_file(fg, pack_name, file_name):
+    for i, p in enumerate(fg.packs):
+        if p['name'] == pack_name:
+            for f in fg.pack_files(p):
+                if f['name'] == file_name:
+                    return i, p, f
+            raise ValueError(f'{file_name} not in pack {pack_name}')
+    raise ValueError(f'pack {pack_name} not in {os.path.basename(fg.path)}')
+
+
+def _id_slots(data, own):
+    """Offsets of u64 values that are this file's own ID or its numbered sub-objects (own+1, own+2, ...)."""
+    return [(i, struct.unpack_from('<Q', data, i)[0]) for i in range(len(data) - 7)
+            if 0 <= struct.unpack_from('<Q', data, i)[0] - own < 64]
+
+
+def _bones_in(data):
+    import zlib
+    names = {zlib.crc32(n.encode()): n for n in BONE_NAMES}
+    return sorted({names[h] for h in names if struct.pack('<I', h) in data})
+
+
+def act_build_k25(a):
+    """Ishpreet k25: put Aveline's closed-skirt ClothSettings + LiteRagdoll (colliders on both thighs and shins)
+    into the installed Élise coat-cloth pack, keeping Élise's file IDs. Writes a .data pack for forge.install."""
+    names = forge_names('syn')
+    if 'datapc_14_dlc.forge' not in names:
+        raise ValueError('DataPC_14_dlc.forge not found in the Syndicate folder')
+    fg = forge('syn', names['datapc_14_dlc.forge'])
+    target_pack = 'ACVI_CHR_P_EvieFrye_Outfit08_Elise_Coat_Cloth'
+    i_t, p_t, set_t = _find_file(fg, target_pack, 'ACVI_CHR_P_EvieFrye_Outfit08_Elise_Coat_ClothSettings')
+    _, _, rag_t = _find_file(fg, target_pack, 'ACVI_CHR_P_EvieFrye_Outfit08_Coat_LiteRagdoll')
+    donor_pack = 'ACVI_CHR_P_EvieFrye_Outfit09_Aveline_Skirt_Cloth'
+    _, _, set_d = _find_file(fg, donor_pack, 'ACVI_CHR_P_EvieFrye_Outfit09_Aveline_Skirt_ClothSettings')
+    _, _, rag_d = _find_file(fg, donor_pack, 'ACVI_CHR_P_EvieFrye_Outfit09_Aveline_Skirt_LiteRagdoll')
+    for t, d in ((set_t, set_d), (rag_t, rag_d)):
+        if t['type'] != d['type'] or len(t['data']) != len(d['data']):
+            raise ValueError(f"{d['name']} ({len(d['data'])} B, {d['type']:08X}) does not match "
+                             f"{t['name']} ({len(t['data'])} B, {t['type']:08X})")
+    # ClothSettings: plain values after the header, so only the own ID changes
+    new_set = bytearray(set_d['data'])
+    if struct.unpack_from('<Q', new_set, 1)[0] != set_d['id']:
+        raise ValueError('ClothSettings header is not (1 byte, own id, type)')
+    struct.pack_into('<Q', new_set, 1, set_t['id'])
+    # LiteRagdoll: own ID + numbered sub-objects. Map them onto Élise's by position; refuse if layouts differ.
+    slots_d = _id_slots(rag_d['data'], rag_d['id'])
+    slots_t = _id_slots(rag_t['data'], rag_t['id'])
+    if [s[0] for s in slots_d] != [s[0] for s in slots_t]:
+        raise ValueError(f'LiteRagdoll layouts differ: Aveline id slots {[s[0] for s in slots_d]}, '
+                         f'Élise {[s[0] for s in slots_t]}; not swapping blindly')
+    new_rag = bytearray(rag_d['data'])
+    for (off, _), (_, val_t) in zip(slots_d, slots_t):
+        struct.pack_into('<Q', new_rag, off, val_t)
+    raw = fg.raw_pack(p_t)
+    out = af.rebuild_pack(raw, {set_t['id']: bytes(new_set), rag_t['id']: bytes(new_rag)})
+    d = os.path.join(out_dir(), 'k25')
+    os.makedirs(d, exist_ok=True)
+    new_path = os.path.join(d, f'dlc14_{i_t}_CoatCloth_k25.data')
+    old_path = os.path.join(d, f'dlc14_{i_t}_CoatCloth_installed_before_k25.data')
+    with open(new_path, 'wb') as f:
+        f.write(out)
+    with open(old_path, 'wb') as f:
+        f.write(raw)
+    k23 = os.path.join(CONFIG.get('duleep_dir', ''), 'Evie', f'dlc14_{i_t}_ChunniCloth_k23.data')
+    k23_same = None
+    if os.path.isfile(k23):
+        k23_same = open(k23, 'rb').read() == raw
+    floats = lambda b: [round(x, 4) for x in struct.unpack_from('<%df' % ((len(b) - 13) // 4), b, 13)]
+    report = {
+        'pack_index': i_t, 'pack': p_t['name'], 'written': new_path, 'size': len(out), 'rollback': old_path,
+        'installed_pack_equals_k23_file': k23_same, 'k23_file': k23,
+        'colliders_before (Élise coat)': _bones_in(rag_t['data']),
+        'colliders_after (Aveline skirt)': _bones_in(rag_d['data']),
+        'ragdoll_id_slots': [s[0] for s in slots_t],
+        'settings_before': floats(set_t['data']), 'settings_after': floats(set_d['data']),
+        'install': f"forge.install({{{i_t}: '{new_path}'}}, forge_path=<dlc_14 forge>)  # via acs_kit, game closed",
+        'rollback_install': f"forge.install({{{i_t}: 'Evie/dlc14_{i_t}_ChunniCloth_k23.data'}}, forge_path=<dlc_14 forge>)",
+    }
+    with open(os.path.join(d, 'k25_report.json'), 'w') as f:
+        json.dump(report, f, indent=1)
+    log('info', f"k25 built: {new_path} ({len(out)} B); colliders {report['colliders_before (Élise coat)']} -> "
+                f"{report['colliders_after (Aveline skirt)']}; installed == k23 file: {k23_same}")
+    return report
 
 
 def act_reveal(a):

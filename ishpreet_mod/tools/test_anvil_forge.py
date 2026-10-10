@@ -89,7 +89,44 @@ def main():
     ]
     for cver in (1, 2):
         run(packs, cver)
+    rebuild_test(packs)
     print('all good')
+
+
+def rebuild_test(packs):
+    """rebuild_pack: same-size replacement, everything else untouched, real checksums, wrong sizes refused."""
+    import zlib
+    with tempfile.TemporaryDirectory() as d:
+        fp = os.path.join(d, 'T.forge')
+        build_forge(fp, packs, 2)
+        fg = af.Forge(fp)
+        p = fg.packs[1]
+        raw = fg.raw_pack(p)
+        orig = list(fg.pack_files(p))
+        new_data = bytes(reversed(orig[1]['data']))
+        out = af.rebuild_pack(raw, {orig[1]['id']: new_data})
+        r = af.Reader(out, 8)
+        af.read_section(r)
+        assert r.take(8) == af.MAGIC
+        _, blocks = af.read_section(r)
+        end1 = af._section_spans(out, 0)[0]  # every stored block carries Adler-32 (seed 0) of its bytes
+        hdr = af.Reader(out, end1 + 15)
+        nb, = hdr.s('I')
+        sizes = [hdr.s('II') for _ in range(nb)]
+        for raw_len, packed in sizes:
+            ck, = hdr.s('I')
+            assert ck == zlib.adler32(hdr.take(packed), 0) and raw_len == packed
+        p2 = dict(p, offset=0, size=len(out))
+        fg.raw_pack = lambda _p: out
+        got = list(fg.pack_files(p2))
+        assert [g['data'] for g in got] == [orig[0]['data'], new_data]
+        assert [(g['id'], g['name']) for g in got] == [(o['id'], o['name']) for o in orig]
+        try:
+            af.rebuild_pack(raw, {orig[1]['id']: new_data + b'x'})
+            raise AssertionError('size change was accepted')
+        except ValueError:
+            pass
+    print('ok  rebuild_pack: same-size replacement, checksums, size guard')
 
 
 def run(packs, cver):

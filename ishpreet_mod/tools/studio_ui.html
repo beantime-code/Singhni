@@ -38,6 +38,7 @@ code,pre,.mono{font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}pre{ba
     <button data-t="search">3 · Search</button>
     <button data-t="bones">4 · Skeletons</button>
     <button data-t="bundle">5 · Bundle for Claude</button>
+    <button data-t="builds">6 · Builds</button>
     <button data-t="debug">Debug log</button>
   </nav>
   <span id="status"></span>
@@ -140,6 +141,15 @@ code,pre,.mono{font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}pre{ba
   </div>
 </section>
 
+<section id="builds">
+  <div class="card">
+    <h2>k25 · Aveline skirt colliders for Ishpreet</h2>
+    <p class="hint">Puts the cloth settings and leg colliders of Evie's Aveline skirt (Hips, Spine, both thighs, both shins) into Ishpreet's installed cloth pack, in place of the open-coat ones that let the skirt wrap one leg. Nothing else changes: same files, same sizes, same IDs. It writes a <code>.data</code> pack plus a rollback copy to <code>out/k25/</code>. It does <b>not</b> install anything: install with acs_kit's <code>forge.install</code> while the game is closed.</p>
+    <button class="b p" id="k25Btn" onclick="buildK25()">Build k25</button>
+    <pre id="k25Out"></pre>
+  </div>
+</section>
+
 <section id="debug">
   <div class="card">
     <h2>Debug log</h2>
@@ -198,6 +208,12 @@ async function findFiles(){const a={game:$('ffGame').value,forge:$('ffForge').va
   $('ffInfo').innerHTML=`${j.hits.length} files across ${j.packs} packs`+(j.errors.length?` · <span class="warn">${j.errors.length} packs could not be decoded (listed in the Debug log and the bundle)</span>`:'');
   $('ffHits').tBodies[0].innerHTML=j.hits.map((h,i)=>`<tr><td>${esc(h.name)}</td><td>${esc(h.type_name||h.type)}</td><td>${mb(h.size)}</td><td>${esc(h.pack)}</td><td><button class="b" data-i="${i}">Extract</button></td></tr>`).join('')||'<tr><td>No matches</td></tr>';
   $('ffHits').tBodies[0].querySelectorAll('button').forEach(b=>b.onclick=async()=>{const h=j.hits[b.dataset.i];const r=await api('extract_file',{game:a.game,forge:a.forge,pack_id:h.pack_id,name:h.name},b);b.textContent=r.error?'failed':'✓ extracted'})}
+async function buildK25(){$('k25Out').textContent='Building…';const j=await api('build_k25',{},$('k25Btn'));
+  if(j.error){$('k25Out').innerHTML=esc(j.error)+'\n\n'+esc(j.traceback||'');return}
+  $('k25Out').textContent=`✓ wrote ${j.written} (${mb(j.size)})\nrollback copy: ${j.rollback}\n`+
+  `installed pack is byte-identical to Evie/${j.k23_file.split('/').pop()}: ${j.installed_pack_equals_k23_file===null?'(k23 file not found)':j.installed_pack_equals_k23_file}\n\n`+
+  `colliders before: ${j['colliders_before (Élise coat)'].join(', ')}\ncolliders after:  ${j['colliders_after (Aveline skirt)'].join(', ')}\n\n`+
+  `install (game closed):\n  ${j.install}\nrollback:\n  ${j.rollback_install}`}
 async function loadExtracted(){const j=await api('extracted');const opts='<option value="">-</option>'+(j.files||[]).filter(f=>/24AECB7C|Skeleton|Body/i.test(f)).map(f=>`<option value="${esc(f)}">${esc(f.split('/extracted/')[1]||f)}</option>`).join('');$('boneA').innerHTML=opts;$('boneB').innerHTML=opts}
 async function bones(){const j=await api('bones',{a:$('boneA').value,b:$('boneB').value,known:$('boneKnown').value});
   if(j.error){$('bonesOut').innerHTML=esc(j.error);return}let s=`A: ${j.a_bones} bones (hash offset ${j.offset})\n`;
