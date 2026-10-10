@@ -29,30 +29,31 @@ def compress(mode, data):
     return out.raw[:n.value]
 
 
-def section(mode, payload, block=0x8000):
+def section(mode, payload, block=0x8000, cver=1):
+    """cver 1 = Unity (u16 block sizes), 2 = Syndicate (u32 block sizes)."""
     chunks = [payload[i:i + block] for i in range(0, len(payload), block)] or [b'']
     packed = []
     for c in chunks:
         z = compress(mode, c)
         packed.append(z if len(z) < len(c) else c)  # store raw when it doesn't shrink
-    s = af.MAGIC + b'\0\0' + bytes([mode]) + b'\0\0\0' + bytes([128]) + struct.pack('<I', len(chunks))
-    s += b''.join(struct.pack('<HH', len(c), len(z)) for c, z in zip(chunks, packed))
+    s = af.MAGIC + struct.pack('<H', cver) + bytes([mode]) + b'\0\0\0' + bytes([128]) + struct.pack('<I', len(chunks))
+    s += b''.join(struct.pack('<HH' if cver < 2 else '<II', len(c), len(z)) for c, z in zip(chunks, packed))
     s += b''.join(b'HASH' + z for z in packed)
     return s
 
 
-def pack_blob(mode, files):
+def pack_blob(mode, files, cver=1):
     table = struct.pack('<H', len(files))
     body = b''
     for fid, ftype, name, data in files:
         table += struct.pack('<QIH', fid, len(data) + 13 + len(name), 1) + b'\0\0'
         nb = name.encode()
         body += struct.pack('<3I', ftype, len(data), len(nb)) + nb + b'\0' + data
-    return section(mode, table) + section(mode, body)
+    return section(mode, table, cver=cver) + section(mode, body, cver=cver)
 
 
-def build_forge(path, packs):
-    blobs = [pack_blob(m, files) for _, _, m, files in packs]
+def build_forge(path, packs, cver=1):
+    blobs = [pack_blob(m, files, cver) for _, _, m, files in packs]
     n = len(packs)
     hdr_a = 64
     off_b = 128
@@ -86,22 +87,27 @@ def main():
                                              (22, 0x0FA3067F, 'xx_Fight_Sword_Kill_Front_01_Dfn', text[:333])]),
         (1003, 'ACU_BaseSkeleton_Male', 1, [(31, 0x24AECB7C, 'ACU_BaseSkeleton_Male', text[:9999] + rnd)]),
     ]
+    for cver in (1, 2):
+        run(packs, cver)
+    print('all good')
+
+
+def run(packs, cver):
     with tempfile.TemporaryDirectory() as d:
         fp = os.path.join(d, 'Test.forge')
-        build_forge(fp, packs)
+        build_forge(fp, packs, cver)
         fg = af.Forge(fp)
         assert fg.version == 27 and [p['name'] for p in fg.packs] == [p[1] for p in packs]
         for p, (_, _, mode, files) in zip(fg.packs, packs):
             got = list(fg.pack_files(p))
             assert [(g['id'], g['type'], g['name'], g['data']) for g in got] == files, (p['name'], mode)
-            print(f"ok  mode {mode}  {p['name']}: {len(got)} files, {sum(len(g['data']) for g in got)} bytes")
+            print(f"ok  v{cver} mode {mode}  {p['name']}: {len(got)} files, {sum(len(g['data']) for g in got)} bytes")
         af.main(['index', fp, os.path.join(d, 'i.csv'), '--grep', 'Sword'])
         rows = open(os.path.join(d, 'i.csv')).read().splitlines()
         assert len(rows) == 5, rows
         af.main(['extract', fp, os.path.join(d, 'out'), '--grep', 'Kill', '--files', '_Atk$'])
         out = os.listdir(os.path.join(d, 'out', 'xx_Fight_Sword_Kill_pack'))
         assert out == ['xx_Fight_Sword_Kill_Front_01_Atk.0FA3067F.21.bin'], out
-    print('all good')
 
 
 if __name__ == '__main__':

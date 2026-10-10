@@ -30,7 +30,8 @@ sys.path.insert(0, HERE)
 import anvil_bones  # noqa: E402
 import anvil_forge as af  # noqa: E402
 
-VERSION = '1.0'
+VERSION = '1.2'
+INDEX_VERSION = 2
 TOKEN = secrets.token_urlsafe(16)
 CONFIG_PATH = os.path.expanduser('~/.ishpreet_studio.json')
 BUNDLE_LIMIT = 28 * 1024 * 1024
@@ -183,11 +184,39 @@ def game_dir(game):
 
 
 def list_forges(game):
+    """Forges in the game folder and one level down (Syndicate keeps its DLC forges in dlc_NN/ folders).
+    Names are relative paths, e.g. 'dlc_14/DataPC_14_dlc.forge'."""
     d = game_dir(game)
     out = []
     for n in sorted(os.listdir(d)):
-        if n.lower().endswith('.forge'):
-            out.append({'name': n, 'size': os.path.getsize(os.path.join(d, n))})
+        p = os.path.join(d, n)
+        if n.lower().endswith('.forge') and os.path.isfile(p):
+            out.append({'name': n, 'size': os.path.getsize(p)})
+        elif os.path.isdir(p) and n.lower() not in SKIP_DIRS:
+            try:
+                for m in sorted(os.listdir(p)):
+                    q = os.path.join(p, m)
+                    if m.lower().endswith('.forge') and os.path.isfile(q):
+                        out.append({'name': f'{n}/{m}', 'size': os.path.getsize(q)})
+            except OSError:
+                pass
+    return out
+
+
+def forge_path(game, name):
+    """Absolute path of a forge given its name from list_forges (no escaping the game folder)."""
+    d = os.path.realpath(game_dir(game))
+    path = os.path.realpath(os.path.join(d, name))
+    if not path.startswith(d + os.sep):
+        raise ValueError(f'forge {name!r} is outside the game folder')
+    return path
+
+
+def forge_names(game):
+    """{basename.lower(): relative name} so plans can name a forge without its folder."""
+    out = {}
+    for f in list_forges(game):
+        out.setdefault(os.path.basename(f['name']).lower(), f['name'])
     return out
 
 
@@ -195,7 +224,7 @@ _FORGES = {}
 
 
 def forge(game, name):
-    path = os.path.join(game_dir(game), os.path.basename(name))
+    path = forge_path(game, name)
     key = (path, os.path.getmtime(path))
     if key not in _FORGES:
         t = time.time()
@@ -346,7 +375,7 @@ def act_search(a):
 
 
 def act_hex(a):
-    path = os.path.join(game_dir(a['game']), os.path.basename(a['forge']))
+    path = forge_path(a['game'], a['forge'])
     off, n = int(a.get('offset') or 0), min(int(a.get('length') or 512), 65536)
     with open(path, 'rb') as f:
         f.seek(off)
@@ -379,9 +408,11 @@ def act_log(a):
 def forge_index(game, name, progress=True):
     """File-level index of a forge: every pack's files (id, type, name, size). Built once by decompressing every
     pack, then cached in <out>/index/. Packs that fail to decode are listed under 'errors'."""
-    path = os.path.join(game_dir(game), os.path.basename(name))
+    path = forge_path(game, name)
     st = os.stat(path)
-    cache = os.path.join(out_dir(), 'index', f'{game}__{safe(name)}__{st.st_size}_{int(st.st_mtime)}.json.gz')
+    # INDEX_VERSION in the name: indexes built by an older reader (e.g. before Syndicate's v2 packs) are ignored
+    cache = os.path.join(out_dir(), 'index',
+                         f'{game}__{safe(name)}__{st.st_size}_{int(st.st_mtime)}__v{INDEX_VERSION}.json.gz')
     if os.path.isfile(cache):
         with gzip.open(cache, 'rt') as f:
             return json.load(f)
@@ -438,9 +469,9 @@ BUNDLE_PLAN = [
     ('Unity sword attack', 'unity', ['DataPC.forge'], r'^xx_Fight_Sword_Atk_2m_Front_01$', 1),
     ('Unity sword kill (Atk + Dfn)', 'unity', ['DataPC.forge'], r'^xx_Fight_Sword_Kill_Front_01_(Atk|Dfn)$', 2),
     ('Unity sword combo finisher', 'unity', ['DataPC.forge'], r'^xx_Fight_Sword_Combo_Finisher_Right_01$', 1),
-    ('Syndicate female skeleton', 'syn', ['DataPC_14_dlc.forge'], r'^ACVI_CHR_SHR_Female$', 1),
-    ('Syndicate male skeleton', 'syn', ['DataPC_extra.forge', 'DataPC_20_dlc.forge', 'DataPC_14_dlc.forge'],
-     r'^ACVI_CHR_SHR_Male$', 1),
+    ('Syndicate female skeleton', 'syn', ['DataPC_14_dlc.forge', 'DataPC_ACVI_London.forge'], r'^ACVI_CHR_SHR_Female$', 1),
+    ('Syndicate male skeleton', 'syn', ['DataPC_extra.forge', 'DataPC_20_dlc.forge', 'DataPC_14_dlc.forge',
+                                        'DataPC_ACVI_London.forge'], r'^ACVI_CHR_SHR_Male$', 1),
     ('Aveline skirt: mesh, cloth, settings, ragdoll', 'syn', ['DataPC_14_dlc.forge'],
      r'^ACVI_CHR_P_EvieFrye_Outfit09_Aveline_Skirt_(LOD0|Cloth|ClothSettings|LiteRagdoll)$', 6),
     ('Aveline leg ball joints', 'syn', ['DataPC_14_dlc.forge'],
@@ -470,7 +501,7 @@ def act_bundle(a):
         item = {'label': label, 'status': 'not found', 'tried': []}
         report['items'].append(item)
         try:
-            names = {f['name'].lower(): f['name'] for f in list_forges(game)}
+            names = forge_names(game)
         except Exception as e:
             item.update(status='skipped', error=str(e))
             continue
@@ -488,7 +519,7 @@ def act_bundle(a):
                 log('ERROR', f'bundle: open {fname}: {e}\n{traceback.format_exc()}')
                 head_name = f'raw/{safe(fname)}.head4k.bin'
                 if head_name not in z.namelist():  # the header bytes are what's needed to fix the parser
-                    with open(os.path.join(game_dir(game), real), 'rb') as fh:
+                    with open(forge_path(game, real), 'rb') as fh:
                         z.writestr(head_name, fh.read(4096))
                 continue
             report['forges'].setdefault('diag', {})[fname] = fg.diag

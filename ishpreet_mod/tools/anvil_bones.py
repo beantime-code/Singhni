@@ -20,12 +20,20 @@ import sys
 BONE = struct.pack('<I', 0x9EF0E7A1)
 
 
+BONE_MARKERS = [0x95741049, 0x9EF0E7A1]  # Unity bones (seen in the user's ACU_BaseSkeleton_*: hash right after it)
+
+
 def candidates(path):
     """{offset: [u32 after each bone marker at that offset]} for offsets 0..32."""
     b = open(path, 'rb').read()
-    pos = [i for i in range(len(b) - 4) if b[i:i + 4] == BONE]
+    pos = []
+    for m in BONE_MARKERS:
+        mb = struct.pack('<I', m)
+        pos = [i for i in range(len(b) - 4) if b[i:i + 4] == mb]
+        if pos:
+            break
     if not pos:
-        sys.exit(f'{path}: no bone markers (is this a Skeleton file?)')
+        raise ValueError(f'{path}: no bone markers (is this a Skeleton file?)')
     return {off: [struct.unpack_from('<I', b, p + 4 + off)[0] for p in pos if p + 8 + off <= len(b)]
             for off in range(0, 33)}
 

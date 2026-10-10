@@ -114,27 +114,34 @@ LAST_SECTIONS = []  # (mode, format, nblocks) of the last pack read, for debuggi
 
 
 def read_section(r):
-    """r is positioned just after MAGIC. Returns (format, [raw blocks])."""
-    r.take(2)
+    """r is positioned just after MAGIC. Returns (format, [raw blocks]).
+
+    Header: u16 container version, u8 compression mode, 3 bytes, u8 format.
+    Format 128 block sizes are (raw, packed) pairs: u16 in container version 1 (Unity), u32 in version 2
+    (Syndicate; confirmed on the user's DataPC_extra.forge). Format 0 is a run of block groups (u8 count,
+    count*(u32 packed, u32 raw), then hash + data per block) until the pack ends (seen in Unity's
+    PrefetchingFileInfos)."""
+    cver, = r.s('H')
     mode, = r.s('B')
     r.take(3)
     fmt, = r.s('B')
     blocks = []
     if fmt == 128:
         n, = r.s('I')
-        sizes = [r.s('HH') for _ in range(n)]  # raw, packed
+        sizes = [r.s('HH' if cver < 2 else 'II') for _ in range(n)]  # raw, packed
         for raw, packed in sizes:
             r.take(4)
             blocks.append(decompress(mode, r.take(packed), raw))
     elif fmt == 0:
-        n, = r.s('B')
-        sizes = [r.s('II') for _ in range(n)]  # packed, raw
-        for packed, raw in sizes:
-            r.take(4)
-            blocks.append(decompress(mode, r.take(packed), raw))
+        while r.left():
+            n, = r.s('B')
+            sizes = [r.s('II') for _ in range(n)]  # packed, raw
+            for packed, raw in sizes:
+                r.take(4)
+                blocks.append(decompress(mode, r.take(packed), raw))
     else:
-        raise ValueError(f'unknown section format {fmt} (compression mode {mode})')
-    LAST_SECTIONS.append((mode, fmt, len(blocks)))
+        raise ValueError(f'unknown section format {fmt} (container v{cver}, compression mode {mode})')
+    LAST_SECTIONS.append((mode, fmt, len(blocks), cver))
     return fmt, blocks
 
 
@@ -210,9 +217,20 @@ class Forge:
             if r.left():
                 raise ValueError(f'{r.left()} trailing bytes after compressed data')
             body = b''.join(blocks)
+        whole = {'id': p['id'], 'type': p['type'], 'name': p['name'], 'data': body}
         if fmt == 0:
-            yield {'id': p['id'], 'type': p['type'], 'name': p['name'], 'data': body}
+            yield whole
             return
+        try:
+            files = self._split(body, p)
+        except (EOFError, ValueError, struct.error):
+            if raw.startswith(MAGIC):
+                raise
+            files = [whole]  # an uncompressed special pack (e.g. GlobalMetaFile) with no file table
+        yield from files
+
+    @staticmethod
+    def _split(body, p):
         r = Reader(body)
         n, = r.s('H')
         table = []
@@ -220,6 +238,7 @@ class Forge:
             fid, size, extra = r.s('QIH')
             r.take(2 * extra)
             table.append(fid)
+        files = []
         for fid in table:
             ftype, size, nlen = r.s('3I')
             name = r.take(nlen).decode('utf-8', 'replace') or f'{fid:016X}'
@@ -230,7 +249,8 @@ class Forge:
                 r.take(12 * k)
             elif flag != 0:
                 raise ValueError(f'unexpected flag {flag} in {p["name"]}')
-            yield {'id': fid, 'type': ftype, 'name': name, 'data': r.take(size)}
+            files.append({'id': fid, 'type': ftype, 'name': name, 'data': r.take(size)})
+        return files
 
 
 def _match(pat, s):
