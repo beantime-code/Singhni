@@ -1,93 +1,118 @@
-# Assassin's Creed Syndicate on Mac (CrossOver): toward a steady 60 fps without lowering quality
+# Assassin's Creed Syndicate on Mac: a steady 60 fps that looks great, on D3DMetal
 
-Status: **research done, measurements needed from the Mac.** Last updated 2026-10-10 (cloud session). Known machine:
-Apple Silicon (arm64), macOS 15.6, CrossOver bottle "Assassins Creed". Still needed: chip, RAM, CrossOver version.
+Status: **plan + tools ready; needs one measured pass on the Mac.** Constraint from the user (2026-10-10): **CrossOver
+only runs the game with D3DMetal**, so every gain has to come from inside D3DMetal, the game, macOS or ReShade.
+Machine: Apple Silicon, macOS 15.6, bottle "Assassins Creed". Still needed: chip, RAM, CrossOver version.
 
-## 1. Why it chugs even on a fast Mac
-Ordered by how much each one likely costs:
-1. **CPU-bound engine, translated twice.** Syndicate (AnvilNext 2.0) is heavy on the CPU because of its crowds,
-   streaming and simulation. Players hit stutter and high CPU even on Windows PCs, and Ubisoft's own advice was to
-   cap the frame rate ([Steam thread](https://steamcommunity.com/app/368500/discussions/1/4326348922706146537/),
-   [Steam thread](https://steamcommunity.com/app/368500/discussions/0/1368380934248692576/?l=turkish)). On a Mac,
-   every x86 instruction also goes through Rosetta 2, and every Windows sync call goes through Wine. So the frame rate
-   is set by the CPU side and by how CrossOver handles thread synchronization, not by the GPU. That's why lowering
-   graphics doesn't fix it.
-2. **The DirectX 11 translation layer.** CrossOver has four ways to run DX11: **D3DMetal** (Apple GPTK), **DXMT**
-   (direct D3D11→Metal, new in CrossOver 25/26), **DXVK** (D3D11→Vulkan→MoltenVK→Metal) and wined3d (slowest). "Auto"
-   picks from CodeWeavers' per-game list
-   ([CodeWeavers advanced settings](https://support.codeweavers.com/miscellanous/advanced-settings-in-crossover-mac),
-   [CrossOver 25 blog](https://www.codeweavers.com/blog/mjohnson/2025/3/11/experience-next-level-gaming-on-mac-with-crossover-25)).
-   - DXMT handles synchronization better than D3DMetal, because Metal tracks resource dependencies itself. An Apple
-     developer-forum post names *Assassin's Creed Valhalla* as the title that shows D3DMetal's sync problem best
-     ([Apple GPTK forum](https://developer.apple.com/forums/tags/game-porting-toolkit)).
-   - Early DX11 reports show DXMT much faster on some games and equal or slower on others. **It has to be measured
-     for Syndicate.**
-3. **Cloth runs at 30 fps.** Capes and coat tails update at 30 fps even when the game runs at 60, which makes motion
-   look like it hitches. Patch 1.31 added an AC.ini switch: `FlexibleMotionSimulationFPS=1` under `[OPTIONS]`, off by
-   default, may need adding by hand ([Guru3D, patch 1.31](https://www.guru3d.com/story/assassins-creed-syndicate-update-1-31/),
-   [GameSpot, patch notes](https://www.gamespot.com/articles/assassins-creed-syndicate-gets-new-pc-patch-see-th/1100-6433360/)).
-   This is free smoothness with no quality loss. Ishpreet's chunni and skirt cloth benefit too.
-4. **Uneven frame pacing.** A frame rate bouncing between 45 and 60 feels worse than a locked 60. Lock it with
-   in-game VSync at the display rate, or a backend frame cap. Guides and Ubisoft support both suggest a limiter
-   ([Quora troubleshooting](https://www.quora.com/How-do-I-fix-the-terrible-lag-I-am-getting-while-playing-Assassins-Creed-Syndicate-even-on-optimal-settings)).
-5. **NVIDIA-only options do nothing or cost a lot under translation.** TXAA, PCSS/HFTS shadows and HBAO+ were
-   NVIDIA-specific on PC. Under Metal they're unavailable or fall back badly. MSAA is expensive in this deferred
-   renderer. Use FXAA, or SMAA through ReShade, plus a sharpener.
+Tools: Studio → **8 · Performance**.
+- **AC.ini editor** with backups, plus one-click full-rate cloth and VSync.
+- **Bottle toggles:** Metal HUD, MSync and a D3DMetal 60 cap, written to `cxbottle.conf [EnvironmentVariables]`, with
+  backups.
+- **ReShade check:** whether it actually loads.
 
-## 2. Test protocol (one variable at a time; every row is measured, not guessed)
-**Instrument:**
-- D3DMetal/DXMT: enable Apple's Metal Performance HUD (bottle environment variable `MTL_HUD_ENABLED=1`).
-- DXVK: `DXVK_HUD=fps,frametimes`.
-- Record average fps and the 1% low (the stutter).
+## 1. The principle: Syndicate on Mac is CPU-bound, so the GPU has room to spare
+- Syndicate's engine is heavy on the CPU (crowds, streaming, simulation). Players hit stutter and high CPU even on
+  Windows PCs, and Ubisoft's own advice was to cap the frame rate
+  ([Steam thread](https://steamcommunity.com/app/368500/discussions/1/4326348922706146537/),
+  [Steam thread](https://steamcommunity.com/app/368500/discussions/0/1368380934248692576/?l=turkish)).
+- On a Mac every x86 instruction also goes through Rosetta 2, and every Windows sync call through Wine. Translated
+  games need more resources, so Apple recommends 16 GB+ for them
+  ([GPTK 2.1 README copy](https://gist.github.com/lynkos/3999f629560219a81d4e2c083a4bf5b1)).
+- So the frame rate is set by the CPU side. Lowering graphics doesn't fix it. **Raising** graphics often costs
+  nothing, because the GPU is waiting on the CPU anyway.
 
-**Benchmark spot:** the same place, same time of day, same settings for each run. For example, a Whitechapel rooftop
-looking over a crowded street, then a 30 s carriage ride (the streaming load).
+**Measure that first** with Apple's Metal Performance HUD (Studio → *Metal HUD on*, `MTL_HUD_ENABLED=1`). It shows
+frame time and GPU time.
+- **GPU time well under frame time** (e.g. GPU 9 ms in a 22 ms frame): CPU-bound. Use the spare GPU time for
+  image quality (§3).
+- **GPU time ≈ frame time:** GPU-bound. Then resolution is the lever (§3.1).
 
-| # | Backend | Sync | AC.ini | Avg fps | 1% low | Notes |
-|---|---|---|---|---|---|---|
-| 1 | Auto (current) | default | as is | | | baseline |
-| 2 | D3DMetal | MSync on | as is | | | |
-| 3 | DXMT | MSync on | as is | | | |
-| 4 | DXVK | MSync on | as is | | | |
-| 5 | best of 2–4 | MSync off | as is | | | sync can help or break a game ([CodeWeavers](https://support.codeweavers.com/miscellanous/advanced-settings-in-crossover-mac)) |
-| 6 | best | best | `FlexibleMotionSimulationFPS=1` | | | cloth smoothness (look, don't just measure) |
-| 7 | best | best | + VSync / 60 cap | | | frame pacing |
+## 2. CPU-side wins, no image loss (do all of these)
+| # | Change | Why | Where |
+|---|---|---|---|
+| 1 | **MSync on** | Faster Wine thread synchronization. CodeWeavers notes it can help or occasionally break a game, so check stability ([CodeWeavers](https://support.codeweavers.com/miscellanous/advanced-settings-in-crossover-mac)) | Studio → *MSync on*, or CrossOver Advanced Settings |
+| 2 | **Ubisoft Connect: in-game overlay off, then minimize the launcher** | The overlay is a known CPU/stutter source, and the launcher's browser processes share the bottle's CPU ([overlay advice](https://www.getdroidtips.com/ubisoft-connect-high-cpu-usage/), [Steam thread](https://steamcommunity.com/app/2239550/discussions/0/4631482745020811870)) | Ubisoft Connect → Settings → General |
+| 3 | **True fullscreen, so macOS Game Mode engages** | Game Mode prioritizes the game's CPU/GPU on Apple Silicon ([CodeWeavers](https://www.codeweavers.com/about/news?curPos=70)) | in game: Display mode Fullscreen |
+| 4 | **Plugged in; Low Power Mode off; High Power Mode on if the Mac has it** | Avoids clock caps | System Settings → Battery/Energy |
+| 5 | **Don't clear D3DMetal's shader cache** | The first visit to an area compiles shaders (one-time hitches). The cache in the user cache's `d3dm` folder removes them on later runs ([GPTK README](https://gist.github.com/lynkos/3999f629560219a81d4e2c083a4bf5b1)) | play an area once, then measure |
+| 6 | **Cloth at full rate** | Capes and coats are capped at 30 fps by default, which looks like hitching at 60. Patch 1.31 added `FlexibleMotionSimulationFPS` under `[OPTIONS]` in AC.ini ([Guru3D](https://www.guru3d.com/story/assassins-creed-syndicate-update-1-31/), [GameSpot](https://www.gamespot.com/articles/assassins-creed-syndicate-gets-new-pc-patch-see-th/1100-6433360/)) | Studio → *Cloth at full frame rate* |
 
-Then raise quality on the winner one setting at a time (environment, shadows, textures, AO, volumetric fog,
-reflections), keeping only those that hold the 1% low above about 55.
+## 3. Spend the spare GPU time on looks (in this order, re-checking the HUD each time)
+1. **Resolution first, the biggest visual win.** Turn on CrossOver's High Resolution mode so the game sees the real
+   Retina pixels, then pick the highest resolution that keeps GPU time under about 14 ms. Resolution is the single
+   largest cost in Ubisoft's engine of this era ([NVIDIA guide](https://www.nvidia.com/en-us/geforce/news/assassins-creed-syndicate-graphics-and-performance-guide)).
+   On a scaled display, prefer a resolution that maps 1:1 or exactly 2:1 to the panel, which avoids blur.
+2. **Shadows High.** PCSS (NVIDIA) cost about 20–35% on PC for little gain
+   ([GamersNexus](https://gamersnexus.net/game-bench/2195-assassins-creed-syndicate-gpu-fps-benchmarks)), and
+   NVIDIA-only options (PCSS/HFTS, HBAO+, TXAA) aren't valid on Apple GPUs anyway. High is the best real setting.
+3. **Environment and textures to Ultra/High.** On PC they cost little GPU
+   ([Prima Games](https://primagames.com/featured/assassins-creece-impressions)). They add some CPU (draw distance),
+   so watch the frame time.
+4. **Anti-aliasing:** FXAA or the game's post-AA, then sharpen with ReShade (§4). MSAA is expensive in this deferred
+   renderer: measure it before keeping it.
+5. **Ambient occlusion:** SSAO (HBAO+ is NVIDIA-only).
 
-## 3. ReShade: is it working?
-- **How to tell:** ReShade writes `ReShade.log` next to `ACS.exe` when it loads, and shows a banner at the top of the
-  screen on start. **No log means it isn't loading.**
-- **The catch:** ReShade loads as `dxgi.dll`, but **D3DMetal and DXMT supply their own dxgi/d3d11**, so the
-  override fights them. A CodeWeavers forum report says adding ReShade's `dxgi.dll` with D3DMetal crashes the game,
-  and that the tutorial that worked was on DXVK
-  ([CodeWeavers forum](https://www.codeweavers.com/support/forums/general?t=27&forumcurPos=255&msg=301597)).
-- **What works on paper:** DXVK + ReShade installed **for Vulkan**, not for D3D11
-  ([Marty's Mods DXVK guide](https://guides.martysmods.com/additionalguides/apiwrappers/dxvk/)). That ties ReShade to
-  the DXVK backend.
-- **So:** if test 3 (DXMT) or test 2 (D3DMetal) wins, skip ReShade, or accept the DXVK speed cost for it. Decide
-  from the numbers.
+## 4. ReShade on D3DMetal (the "looks amazing" layer)
+- **The problem:** ReShade's default install is a `dxgi.dll` in the game folder. Under D3DMetal that fights
+  D3DMetal's own DXGI. One CrossOver user reports exactly this crashing on D3DMetal
+  ([CodeWeavers forum](https://www.codeweavers.com/support/forums/general?t=27&forumcurPos=255&msg=301597)). The Studio
+  shows whether ReShade really loads: no `ReShade.log` next to ACS.exe means it never ran.
+- **Untested, but the documented Wine method** is to load ReShade as **`d3d11.dll`**, not `dxgi.dll`, with a
+  `d3d11 = native, builtin` override. ReShade wraps the game's D3D11, then calls the bottle's real D3D11, which is
+  D3DMetal ([Proton/Wine guide](https://github.com/sonic2kk/steamtinkerlaunch/wiki/ReShade/44f7769c922aa725c3ba8d1cae87b14cd12514e2);
+  ReShade supports d3d11.dll as a wrapper name: [ReShade forum](https://reshade.me/forum/general-discussion/1267-using-additional-dll-files)).
+  Steps:
+  1. Remove ReShade's `dxgi.dll` from the game folder.
+  2. Install ReShade for DirectX 10/11/12, then rename its DLL to `d3d11.dll`.
+  3. CrossOver → bottle → Wine Configuration → Libraries → add `d3d11`, set to *native, builtin*.
+  4. Launch, and check for `ReShade.log` (Studio → Read settings).
+- **If it loads, the preset that matters most:** SMAA (clean edges) + CAS or LumaSharpen (crisp detail) + a light
+  Tonemap/Vibrance. Skip heavy MXAO/RTGI until the HUD shows GPU headroom.
+- **If it doesn't load:** the image gains come from §3 only. Don't keep a broken `dxgi.dll` in the folder.
 
-## 4. "Why does Unity (2014) look so clean?"
-- **Different look, same engine family.** Unity's Paris was built with baked global illumination and very dense
-  materials. Syndicate's London is deliberately hazy and foggy.
-- **Most clean press shots aren't gameplay frames.** They're captured at high resolution and downsampled
-  (supersampling), often in cinematics with depth of field. Gameplay at native resolution with FXAA looks softer and
-  more aliased.
-- **The legitimate way to get close:**
-  1. Native Retina resolution (CrossOver's high-resolution mode).
-  2. A good post-AA (SMAA) and a light sharpener (CAS) through ReShade, if it can load (see §3).
-  3. A locked frame rate with cloth at full rate.
-- Running Unity itself on Apple Silicon is GPU-light but similarly CPU-bound: about 30 fps on an M1 Air after the
-  GPTK 2 patch ([AppleGamingWiki, AC Unity](https://www.applegamingwiki.com/wiki/Assassin's_Creed_Unity)). For a
-  data point on Syndicate: one Mac mini M4 user reports about 40 fps at 1440p High on CrossOver 26 Preview
+## 5. Frame pacing: lock it
+- **Cap at 60 and sync to it.** A rate swinging between 45 and 60 feels worse than a locked one. Use in-game VSync
+  (Studio → *VSync on*) or D3DMetal's cap (`D3DM_MAX_FPS=60`, Studio → *D3DMetal cap 60*). The cap is documented for
+  newer GPTK builds ([crossover-dx12-fix README](https://github.com/webmonarch/crossover-dx12-fix)), so check in the
+  HUD that your build honours it.
+- **On ProMotion (120 Hz) MacBooks, set the display to a fixed 60 Hz while playing.** Several macOS developers report
+  fullscreen judder from variable refresh, fixed by locking 60 Hz
+  ([GLFW forum](https://discourse.glfw.org/t/mac-fullscreen-issues/2670),
+  [Apple forums](https://developer.apple.com/forums/thread/742803)).
+
+## 6. Bigger lever, optional: a newer D3DMetal
+CrossOver ships Apple's D3DMetal (CrossOver 26.3 has D3DMetal 3.0). Apple's newer Game Porting Toolkit builds can be
+swapped into `CrossOver.app/Contents/SharedSupport/CrossOver/lib64/apple_gptk`, with scripts and rollback
+([crossover-dx12-fix](https://github.com/webmonarch/crossover-dx12-fix)).
+- **Requirements:** macOS 15+, CrossOver 26.x, and the terminal needs App Management permission.
+- **Risk:** a beta GPTK can break other games. Only try it after §2–§5 are measured, and keep the rollback.
+
+## 7. Why the Unity screenshot looks so clean
+- **Different look, same engine family.** Unity's Paris used baked global illumination and very dense materials.
+  Syndicate's London is deliberately hazy and foggy.
+- **That kind of shot is usually not a raw gameplay frame.** Press and cinematic captures are often rendered above
+  display resolution and scaled down (supersampling), with depth of field.
+- **The honest equivalent on a Mac:** the highest resolution the spare GPU time allows (§3.1), plus SMAA and a
+  sharpener (§4), at a locked 60 (§5).
+- For calibration: Unity itself ran at about 30 fps on an M1 Air after GPTK 2
+  ([AppleGamingWiki](https://www.applegamingwiki.com/wiki/Assassin's_Creed_Unity)). One M4 Mac mini user reports
+  Syndicate at about 40 fps at 1440p High on CrossOver 26 Preview
   ([MacGamers](https://macgamers.org/games/assassins-creed-syndicate)).
 
-## 5. Next steps
-1. **Done:** Studio → **8 · Performance**. It reads `AC.ini` from the bottle, shows and edits every setting (with a
-   backup in `out/acini_backups/` and the line endings kept), and has one-click *Cloth at full frame rate* and *VSync
-   on*. It also shows the bottle's graphics and sync lines (read-only) and whether ReShade really loads.
-2. Run the test table (§2) on the Mac and fill it in.
-3. If CPU-bound on every backend: look at engine-side CPU costs that don't change the image, such as the
-   streaming and LOD distances that trigger hitches during carriage rides, in AC.ini.
+## 8. Measurement sheet (fill in on the Mac: same spot, same time of day)
+Benchmark: a Whitechapel rooftop over a crowded street (10 s still), then a 30 s carriage ride (streaming).
+
+| Step | Change | Avg fps | 1% low | Frame ms | GPU ms | Keep? |
+|---|---|---|---|---|---|---|
+| 0 | baseline (Metal HUD on only) | | | | | |
+| 1 | + MSync | | | | | |
+| 2 | + overlay off, launcher minimized | | | | | |
+| 3 | + fullscreen/Game Mode, power | | | | | |
+| 4 | + cloth full rate | | | | | look |
+| 5 | + VSync / cap 60, 60 Hz display | | | | | feel |
+| 6 | + resolution up (High Resolution mode) | | | | | |
+| 7 | + shadows/environment High/Ultra | | | | | |
+| 8 | + ReShade d3d11 (if it loads) | | | | | |
+
+**Rule:** keep a change only if the 1% low stays at or above about 55 fps. Step 8 adds GPU cost, so only after step 6
+shows headroom.

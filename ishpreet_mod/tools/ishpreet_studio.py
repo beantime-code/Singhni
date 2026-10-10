@@ -1091,6 +1091,83 @@ def act_perf_write(a):
     return {'ac_ini': p, 'backup': backup, 'ini': _parse_ini(open(p, encoding='utf-8').read())}
 
 
+BOTTLE_ENV_ALLOWED = {
+    'MTL_HUD_ENABLED': "Apple's Metal Performance HUD: fps, frame time, GPU time (measure before changing anything)",
+    'WINEMSYNC': 'MSync: faster thread synchronization in Wine (Syndicate is CPU-bound)',
+    'D3DM_MAX_FPS': 'D3DMetal frame cap (documented for newer GPTK builds; check the HUD to see whether yours honours it)',
+    'ROSETTA_ADVERTISE_AVX': 'Let the game see AVX through Rosetta (macOS 15+); only for invalid-instruction crashes',
+}
+
+
+def act_bottle_env(a):
+    """Set or remove environment variables in the bottle's cxbottle.conf [EnvironmentVariables] section.
+    Only the keys in BOTTLE_ENV_ALLOWED. CrossOver must be quit first. Backs the file up."""
+    root = _bottle_root()
+    conf = os.path.join(root or '', 'cxbottle.conf')
+    if not root or not os.path.isfile(conf):
+        raise ValueError(f'cxbottle.conf not found (bottle: {root})')
+    want = {k: v for k, v in (a.get('set') or {}).items()}
+    bad = [k for k in want if k not in BOTTLE_ENV_ALLOWED]
+    if bad:
+        raise ValueError(f'not allowed: {bad}')
+    raw = open(conf, 'rb').read()
+    crlf = b'\r\n' in raw
+    lines = raw.decode('utf-8', errors='replace').replace('\r\n', '\n').split('\n')
+    bdir = os.path.join(out_dir(), 'bottle_backups')
+    os.makedirs(bdir, exist_ok=True)
+    backup = os.path.join(bdir, f"cxbottle_{time.strftime('%Y%m%d_%H%M%S')}.conf")
+    with open(backup, 'wb') as f:
+        f.write(raw)
+    key_rx = re.compile(r'^\s*"([^"]+)"\s*=')
+    out, cur, done, style = [], None, set(), '"{k}" = "{v}"'
+    for line in lines:
+        s = line.strip()
+        if s.startswith('[') and s.endswith(']'):
+            if cur == 'EnvironmentVariables':
+                blanks = 0
+                while out and out[-1].strip() == '':
+                    out.pop()
+                    blanks += 1
+                out += [style.format(k=k, v=v) for k, v in want.items() if v is not None and k not in done]
+                out += [''] * blanks
+                done |= set(want)
+            cur = s[1:-1]
+            out.append(line)
+            continue
+        m = key_rx.match(line)
+        if cur == 'EnvironmentVariables' and m:
+            if '" = "' not in line and '"="' in line.replace(' ', ''):
+                style = '"{k}"="{v}"'
+            k = m.group(1)
+            if k in want:
+                done.add(k)
+                if want[k] is None:
+                    continue  # remove
+                line = style.format(k=k, v=want[k])
+        out.append(line)
+    if cur == 'EnvironmentVariables':
+        while out and out[-1] == '':
+            out.pop()
+        out += [style.format(k=k, v=v) for k, v in want.items() if v is not None and k not in done]
+        done |= set(want)
+    missing = {k: v for k, v in want.items() if k not in done and v is not None}
+    if missing:
+        out += ['', '[EnvironmentVariables]'] + [style.format(k=k, v=v) for k, v in missing.items()]
+    text = ('\r\n' if crlf else '\n').join(out)
+    if not text.endswith('\r\n' if crlf else '\n'):
+        text += '\r\n' if crlf else '\n'
+    with open(conf, 'wb') as f:
+        f.write(text.encode('utf-8'))
+    log('info', f'cxbottle.conf updated: {json.dumps(want)}; backup {backup}')
+    env, sec = [], None
+    for l in text.splitlines():
+        if l.strip().startswith('['):
+            sec = l.strip()
+        elif sec == '[EnvironmentVariables]' and key_rx.match(l):
+            env.append(l)
+    return {'conf': conf, 'backup': backup, 'env_lines': env}
+
+
 def act_reveal(a):
     p = a.get('path') or out_dir()
     if sys.platform == 'darwin':

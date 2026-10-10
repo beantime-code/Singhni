@@ -72,9 +72,18 @@ to roll back. Everything below lives in `ishpreet_mod/` (git: `beantime-code/Sin
   3. `graft_style.py`.
   4. E3 (why m2 crashed) and E4 (the item → style test) on the Mac, one game launch each.
 
-## 4. Performance on Mac (CrossOver), in progress
-Goal: a steady 60 fps that looks right, without lowering image quality. Status and findings: `PERFORMANCE.md` (this
-session keeps adding to it). First things to record from the Mac:
+## 4. Performance on Mac (CrossOver, **D3DMetal only**: the user says it's the only backend that runs the game)
+Goal: a steady 60 fps that looks great, without lowering image quality. Plan, sources and measurement sheet:
+`PERFORMANCE.md`. The Studio's **8 · Performance** tab sets the bottle variables (Metal HUD, MSync, D3DMetal cap) and
+AC.ini (full-rate cloth, VSync), with backups. Order of work:
+1. Metal HUD on, then measure.
+2. The CPU-side wins.
+3. Spend the GPU headroom on resolution and quality.
+4. Lock 60 (and set ProMotion displays to 60 Hz).
+5. ReShade loaded as d3d11.dll (untested).
+6. Optionally, a newer D3DMetal.
+
+First things to record from the Mac:
 - Mac model (chip and RAM), CrossOver version, bottle graphics backend (D3DMetal / DXVK / Auto), macOS version.
 - The game's in-game settings, and whether ReShade is actually loading (look for a `ReShade.log` next to ACS.exe).
 

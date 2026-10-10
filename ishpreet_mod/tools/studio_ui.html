@@ -200,6 +200,16 @@ code,pre,.mono{font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}pre{ba
     </div>
     <pre id="pfOut"></pre>
   </div>
+  <div class="card">
+    <h2>Bottle (D3DMetal): quit CrossOver first</h2>
+    <p class="hint">These write to the bottle's <code>cxbottle.conf</code> under <code>[EnvironmentVariables]</code>, with a backup in <code>out/bottle_backups/</code>. Start with the <b>Metal HUD</b>: it shows frame time against GPU time. If GPU time is well under frame time, the game is CPU-bound and you can raise resolution, shadows and AA for free (PERFORMANCE.md §2).</p>
+    <div class="row">
+      <div class="btns"><button class="b" onclick="bottleEnv({MTL_HUD_ENABLED:'1'})">Metal HUD on</button> <button class="b" onclick="bottleEnv({MTL_HUD_ENABLED:null})">off</button></div>
+      <div class="btns"><button class="b" onclick="bottleEnv({WINEMSYNC:'1'})">MSync on</button> <button class="b" onclick="bottleEnv({WINEMSYNC:null})">off</button></div>
+      <div class="btns"><button class="b" onclick="bottleEnv({D3DM_MAX_FPS:'60'})">D3DMetal cap 60</button> <button class="b" onclick="bottleEnv({D3DM_MAX_FPS:null})">remove</button></div>
+    </div>
+    <pre id="pfEnv"></pre>
+  </div>
   <div class="card"><h2>AC.ini</h2><div class="scroll"><table id="pfIni"><thead><tr><th>Section</th><th>Key</th><th>Value</th></tr></thead><tbody></tbody></table></div>
     <div class="row" style="margin-top:10px"><div class="btns"><button class="b p" onclick="perfSaveTable()">Save edited values</button></div></div></div>
 </section>
@@ -301,6 +311,8 @@ function perfTable(ini){const rows=[];for(const s in (ini||{}))for(const k in in
   $('pfIni').tBodies[0].innerHTML=rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td><input type="text" data-s="${esc(r[0])}" data-k="${esc(r[1])}" data-o="${esc(r[2])}" value="${esc(r[2])}"></td></tr>`).join('')||'<tr><td class="hint">no AC.ini loaded</td></tr>'}
 async function perfSet(set){const j=await api('perf_write',{set});if(j.error){$('pfOut').innerHTML=esc(j.error);return}
   $('pfOut').textContent=`saved ${JSON.stringify(set)}\nbackup: ${j.backup}`;perfTable(j.ini)}
+async function bottleEnv(set){const j=await api('bottle_env',{set});if(j.error){$('pfEnv').innerHTML=esc(j.error);return}
+  $('pfEnv').textContent=`saved ${JSON.stringify(set)} (null = removed)\nbackup: ${j.backup}\n\n`+j.env_lines.join('\n')}
 function perfSaveTable(){const set={};$('pfIni').querySelectorAll('input').forEach(i=>{if(i.value!==i.dataset.o){(set[i.dataset.s]=set[i.dataset.s]||{})[i.dataset.k]=i.value}});
   if(!Object.keys(set).length){$('pfOut').textContent='nothing changed';return}perfSet(set)}
 async function buildK25(){$('k25Out').textContent='Building…';const j=await api('build_k25',{},$('k25Btn'));
