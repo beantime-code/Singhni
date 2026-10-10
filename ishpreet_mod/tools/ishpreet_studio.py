@@ -982,6 +982,115 @@ def _write_parts(blobs, prefix):
     return written
 
 
+# ----------------------------------------------------------------------------------- performance (AC.ini, bottle)
+
+def _bottle_root():
+    d = CONFIG.get('syn_dir') or ''
+    while d and d != os.path.dirname(d):
+        if os.path.isdir(os.path.join(d, 'drive_c')):
+            return d
+        d = os.path.dirname(d)
+    return None
+
+
+def _ac_ini():
+    """AC.ini of Syndicate inside the bottle (Documents/Assassin's Creed Syndicate/AC.ini), any user name."""
+    root = _bottle_root()
+    if not root:
+        return None
+    users = os.path.join(root, 'drive_c', 'users')
+    for u in sorted(os.listdir(users)) if os.path.isdir(users) else []:
+        for docs in ('Documents', 'My Documents'):
+            base = os.path.join(users, u, docs)
+            if not os.path.isdir(base):
+                continue
+            for n in sorted(os.listdir(base)):
+                if 'syndicate' in n.lower():
+                    p = os.path.join(base, n, 'AC.ini')
+                    if os.path.isfile(p):
+                        return p
+    return None
+
+
+def _parse_ini(text):
+    sections, cur = {}, None
+    for line in text.splitlines():
+        s = line.strip()
+        if s.startswith('[') and s.endswith(']'):
+            cur = s[1:-1]
+            sections.setdefault(cur, {})
+        elif '=' in s and cur is not None and not s.startswith(';'):
+            k, v = s.split('=', 1)
+            sections[cur][k.strip()] = v.strip()
+    return sections
+
+
+def act_perf_read(a):
+    root = _bottle_root()
+    out = {'bottle': root, 'ac_ini': _ac_ini(), 'ini': None, 'bottle_conf': [], 'reshade': {}}
+    if out['ac_ini']:
+        out['ini'] = _parse_ini(open(out['ac_ini'], encoding='utf-8', errors='replace').read())
+    if root and os.path.isfile(os.path.join(root, 'cxbottle.conf')):
+        for line in open(os.path.join(root, 'cxbottle.conf'), encoding='utf-8', errors='replace'):
+            if re.search(r'^\s*\[|DXVK|D3DM|DXMT|METAL|MSYNC|ESYNC|SYNC|GRAPHICS|BACKEND|HUD|WINE', line, re.I):
+                out['bottle_conf'].append(line.rstrip())
+    sd = CONFIG.get('syn_dir') or ''
+    for n in ('dxgi.dll', 'd3d11.dll', 'ReShade.ini', 'ReShade.log', 'reshade-shaders', 'dxvk.conf'):
+        p = os.path.join(sd, n)
+        if os.path.exists(p):
+            out['reshade'][n] = os.path.getsize(p) if os.path.isfile(p) else 'folder'
+    log_p = os.path.join(sd, 'ReShade.log')
+    if os.path.isfile(log_p):
+        out['reshade_log_tail'] = open(log_p, encoding='utf-8', errors='replace').read()[-3000:]
+    out['reshade_verdict'] = ('ReShade.log present: ReShade loaded at least once (see the tail)' if 'ReShade.log' in
+                              out['reshade'] else ('ReShade files present but no ReShade.log: it is NOT loading'
+                                                   if out['reshade'] else 'ReShade not installed in the game folder'))
+    log('info', f"perf read: AC.ini {out['ac_ini']}, bottle {root}, reshade {out['reshade']}")
+    return out
+
+
+def act_perf_write(a):
+    """Set AC.ini keys ({section: {key: value}}), keeping every other line as it is. Backs the file up first."""
+    p = _ac_ini()
+    if not p:
+        raise ValueError('AC.ini not found in the bottle (start the game once so it creates it)')
+    raw = open(p, 'rb').read()
+    crlf = b'\r\n' in raw  # keep the game's own line endings
+    text = raw.decode('utf-8', errors='replace').replace('\r\n', '\n')
+    bdir = os.path.join(out_dir(), 'acini_backups')
+    os.makedirs(bdir, exist_ok=True)
+    backup = os.path.join(bdir, f"AC_{time.strftime('%Y%m%d_%H%M%S')}.ini")
+    with open(backup, 'wb') as f:
+        f.write(raw)
+    want = {s: dict(kv) for s, kv in (a.get('set') or {}).items()}
+    lines, cur, done = text.splitlines(), None, set()
+    out = []
+    for line in lines:
+        s = line.strip()
+        if s.startswith('[') and s.endswith(']'):
+            if cur in want:  # append keys this section didn't have yet
+                out += [f'{k}={v}' for k, v in want[cur].items() if (cur, k) not in done]
+                done |= {(cur, k) for k in want[cur]}
+            cur = s[1:-1]
+        elif '=' in s and cur in want:
+            k = s.split('=', 1)[0].strip()
+            if k in want[cur]:
+                line = f'{k}={want[cur][k]}'
+                done.add((cur, k))
+        out.append(line)
+    if cur in want:
+        out += [f'{k}={v}' for k, v in want[cur].items() if (cur, k) not in done]
+        done |= {(cur, k) for k in want[cur]}
+    for sec, kv in want.items():  # sections that did not exist
+        missing = [(k, v) for k, v in kv.items() if (sec, k) not in done]
+        if missing:
+            out += ['', f'[{sec}]'] + [f'{k}={v}' for k, v in missing]
+    with open(p, 'wb') as f:
+        f.write(('\r\n' if crlf else '\n').join(out).encode('utf-8') + (b'\r\n' if crlf else b'\n'))
+    log('info', f'AC.ini updated: {json.dumps(want)}; backup {backup}')
+    return {'ac_ini': p, 'backup': backup, 'ini': _parse_ini(open(p, encoding='utf-8').read())}
+
+
 def act_reveal(a):
     p = a.get('path') or out_dir()
     if sys.platform == 'darwin':

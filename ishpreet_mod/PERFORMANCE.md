@@ -85,9 +85,9 @@ reflections), keeping only those that hold the 1% low above about 55.
   ([MacGamers](https://macgamers.org/games/assassins-creed-syndicate)).
 
 ## 5. Next steps
-1. Studio: an **AC.ini** panel that finds the file in the bottle, backs it up, shows every setting, and toggles
-   `FlexibleMotionSimulationFPS`, VSync and the frame cap. Plus a **Bottle** panel that reads the current backend
-   and sync settings from the bottle's config.
+1. **Done:** Studio → **8 · Performance**. It reads `AC.ini` from the bottle, shows and edits every setting (with a
+   backup in `out/acini_backups/` and the line endings kept), and has one-click *Cloth at full frame rate* and *VSync
+   on*. It also shows the bottle's graphics and sync lines (read-only) and whether ReShade really loads.
 2. Run the test table (§2) on the Mac and fill it in.
 3. If CPU-bound on every backend: look at engine-side CPU costs that don't change the image, such as the
    streaming and LOD distances that trigger hitches during carriage rides, in AC.ini.

@@ -25,7 +25,8 @@ to roll back. Everything below lives in `ishpreet_mod/` (git: `beantime-code/Sin
   5. Bundle for Claude: under 28 MB; skeletons, Aveline skirt, sword clips, pipeline sources, log.
   6. Builds: **k25**.
   7. Sword: clip catalog, bone check, mapping plan, fight-data export, original-graph export.
-  8. Debug log: hex viewer, full tracebacks, also in `out/studio_log.txt`.
+  8. Performance: AC.ini editor with backups, cloth-60 and VSync toggles, bottle settings, ReShade check.
+  9. Debug log: hex viewer, full tracebacks, also in `out/studio_log.txt`.
 - **Tools behind it** (`tools/`, all tested):
   - `anvil_forge.py`: reader for Unity v1 and Syndicate v2 containers; lzo1x/lzo2a/lzo1c; chained pack tables; and
     `rebuild_pack`, which does same-size file replacement with zero-seeded Adler-32 block checksums.
