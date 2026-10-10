@@ -39,6 +39,7 @@ code,pre,.mono{font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}pre{ba
     <button data-t="bones">4 · Skeletons</button>
     <button data-t="bundle">5 · Bundle for Claude</button>
     <button data-t="builds">6 · Builds</button>
+    <button data-t="sword">7 · Sword</button>
     <button data-t="debug">Debug log</button>
   </nav>
   <span id="status"></span>
@@ -150,6 +151,31 @@ code,pre,.mono{font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}pre{ba
   </div>
 </section>
 
+<section id="sword">
+  <div class="card">
+    <h2>Unity sword → Syndicate</h2>
+    <p class="hint">Lists Arno's sword clips (Unity <code>DataPC.forge</code>) and the Syndicate clips they could replace (<code>DataPC_extra.forge</code>, pack NewDemo_DEV). The 2026-10-10 check found every bone the sword clips animate in Syndicate's base skeletons. Run <b>Check bones</b> on any clip to confirm it for that clip. Attacker and defender (<code>_Atk</code>/<code>_Dfn</code>) clips are linked: map both, or kills desync.</p>
+    <div class="row">
+      <div style="flex:0 0 150px"><label>Unity style</label><select id="swStyle"><option>Sword</option><option>Long</option><option>Heavy</option></select></div>
+      <div style="flex:0 0 150px"><label>Syndicate slots</label><select id="swTarget"><option>Cane</option><option>Knife</option><option>Knuckle</option></select></div>
+      <div><label>Filter (regex on name)</label><input type="text" id="swFilter" placeholder="e.g. Kill_Front|Atk_2m" oninput="swRender()"></div>
+      <div class="btns"><button class="b p" id="swLoad" onclick="swLoad()">Load clips</button></div>
+    </div>
+    <div id="swInfo" class="hint"></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h2>Unity clips <span id="swUCount" class="pill"></span></h2><div class="scroll"><table id="swU"><thead><tr><th>Clip</th><th>Family</th><th>Size</th><th></th></tr></thead><tbody></tbody></table></div><pre id="swCheck"></pre></div>
+    <div class="card"><h2>Syndicate slots <span id="swSCount" class="pill"></span></h2><div class="scroll"><table id="swS"><thead><tr><th>Clip</th><th>Family</th><th>Size</th></tr></thead><tbody></tbody></table></div></div>
+  </div>
+  <div class="card">
+    <h2>Mapping</h2>
+    <p class="hint">Select a Unity clip on the left (click its name), then a Syndicate slot on the right. Paired clips are added together automatically when both sides have a pair. <b>Save plan</b> writes <code>out/sword/sword_plan.json</code> and extracts the chosen Unity clips next to it, ready for AnvilToolkit's XML export/import step and for the cloud session.</p>
+    <table id="swMap"><thead><tr><th>Unity clip</th><th>→ Syndicate slot</th><th></th></tr></thead><tbody></tbody></table>
+    <div class="row" style="margin-top:10px"><div class="btns"><button class="b p" id="swSave" onclick="swSave()">Save plan</button></div></div>
+    <pre id="swPlanOut"></pre>
+  </div>
+</section>
+
 <section id="debug">
   <div class="card">
     <h2>Debug log</h2>
@@ -208,6 +234,33 @@ async function findFiles(){const a={game:$('ffGame').value,forge:$('ffForge').va
   $('ffInfo').innerHTML=`${j.hits.length} files across ${j.packs} packs`+(j.errors.length?` · <span class="warn">${j.errors.length} packs could not be decoded (listed in the Debug log and the bundle)</span>`:'');
   $('ffHits').tBodies[0].innerHTML=j.hits.map((h,i)=>`<tr><td>${esc(h.name)}</td><td>${esc(h.type_name||h.type)}</td><td>${mb(h.size)}</td><td>${esc(h.pack)}</td><td><button class="b" data-i="${i}">Extract</button></td></tr>`).join('')||'<tr><td>No matches</td></tr>';
   $('ffHits').tBodies[0].querySelectorAll('button').forEach(b=>b.onclick=async()=>{const h=j.hits[b.dataset.i];const r=await api('extract_file',{game:a.game,forge:a.forge,pack_id:h.pack_id,name:h.name},b);b.textContent=r.error?'failed':'✓ extracted'})}
+let SW={unity:[],syn:[],selU:null,map:[]};
+async function swLoad(){$('swInfo').textContent='Loading (the first time reads every pack of both forges)…';
+  const j=await api('sword_catalog',{style:$('swStyle').value,target:$('swTarget').value},$('swLoad'));
+  if(j.error){$('swInfo').innerHTML=errBox(j);return}SW.unity=j.unity;SW.syn=j.syn;$('swInfo').textContent=`${j.unity.length} Unity clips, ${j.syn.length} Syndicate slots`;swRender()}
+function swRender(){const rx=$('swFilter').value?new RegExp($('swFilter').value,'i'):null;
+  const U=SW.unity.filter(c=>!rx||rx.test(c.name)).slice(0,1500),S=SW.syn.filter(c=>!rx||rx.test(c.name)).slice(0,1500);
+  $('swUCount').textContent=U.length;$('swSCount').textContent=S.length;
+  $('swU').tBodies[0].innerHTML=U.map(c=>`<tr class="click${SW.selU===c.name?' sel':''}" data-n="${esc(c.name)}"><td>${esc(c.name)}${c.paired_with.length?' <span class="pill">pair</span>':''}</td><td>${c.family}</td><td>${mb(c.size)}</td><td><button class="b" data-chk="${esc(c.name)}">Check bones</button></td></tr>`).join('');
+  $('swS').tBodies[0].innerHTML=S.map(c=>`<tr class="click" data-n="${esc(c.name)}"><td>${esc(c.name)}${c.paired_with.length?' <span class="pill">pair</span>':''}</td><td>${c.family}</td><td>${mb(c.size)}</td></tr>`).join('');
+  $('swU').tBodies[0].querySelectorAll('tr').forEach(tr=>tr.onclick=e=>{if(e.target.dataset.chk)return;SW.selU=tr.dataset.n;swRender()});
+  $('swU').tBodies[0].querySelectorAll('button').forEach(b=>b.onclick=()=>swCheck(b.dataset.chk,b));
+  $('swS').tBodies[0].querySelectorAll('tr').forEach(tr=>tr.onclick=()=>swMapAdd(tr.dataset.n));
+  $('swMap').tBodies[0].innerHTML=SW.map.map((m,i)=>`<tr><td>${esc(m.unity)}</td><td>${esc(m.syn)}</td><td><button class="b" data-i="${i}">remove</button></td></tr>`).join('')||'<tr><td class="hint">nothing mapped yet</td></tr>';
+  $('swMap').tBodies[0].querySelectorAll('button').forEach(b=>b.onclick=()=>{SW.map.splice(+b.dataset.i,1);swRender()})}
+function swMapAdd(sName){if(!SW.selU){$('swPlanOut').textContent='Pick a Unity clip first (left table).';return}
+  const u=SW.unity.find(c=>c.name===SW.selU),s=SW.syn.find(c=>c.name===sName);SW.map.push({unity:u.name,syn:s.name});
+  // auto-pair: map the partner(s) too, matching _Atk->_Atk and _Dfn->_Dfn
+  for(const up of u.paired_with){const side=up.match(/_(Atk|Dfn)/)[1];const sp=s.paired_with.find(n=>n.includes('_'+side));
+    if(sp&&!SW.map.some(m=>m.unity===up))SW.map.push({unity:up,syn:sp})}
+  swRender()}
+async function swCheck(name,btn){const c=SW.unity.find(x=>x.name===name);$('swCheck').textContent='Checking '+name+'…';const j=await api('sword_check',{name:c.name,id:c.id,pack_id:c.pack_id},btn);
+  if(j.error){$('swCheck').innerHTML=esc(j.error);return}
+  $('swCheck').textContent=`${j.clip}\nbones animated: ${j.bones_animated}\nin Syndicate male skeleton: ${j.in_syndicate_male}${j.in_syndicate_female!==null?'\nin Syndicate female skeleton: '+j.in_syndicate_female:''}\n`+
+  (j.direct_port?'✓ every animated bone exists in Syndicate: direct port, no retarget':'✗ missing: '+[...j.missing_male,...(j.missing_female||[])].join(', '))}
+async function swSave(){const j=await api('sword_plan',{rows:SW.map,style:$('swStyle').value,target:$('swTarget').value},$('swSave'));
+  if(j.error){$('swPlanOut').innerHTML=esc(j.error);return}
+  $('swPlanOut').textContent=`saved ${j.plan.length} rows → out/sword/sword_plan.json\nextracted ${j.extracted.length} Unity clips\n`+(j.problems.length?'\n⚠ '+j.problems.join('\n⚠ '):'\n✓ no pairing problems')}
 async function buildK25(){$('k25Out').textContent='Building…';const j=await api('build_k25',{},$('k25Btn'));
   if(j.error){$('k25Out').innerHTML=esc(j.error)+'\n\n'+esc(j.traceback||'');return}
   $('k25Out').textContent=`✓ wrote ${j.written} (${mb(j.size)})\nrollback copy: ${j.rollback}\n`+

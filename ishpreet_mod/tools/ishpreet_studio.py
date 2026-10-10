@@ -486,6 +486,46 @@ BUNDLE_PLAN = [
 ]
 
 
+PIPELINE_TEXT = re.compile(r'\.(py|md|txt|json|log|csv)$', re.I)
+PIPELINE_MESH = re.compile(r'(k2[3-9]|k3\d).*\.(glb|gltf|log|png|jpg)$', re.I)
+
+
+def _bundle_pipeline(z, budget):
+    """The Mac-side build pipeline, so checks can be written against the real code and meshes:
+    acs_kit/ scripts, logs and docs (text, < 512 KB each), and the latest builds' GLB exports and logs."""
+    root = CONFIG.get('duleep_dir') or ''
+    if not os.path.isdir(root):
+        return {'error': f'Duleep_Files not found: {root}'}
+    picked, skipped, used = [], [], 0
+    cands = []
+    for dp, dns, fns in os.walk(root):
+        rel = os.path.relpath(dp, root)
+        dns[:] = [d for d in dns if d.lower() not in SKIP_DIRS and d not in ('out', 'ishpreet_mod', 'katar', 'Jacob')]
+        if rel.count(os.sep) > 3:
+            dns[:] = []
+        for fn in fns:
+            p = os.path.join(dp, fn)
+            r = os.path.relpath(p, root)
+            try:
+                size = os.path.getsize(p)
+            except OSError:
+                continue
+            in_kit = r.startswith('acs_kit') or os.sep not in r
+            if in_kit and PIPELINE_TEXT.search(fn) and size < 512 * 1024:
+                cands.append((0, size, r, p))
+            elif PIPELINE_MESH.search(fn) and size < 8 * 1024 * 1024:
+                cands.append((1, -os.path.getmtime(p), r, p))  # newest builds first
+    for prio, _, r, p in sorted(cands):
+        size = os.path.getsize(p)
+        if used + size > budget:
+            skipped.append(r)
+            continue
+        z.write(p, 'pipeline/' + r)
+        picked.append(r)
+        used += size
+    return {'files': len(picked), 'bytes': used, 'skipped_for_size': skipped[:200]}
+
+
 def act_bundle(a):
     """Build claude_bundle_<time>.zip: log, env, diagnostics, forge indexes and the BUNDLE_PLAN files (< 28 MB)."""
     t0 = time.time()
@@ -566,9 +606,12 @@ def act_bundle(a):
         report['known_bones'] = 'included'
     else:
         report['known_bones'] = f'missing: {known}'
-    k25 = os.path.join(out_dir(), 'k25', 'k25_report.json')
-    if os.path.isfile(k25):
-        z.write(k25, 'k25/k25_report.json')
+    for extra in (('k25', 'k25_report.json'), ('sword', 'sword_plan.json')):
+        p = os.path.join(out_dir(), *extra)
+        if os.path.isfile(p):
+            z.write(p, '/'.join(extra))
+    if a.get('pipeline', True):
+        report['pipeline'] = _bundle_pipeline(z, BUNDLE_LIMIT - 1024 * 1024 - used)
     report['seconds'] = round(time.time() - t0, 1)
     z.writestr('report.json', json.dumps(report, indent=1, default=str))
     with LOG_LOCK:
@@ -681,6 +724,142 @@ def act_build_k25(a):
     log('info', f"k25 built: {new_path} ({len(out)} B); colliders {report['colliders_before (Élise coat)']} -> "
                 f"{report['colliders_after (Aveline skirt)']}; installed == k23 file: {k23_same}")
     return report
+
+
+# ----------------------------------------------------------------------------------- Sword (Unity -> Syndicate)
+
+# most specific first: '_Atk' is also the attacker suffix of kills, so it is checked last
+SWORD_FAMILIES = ['Kill', 'PerfectParry', 'Parry', 'Counter', 'Combo', 'StrongAtk', 'Sig', 'Ground', 'Nonlethal',
+                  'ShoulderCharge', 'Unsheath', 'Sheath', 'Dodge', 'Idle', 'Strafe', 'Turn', 'Attack', 'Atk']
+
+
+def _family(name):
+    for k in SWORD_FAMILIES:
+        if f'_{k}' in name:
+            return k
+    return 'other'
+
+
+def _pair_key(name):
+    """Attacker/defender clips share a name up to _Atk/_Dfn: they must be ported (and swapped) together."""
+    m = re.match(r'(.*)_(Atk|Dfn)(_.*)?$', name)
+    return (m.group(1) + (m.group(3) or '')) if m else None
+
+
+def _skeleton_bones(game, forge_name, file_rx):
+    idx = forge_index(game, forge_name)
+    fg = forge(game, forge_name)
+    for p in idx['packs']:
+        for fid, ftype, nm, size in p['files']:
+            if ftype == '24AECB7C' and re.search(file_rx, nm):
+                for f in fg.pack_files(_pack(fg, p['id'])):
+                    if str(f['id']) == fid:
+                        b, mk = f['data'], struct.pack('<I', 0x95741049)
+                        out, i = set(), b.find(mk)
+                        while i != -1:
+                            out.add(struct.unpack_from('<I', b, i + 4)[0])
+                            i = b.find(mk, i + 4)
+                        return out
+    raise ValueError(f'skeleton {file_rx} not found in {forge_name}')
+
+
+def act_sword_catalog(a):
+    """Unity sword clips (player/shared xx_) and Syndicate cane/kukri/knuckle clips, with Atk/Dfn pairing."""
+    style = a.get('style') or 'Sword'
+    u_name = forge_names('unity').get('datapc.forge')
+    s_name = forge_names('syn').get('datapc_extra.forge')
+    if not u_name or not s_name:
+        raise ValueError('needs Unity DataPC.forge and Syndicate DataPC_extra.forge (Setup tab)')
+    ui, si = forge_index('unity', u_name), forge_index('syn', s_name)
+
+    def clips(idx, rx):
+        out = []
+        for p in idx['packs']:
+            for fid, ftype, nm, size in p['files']:
+                if ftype == '0FA3067F' and re.search(rx, nm):
+                    out.append({'name': nm, 'id': fid, 'size': size, 'pack': p['name'], 'pack_id': p['id'],
+                                'family': _family(nm), 'pair': _pair_key(nm)})
+        return out
+    unity = clips(ui, rf'^xx_Fight_{style}_')
+    target = a.get('target') or 'Cane'
+    syn = clips(si, rf'^ACVI_Fight_xx_{target}')
+    for lst in (unity, syn):
+        pairs = {}
+        for c in lst:
+            if c['pair']:
+                pairs.setdefault(c['pair'], []).append(c['name'])
+        for c in lst:
+            c['paired_with'] = [n for n in pairs.get(c['pair'], []) if n != c['name']] if c['pair'] else []
+    return {'unity': unity, 'syn': syn, 'unity_forge': u_name, 'syn_forge': s_name}
+
+
+def act_sword_check(a):
+    """Bone coverage of one Unity clip against Syndicate's male and female base skeletons."""
+    u_name, s_name = forge_names('unity')['datapc.forge'], forge_names('syn')['datapc_extra.forge']
+    ubones = _skeleton_bones('unity', u_name, r'^ACU_BaseSkeleton_Male$')
+    smale = _skeleton_bones('syn', s_name, r'^ACVI_CHR_SHR_Male$')
+    f14 = forge_names('syn').get('datapc_14_dlc.forge')
+    sfem = _skeleton_bones('syn', f14, r'^ACVI_CHR_SHR_Female$') if f14 else set()
+    fg = forge('unity', u_name)
+    data = None
+    for f in fg.pack_files(_pack(fg, a['pack_id'])):
+        if str(f['id']) == a['id']:
+            data = f['data']
+    if data is None:
+        raise ValueError('clip not found')
+    used = {h for h in ubones if struct.pack('<I', h) in data}
+    res = {'clip': a['name'], 'bones_animated': len(used), 'in_syndicate_male': len(used & smale),
+           'in_syndicate_female': len(used & sfem) if sfem else None,
+           'missing_male': [bone_name(h) for h in sorted(used - smale)],
+           'missing_female': [bone_name(h) for h in sorted(used - sfem)] if sfem else None}
+    res['direct_port'] = not res['missing_male'] and (not sfem or not res['missing_female'])
+    log('info', f"sword check {a['name']}: {len(used)} bones, male ok {len(used & smale)}, "
+                f"direct port: {res['direct_port']}")
+    return res
+
+
+def act_sword_plan(a):
+    """Save the Unity -> Syndicate slot mapping (pairs expanded) and extract the chosen Unity clips for the
+    AnvilToolkit XML step. Returns the plan."""
+    rows = a.get('rows') or []
+    if not rows:
+        raise ValueError('no rows: pick at least one Unity clip and a Syndicate slot')
+    cat = act_sword_catalog({'style': a.get('style'), 'target': a.get('target')})
+    u = {c['name']: c for c in cat['unity']}
+    s = {c['name']: c for c in cat['syn']}
+    plan, problems = [], []
+    for r in rows:
+        uc, sc = u.get(r['unity']), s.get(r['syn'])
+        if not uc or not sc:
+            problems.append(f"unknown clip in row {r}")
+            continue
+        plan.append({'unity': uc, 'syn': sc})
+        # a pair on one side needs its partner mapped too, or kills desync (katar m1 lesson)
+        if uc['paired_with'] and not sc['paired_with']:
+            problems.append(f"{uc['name']} has partner {uc['paired_with']} but slot {sc['name']} has none")
+        for partner in uc['paired_with']:
+            if partner not in [x['unity'] for x in rows]:
+                problems.append(f"{uc['name']}: its partner {partner} is not mapped")
+    d = os.path.join(out_dir(), 'sword')
+    os.makedirs(d, exist_ok=True)
+    fg = forge('unity', cat['unity_forge'])
+    written = []
+    for row in plan:
+        c = row['unity']
+        for f in fg.pack_files(_pack(fg, c['pack_id'])):
+            if str(f['id']) == c['id']:
+                fn = os.path.join(d, f"{safe(c['name'])}.0FA3067F.{c['id']}.bin")
+                with open(fn, 'wb') as o:
+                    o.write(f['data'])
+                written.append(fn)
+                break
+    out = {'plan': [{'unity': r['unity']['name'], 'unity_id': r['unity']['id'], 'syn_slot': r['syn']['name'],
+                     'syn_slot_id': r['syn']['id'], 'syn_pack': r['syn']['pack']} for r in plan],
+           'problems': problems, 'extracted': written}
+    with open(os.path.join(d, 'sword_plan.json'), 'w') as f:
+        json.dump(out, f, indent=1)
+    log('info' if not problems else 'WARN', f'sword plan: {len(plan)} rows, {len(problems)} problems')
+    return out
 
 
 def act_reveal(a):
