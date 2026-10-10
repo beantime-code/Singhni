@@ -169,30 +169,43 @@ class Forge:
             if len(block_b) < 48:
                 raise ValueError(f'pack table header points past the end of the file (offset {off_b}): '
                                  f'truncated or corrupt forge, or version {self.version} uses a different layout')
-            count, pad, idx_off, unk1, unk2, name_off, unk3 = struct.unpack('<iiQQQQQ', block_b)
+            count, pad, idx_off, nxt, unk2, name_off, unk3 = struct.unpack('<iiQqQQQ', block_b)
             self.diag.update(block_a_hex=block_a.hex(), off_b=off_b, block_b_hex=block_b.hex(), count=count,
-                             idx_off=idx_off, name_off=name_off, unk=[pad, unk1, unk2, unk3])
-            if not (0 < count < 10_000_000) or idx_off >= self.file_size or name_off >= self.file_size:
-                raise ValueError(f'implausible pack table (count {count}, index @{idx_off}, names @{name_off}); '
-                                 f'forge version {self.version} may use a different layout')
-            f.seek(idx_off)
-            idx = f.read(20 * count)
-            f.seek(name_off)
-            names = f.read(192 * count)
+                             idx_off=idx_off, name_off=name_off, unk=[pad, nxt, unk2, unk3])
+            # The pack table is a chain of blocks: header (count, ?, index table, next block, ?, name table, ?).
+            # All forges seen so far have one block (next = -1); further blocks are followed if present.
+            blocks, seen = [], set()
+            while True:
+                if not (0 < count < 10_000_000) or idx_off >= self.file_size or name_off >= self.file_size:
+                    raise ValueError(f'implausible pack table (count {count}, index @{idx_off}, names @{name_off}); '
+                                     f'forge version {self.version} may use a different layout')
+                f.seek(idx_off)
+                idx = f.read(20 * count)
+                f.seek(name_off)
+                blocks.append((count, idx, f.read(192 * count)))
+                seen.add(off_b)
+                if nxt <= 0 or nxt >= self.file_size or nxt in seen:
+                    break
+                off_b = nxt
+                f.seek(off_b)
+                count, pad, idx_off, nxt, unk2, name_off, unk3 = struct.unpack('<iiQqQQQ', f.read(48))
+            self.diag['blocks'] = len(blocks)
         self.packs = []
-        bad_size = bad_off = 0
-        for i in range(count):
-            data_off, pack_id, size = struct.unpack_from('<QQI', idx, 20 * i)
-            nsize, = struct.unpack_from('<I', names, 192 * i)
-            ptype, = struct.unpack_from('<I', names, 192 * i + 16)
-            name = names[192 * i + 44:192 * i + 172].split(b'\0', 1)[0].decode('utf-8', 'replace')
-            bad_size += nsize != size
-            bad_off += data_off + size > self.file_size
-            self.packs.append({'id': pack_id, 'offset': data_off, 'size': size, 'type': ptype, 'name': name})
+        bad_size = bad_off = total = 0
+        for count, idx, names in blocks:
+            for i in range(count):
+                data_off, pack_id, size = struct.unpack_from('<QQI', idx, 20 * i)
+                nsize, = struct.unpack_from('<I', names, 192 * i)
+                ptype, = struct.unpack_from('<I', names, 192 * i + 16)
+                name = names[192 * i + 44:192 * i + 172].split(b'\0', 1)[0].decode('utf-8', 'replace')
+                bad_size += nsize != size
+                bad_off += data_off + size > self.file_size
+                self.packs.append({'id': pack_id, 'offset': data_off, 'size': size, 'type': ptype, 'name': name})
+            total += count
         self.diag.update(size_mismatches=bad_size, out_of_file=bad_off)
-        if count and (bad_size > count // 10 or bad_off > count // 10):
+        if total and (bad_size > total // 10 or bad_off > total // 10):
             raise ValueError(f'pack table looks wrong: {bad_size} size mismatches, {bad_off} entries past end of '
-                             f'file out of {count}')
+                             f'file out of {total}')
 
     def raw_pack(self, p):
         with open(self.path, 'rb') as f:

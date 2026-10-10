@@ -52,27 +52,38 @@ def pack_blob(mode, files, cver=1):
     return section(mode, table, cver=cver) + section(mode, body, cver=cver)
 
 
-def build_forge(path, packs, cver=1):
+def build_forge(path, packs, cver=1, blocks=1):
+    """Synthetic forge. blocks=2 splits the pack table into two chained blocks (header 'next' pointer)."""
     blobs = [pack_blob(m, files, cver) for _, _, m, files in packs]
     n = len(packs)
+    groups = [list(range(n))] if blocks == 1 or n < 2 else [list(range(n // 2)), list(range(n // 2, n))]
     hdr_a = 64
-    off_b = 128
-    idx_off = 256
-    name_off = idx_off + 20 * n
-    data_off = name_off + 192 * n
+    heads = [128 + 64 * k for k in range(len(groups))]
+    tables = []
+    pos = 128 + 64 * len(groups)
+    for g in groups:
+        tables.append((pos, pos + 20 * len(g)))
+        pos += 212 * len(g)
+    data_off = pos
     buf = bytearray(data_off)
     buf[0:8] = b'scimitar'
     struct.pack_into('<iQ', buf, 9, 27, hdr_a)
-    struct.pack_into('<Q', buf, hdr_a + 36, off_b)
-    struct.pack_into('<iiQQQQQ', buf, off_b, n, 0, idx_off, 0, 0, name_off, 0)
-    pos = data_off
-    for i, ((pid, name, _, _), blob) in enumerate(zip(packs, blobs)):
-        struct.pack_into('<QQI', buf, idx_off + 20 * i, pos, pid, len(blob))
-        struct.pack_into('<I', buf, name_off + 192 * i, len(blob))
-        struct.pack_into('<I', buf, name_off + 192 * i + 16, 0x0FA3067F)
-        nb = name.encode()
-        buf[name_off + 192 * i + 44:name_off + 192 * i + 44 + len(nb)] = nb
-        pos += len(blob)
+    struct.pack_into('<Q', buf, hdr_a + 36, heads[0])
+    offs, p = [], data_off
+    for blob in blobs:
+        offs.append(p)
+        p += len(blob)
+    for k, g in enumerate(groups):
+        idx_off, name_off = tables[k]
+        nxt = heads[k + 1] if k + 1 < len(groups) else -1
+        struct.pack_into('<iiQqQQQ', buf, heads[k], len(g), 0, idx_off, nxt, 0, name_off, 0)
+        for j, i in enumerate(g):
+            pid, name, _, _ = packs[i]
+            struct.pack_into('<QQI', buf, idx_off + 20 * j, offs[i], pid, len(blobs[i]))
+            struct.pack_into('<I', buf, name_off + 192 * j, len(blobs[i]))
+            struct.pack_into('<I', buf, name_off + 192 * j + 16, 0x0FA3067F)
+            nb = name.encode()
+            buf[name_off + 192 * j + 44:name_off + 192 * j + 44 + len(nb)] = nb
     with open(path, 'wb') as f:
         f.write(bytes(buf) + b''.join(blobs))
 
@@ -89,6 +100,13 @@ def main():
     ]
     for cver in (1, 2):
         run(packs, cver)
+    with tempfile.TemporaryDirectory() as d:  # chained pack-table blocks
+        fp = os.path.join(d, 'C.forge')
+        build_forge(fp, packs, 2, blocks=2)
+        fg = af.Forge(fp)
+        assert [p['name'] for p in fg.packs] == [p[1] for p in packs] and fg.diag['blocks'] == 2, fg.diag
+        assert all(len(list(fg.pack_files(p))) == len(packs[i][3]) for i, p in enumerate(fg.packs))
+        print('ok  chained pack table: 2 blocks,', len(fg.packs), 'packs')
     rebuild_test(packs)
     print('all good')
 

@@ -905,6 +905,50 @@ def act_fight_export(a):
                 blobs.append((path, data))
         except Exception as e:
             log('ERROR', f'fight export {game}/{fb}: {e}\n{traceback.format_exc()}')
+    written = _write_parts(blobs, 'claude_fight')
+    log('info', f'fight export: {len(blobs)} files in {len(written)} parts, {time.time() - t0:.0f}s')
+    return {'parts': written, 'files': len(blobs), 'seconds': round(time.time() - t0, 1),
+            'summary': [{'path': p, 'size': len(d)} for p, d in blobs if len(d) > 1e6]}
+
+
+def _original_pack(game, forge_basename, index):
+    """A pack as it was before acs_kit relocated it: the relocation log in Duleep_Files keeps the original
+    20-byte index entry (offset, id, size), and relocation never overwrites the original bytes."""
+    path = os.path.join(CONFIG.get('duleep_dir') or '', f'{forge_basename}.reloc.json')
+    try:
+        entries = json.load(open(path))['entries']
+    except (OSError, ValueError, KeyError):
+        return None
+    for e in entries:
+        if e.get('index') == index:
+            off, fid, size = struct.unpack('<QQI', bytes.fromhex(e['oe']))
+            return {'id': fid, 'offset': off, 'size': size, 'type': 0, 'name': f'original_{index}'}
+    return None
+
+
+def act_original_graph_export(a):
+    """Syndicate's unmodded fight graph (before the katar edits), read from its pre-relocation location."""
+    real = forge_names('syn').get('datapc_extra.forge')
+    if not real:
+        raise ValueError('DataPC_extra.forge not found')
+    fg = forge('syn', real)
+    p = _original_pack('syn', 'DataPC_extra.forge', int(a.get('index', 6969)))
+    if p is None:
+        raise ValueError('no relocation entry for pack 6969 in Duleep_Files/DataPC_extra.forge.reloc.json: '
+                         'the installed graph is the original one, use Export fight data instead')
+    if p['offset'] + p['size'] > fg.file_size:
+        raise ValueError('the original bytes are past the end of the forge (it was truncated?)')
+    blobs = [(f"syn_original/{safe(f['name'])}.{f['type']:08X}.{f['id']}.bin", f['data'])
+             for f in fg.pack_files(p) if f['type'] == 0xC0C861CD]
+    if not blobs:
+        raise ValueError('no AtomGraph in the original pack')
+    written = _write_parts(blobs, 'claude_graph_original')
+    log('info', f'original graph export: {[len(d) for _, d in blobs]} bytes -> {len(written)} parts')
+    return {'parts': written, 'files': len(blobs)}
+
+
+def _write_parts(blobs, prefix):
+    """gzip each blob, split into <= 20 MB pieces, pack into zips under BUNDLE_LIMIT (manifest with sha256)."""
     manifest = {'files': [], 'created': time.strftime('%Y-%m-%d %H:%M:%S')}
     chunks = []  # (zip path, bytes) after gzip, split into <= 20 MB pieces
     for path, data in blobs:
@@ -915,8 +959,8 @@ def act_fight_export(a):
         for k in range(n):
             chunks.append((f'{path}.gz.{k:02d}', gz[k * 20 * 1024 * 1024:(k + 1) * 20 * 1024 * 1024]))
     parts, cur, cur_size = [], [], 0
-    for c in chunks:
-        if cur and cur_size + len(c[1]) > BUNDLE_LIMIT - 512 * 1024:
+    for c in chunks:  # 25 MB per part: the user's 2026-10-10 part 1 came out at 30.7 MB with the old 28 MB target
+        if cur and cur_size + len(c[1]) > 25 * 1000 * 1000:
             parts.append(cur)
             cur, cur_size = [], 0
         cur.append(c)
@@ -926,7 +970,7 @@ def act_fight_export(a):
     stamp = time.strftime('%Y%m%d_%H%M%S')
     written = []
     for i, part in enumerate(parts, 1):
-        path = os.path.join(out_dir(), f'claude_fight_{stamp}_part{i}of{len(parts)}.zip')
+        path = os.path.join(out_dir(), f'{prefix}_{stamp}_part{i}of{len(parts)}.zip')
         with zipfile.ZipFile(path, 'w', zipfile.ZIP_STORED) as z:
             for name, data in part:
                 z.writestr(name, data)
@@ -935,9 +979,7 @@ def act_fight_export(a):
                 with LOG_LOCK:
                     z.writestr('studio_log.txt', '\n'.join(LOG))
         written.append({'path': path, 'size': os.path.getsize(path)})
-    log('info', f'fight export: {len(blobs)} files in {len(parts)} parts, {time.time() - t0:.0f}s')
-    return {'parts': written, 'files': len(blobs), 'seconds': round(time.time() - t0, 1),
-            'summary': [{'path': m['path'], 'size': m['size']} for m in manifest['files'] if m['size'] > 1e6]}
+    return written
 
 
 def act_reveal(a):
