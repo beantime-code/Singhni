@@ -862,6 +862,84 @@ def act_sword_plan(a):
     return out
 
 
+# ----------------------------------------------------------------------------------- fight data export (multi-part)
+
+FIGHT_TYPES = {'C0C861CD': 'AtomGraph', '2E772CD8': 'UIEnumBinding', 'C69075AB': 'InventoryItemSettings',
+               '0F76DBDC': 'AvatarCustomizationManager'}
+FIGHT_NAME_RX = re.compile(r'Weapon|Fight|Sword|Cane|Kukri|Knife|Knuckle|Heavy|Long|Dagger|Gear|Inventory|Avatar',
+                           re.I)
+
+
+def _collect(game, forge_basename, want):
+    """want(pack_name, file_type, file_name, size) -> bool. Yields (path_in_zip, bytes)."""
+    real = forge_names(game).get(forge_basename.lower())
+    if not real:
+        log('WARN', f'fight export: {forge_basename} not found for {game}')
+        return
+    idx = forge_index(game, real)
+    fg = forge(game, real)
+    for p in idx['packs']:
+        hits = {fid for fid, ft, nm, sz in p['files'] if want(p['name'], ft, nm, sz)}
+        if not hits:
+            continue
+        for f in fg.pack_files(_pack(fg, p['id'])):
+            if str(f['id']) in hits:
+                yield (f"{game}/{safe(p['name'])}/{safe(f['name'])}.{f['type']:08X}.{f['id']}.bin", f['data'])
+
+
+def act_fight_export(a):
+    """Everything needed to work out how a fighting style is selected: both fight graphs, the weapon / inventory /
+    UI-binding / gear-tab records of both games, and Syndicate's leftover Sword/Long/Heavy clips. Written as
+    claude_fight_partN.zip files under 28 MB each (gzip inside; big files split across parts, sha256 in manifest)."""
+    t0 = time.time()
+    blobs = []
+    graph = lambda pn, ft, nm, sz: ft == 'C0C861CD' and nm.startswith('NewDemo')
+    settings = lambda pn, ft, nm, sz: pn == 'Game Bootstrap Settings' and (
+        ft in FIGHT_TYPES or (FIGHT_NAME_RX.search(nm) and sz < 2 * 1024 * 1024))
+    leftovers = lambda pn, ft, nm, sz: ft == '0FA3067F' and re.search(r'_Fight_(Sword|Long|Heavy)_|_xx_Heavy', nm)
+    for game, fb, want in (('syn', 'DataPC_extra.forge', graph), ('unity', 'DataPC.forge', graph),
+                           ('syn', 'DataPC.forge', settings), ('unity', 'DataPC.forge', settings),
+                           ('syn', 'DataPC_extra.forge', leftovers)):
+        try:
+            for path, data in _collect(game, fb, want):
+                blobs.append((path, data))
+        except Exception as e:
+            log('ERROR', f'fight export {game}/{fb}: {e}\n{traceback.format_exc()}')
+    manifest = {'files': [], 'created': time.strftime('%Y-%m-%d %H:%M:%S')}
+    chunks = []  # (zip path, bytes) after gzip, split into <= 20 MB pieces
+    for path, data in blobs:
+        gz = gzip.compress(data, 9)
+        n = (len(gz) + 20 * 1024 * 1024 - 1) // (20 * 1024 * 1024)
+        manifest['files'].append({'path': path, 'size': len(data), 'sha256': hashlib.sha256(data).hexdigest(),
+                                  'gz_parts': n})
+        for k in range(n):
+            chunks.append((f'{path}.gz.{k:02d}', gz[k * 20 * 1024 * 1024:(k + 1) * 20 * 1024 * 1024]))
+    parts, cur, cur_size = [], [], 0
+    for c in chunks:
+        if cur and cur_size + len(c[1]) > BUNDLE_LIMIT - 512 * 1024:
+            parts.append(cur)
+            cur, cur_size = [], 0
+        cur.append(c)
+        cur_size += len(c[1])
+    if cur:
+        parts.append(cur)
+    stamp = time.strftime('%Y%m%d_%H%M%S')
+    written = []
+    for i, part in enumerate(parts, 1):
+        path = os.path.join(out_dir(), f'claude_fight_{stamp}_part{i}of{len(parts)}.zip')
+        with zipfile.ZipFile(path, 'w', zipfile.ZIP_STORED) as z:
+            for name, data in part:
+                z.writestr(name, data)
+            if i == 1:
+                z.writestr('manifest.json', json.dumps(manifest, indent=1))
+                with LOG_LOCK:
+                    z.writestr('studio_log.txt', '\n'.join(LOG))
+        written.append({'path': path, 'size': os.path.getsize(path)})
+    log('info', f'fight export: {len(blobs)} files in {len(parts)} parts, {time.time() - t0:.0f}s')
+    return {'parts': written, 'files': len(blobs), 'seconds': round(time.time() - t0, 1),
+            'summary': [{'path': m['path'], 'size': m['size']} for m in manifest['files'] if m['size'] > 1e6]}
+
+
 def act_reveal(a):
     p = a.get('path') or out_dir()
     if sys.platform == 'darwin':

@@ -168,6 +168,12 @@ code,pre,.mono{font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}pre{ba
     <div class="card"><h2>Syndicate slots <span id="swSCount" class="pill"></span></h2><div class="scroll"><table id="swS"><thead><tr><th>Clip</th><th>Family</th><th>Size</th></tr></thead><tbody></tbody></table></div></div>
   </div>
   <div class="card">
+    <h2>Fight data for Claude (true 4th style)</h2>
+    <p class="hint">Exports both fight graphs (Syndicate and Unity <code>NewDemo_DEV</code>), the weapon type, inventory item, UI icon binding and gear-tab records from both games, and Syndicate's leftover Sword/Long/Heavy clips. Output: one or more <code>claude_fight_…_partNofM.zip</code> files (each under 28 MB). Send all parts. The first run indexes Syndicate's DataPC.forge and can take a few minutes.</p>
+    <button class="b p" id="fxBtn" onclick="fightExport()">Export fight data</button>
+    <div id="fxOut" style="margin-top:10px"></div>
+  </div>
+  <div class="card">
     <h2>Mapping</h2>
     <p class="hint">Select a Unity clip on the left (click its name), then a Syndicate slot on the right. Paired clips are added together automatically when both sides have a pair. <b>Save plan</b> writes <code>out/sword/sword_plan.json</code> and extracts the chosen Unity clips next to it, ready for AnvilToolkit's XML export/import step and for the cloud session.</p>
     <table id="swMap"><thead><tr><th>Unity clip</th><th>→ Syndicate slot</th><th></th></tr></thead><tbody></tbody></table>
@@ -261,6 +267,9 @@ async function swCheck(name,btn){const c=SW.unity.find(x=>x.name===name);$('swCh
 async function swSave(){const j=await api('sword_plan',{rows:SW.map,style:$('swStyle').value,target:$('swTarget').value},$('swSave'));
   if(j.error){$('swPlanOut').innerHTML=esc(j.error);return}
   $('swPlanOut').textContent=`saved ${j.plan.length} rows → out/sword/sword_plan.json\nextracted ${j.extracted.length} Unity clips\n`+(j.problems.length?'\n⚠ '+j.problems.join('\n⚠ '):'\n✓ no pairing problems')}
+async function fightExport(){$('fxOut').textContent='Working… (progress in the Debug log)';const j=await api('fight_export',{},$('fxBtn'));
+  if(j.error){$('fxOut').innerHTML=errBox(j);return}
+  $('fxOut').innerHTML=`<div class="ok">${j.files} files in ${j.parts.length} part(s), ${j.seconds}s</div>`+j.parts.map(p=>`<div class="mono">${esc(p.path)} (${mb(p.size)}) <button class="b" onclick='api("reveal",{path:${JSON.stringify(p.path)}})'>Show in Finder</button></div>`).join('')}
 async function buildK25(){$('k25Out').textContent='Building…';const j=await api('build_k25',{},$('k25Btn'));
   if(j.error){$('k25Out').innerHTML=esc(j.error)+'\n\n'+esc(j.traceback||'');return}
   $('k25Out').textContent=`✓ wrote ${j.written} (${mb(j.size)})\nrollback copy: ${j.rollback}\n`+
