@@ -7,6 +7,7 @@ Everything it does is logged (with full tracebacks) to <output folder>/studio_lo
 tab. "Bundle for Claude" packs the log, the forge header diagnostics and the small game files the cloud
 session needs (skeletons, a few sword clips, the Aveline skirt pack) into one zip under 28 MB.
 """
+import gzip
 import hashlib
 import io
 import json
@@ -82,11 +83,63 @@ def log(level, msg):
 
 BOTTLE_GLOBS = ['~/CXPBottles', '~/Library/Application Support/CrossOver/Bottles']
 GAME_DIRS = {'unity': "Assassin's Creed Unity", 'syn': "Assassin's Creed Syndicate"}
+# a forge that only that game has: identifies its folder whatever it is called
+MARKERS = {'unity': 'DataPC_ACU_Paris.forge', 'syn': 'DataPC_ACVI_London.forge'}
+SKIP_DIRS = {'windows', 'users', 'programdata', 'extracted', 'backups', 'dosdevices', '__pycache__', '.git'}
+
+
+def _is_game_dir(game, d):
+    try:
+        return os.path.isfile(os.path.join(d, MARKERS[game]))
+    except OSError:
+        return False
+
+
+def _walk_for(roots, max_depth=9):
+    """Folders under roots holding a marker forge (depth-limited, skips system and AnvilToolkit output dirs)."""
+    hits = {'unity': [], 'syn': []}
+    for root in roots:
+        root = os.path.expanduser(root)
+        if not os.path.isdir(root):
+            continue
+        base_depth = root.rstrip('/').count('/')
+        for dp, dns, fns in os.walk(root, followlinks=False):
+            if dp.count('/') - base_depth >= max_depth:
+                dns[:] = []
+            dns[:] = [d for d in dns if d.lower() not in SKIP_DIRS]
+            for game, marker in MARKERS.items():
+                if marker in fns and dp not in hits[game]:
+                    hits[game].append(dp)
+    return hits
+
+
+def _from_acs_kit():
+    """Game folders named in Duleep_Files/acs_kit/*.py (the path settings the earlier sessions used)."""
+    found = {'unity': [], 'syn': []}
+    kit = os.path.join(CONFIG.get('duleep_dir') or DEFAULTS['duleep_dir'], 'acs_kit')
+    if not os.path.isdir(kit):
+        return found
+    for fn in sorted(os.listdir(kit)):
+        if not fn.endswith('.py'):
+            continue
+        try:
+            text = open(os.path.join(kit, fn), encoding='utf-8', errors='replace').read()
+        except OSError:
+            continue
+        for s in re.findall(r'''["']([^"'\n]*/[^"'\n]*)["']''', text):  # any quoted path
+            p = os.path.abspath(os.path.expanduser(s))
+            for cand in (p, os.path.dirname(p), os.path.dirname(os.path.dirname(p))):
+                for game in ('unity', 'syn'):
+                    if _is_game_dir(game, cand) and cand not in found[game]:
+                        found[game].append(cand)
+    return found
 
 
 def detect():
-    """Look for the game folders inside CrossOver bottles, plus Duleep_Files."""
+    """Find the game folders: the usual launcher paths, then acs_kit's path settings, then a search of the
+    CrossOver bottles for a forge only that game has."""
     found = {'unity_dir': [], 'syn_dir': []}
+    t = time.time()
     for root in BOTTLE_GLOBS:
         root = os.path.expanduser(root)
         if not os.path.isdir(root):
@@ -98,9 +151,27 @@ def detect():
                          'drive_c/Program Files/Steam/steamapps/common']:
                 for key, name in GAME_DIRS.items():
                     p = os.path.join(root, bottle, base, name)
-                    if os.path.isdir(p):
+                    if os.path.isdir(p) and _is_game_dir(key, p):
                         found[f'{key}_dir'].append(p)
-    log('info', f'detect: {json.dumps(found)}')
+    # folder names vary ("Assassin s Creed Syndicate"): check every sibling of a found game folder for the marker
+    for key in ('unity_dir', 'syn_dir'):
+        for d in list(found['unity_dir'] + found['syn_dir']):
+            parent = os.path.dirname(d)
+            try:
+                for n in sorted(os.listdir(parent)):
+                    p = os.path.join(parent, n)
+                    if os.path.isdir(p) and _is_game_dir(key[:-4], p) and p not in found[key]:
+                        found[key].append(p)
+            except OSError:
+                pass
+    if not found['unity_dir'] or not found['syn_dir']:
+        for game, dirs in _from_acs_kit().items():
+            found[f'{game}_dir'] += [d for d in dirs if d not in found[f'{game}_dir']]
+    if not found['unity_dir'] or not found['syn_dir']:
+        hits = _walk_for(BOTTLE_GLOBS + ['~/Games', '~/Downloads', '/Applications'])
+        for game, dirs in hits.items():
+            found[f'{game}_dir'] += [d for d in dirs if d not in found[f'{game}_dir']]
+    log('info', f'detect ({time.time() - t:.1f}s): {json.dumps(found)}')
     return found
 
 
@@ -152,7 +223,11 @@ def act_set_config(a):
             CONFIG[k] = os.path.expanduser(str(a[k]).strip())
     save_config()
     log('info', f'config saved: {json.dumps(CONFIG)}')
-    return CONFIG
+    warnings = [f"{'Unity' if g == 'unity' else 'Syndicate'} folder has no {MARKERS[g]}: is it the game folder?"
+                for g in ('unity', 'syn') if not _is_game_dir(g, CONFIG.get(f'{g}_dir') or '')]
+    for w in warnings:
+        log('WARN', w)
+    return dict(CONFIG, warnings=warnings)
 
 
 def act_detect(_):
@@ -301,36 +376,98 @@ def act_log(a):
         return {'lines': LOG[since:], 'next': len(LOG)}
 
 
-# Files the cloud session needs, in priority order: (label, game, forge candidates, pack regex, file regex)
+def forge_index(game, name, progress=True):
+    """File-level index of a forge: every pack's files (id, type, name, size). Built once by decompressing every
+    pack, then cached in <out>/index/. Packs that fail to decode are listed under 'errors'."""
+    path = os.path.join(game_dir(game), os.path.basename(name))
+    st = os.stat(path)
+    cache = os.path.join(out_dir(), 'index', f'{game}__{safe(name)}__{st.st_size}_{int(st.st_mtime)}.json.gz')
+    if os.path.isfile(cache):
+        with gzip.open(cache, 'rt') as f:
+            return json.load(f)
+    fg = forge(game, name)
+    t = time.time()
+    idx = {'forge': name, 'size': st.st_size, 'version': fg.version, 'packs': [], 'errors': []}
+    for i, p in enumerate(fg.packs):
+        try:
+            files = [[str(f['id']), f"{f['type']:08X}", f['name'], len(f['data'])] for f in fg.pack_files(p)]
+            idx['packs'].append({'id': str(p['id']), 'name': p['name'], 'sections': list(af.LAST_SECTIONS),
+                                 'files': files})
+        except Exception as e:
+            idx['errors'].append({'pack': p['name'], 'id': str(p['id']), 'error': f'{type(e).__name__}: {e}',
+                                  'sections': list(af.LAST_SECTIONS), 'head': fg.raw_pack(p)[:64].hex()})
+        if progress and i and i % 200 == 0:
+            log('info', f'indexing {name}: {i}/{len(fg.packs)} packs, {time.time() - t:.0f}s')
+    idx['seconds'] = round(time.time() - t, 1)
+    os.makedirs(os.path.dirname(cache), exist_ok=True)
+    with gzip.open(cache, 'wt') as f:
+        json.dump(idx, f)
+    log('info' if not idx['errors'] else 'WARN',
+        f"indexed {name}: {len(idx['packs'])} packs, {sum(len(p['files']) for p in idx['packs'])} files, "
+        f"{len(idx['errors'])} packs failed, {idx['seconds']}s")
+    return idx
+
+
+def act_find_files(a):
+    """File-name search inside the packs of one forge (builds the forge's index the first time)."""
+    rx = re.compile(a['grep'], re.I)
+    idx = forge_index(a['game'], a['forge'])
+    hits = []
+    for p in idx['packs']:
+        for fid, ftype, fname, size in p['files']:
+            if rx.search(fname):
+                hits.append({'pack': p['name'], 'pack_id': p['id'], 'id': fid, 'type': ftype,
+                             'type_name': TYPE_NAMES.get(int(ftype, 16), ''), 'name': fname, 'size': size})
+                if len(hits) >= 2000:
+                    break
+    return {'hits': hits, 'packs': len(idx['packs']), 'errors': idx['errors'][:50], 'seconds': idx.get('seconds')}
+
+
+def act_extract_file(a):
+    fg = forge(a['game'], a['forge'])
+    p = _pack(fg, a['pack_id'])
+    w = extract_pack(fg, p, os.path.join(out_dir(), 'extracted', a['game']), f"^{re.escape(a['name'])}$")
+    log('info', f"extracted {a['name']} from {p['name']}")
+    return {'written': w}
+
+
+# What the cloud session needs: (label, game, forge candidates in order, file-name regex, max files)
 BUNDLE_PLAN = [
-    ('Unity male skeleton', 'unity', ['DataPC_10_dlc.forge', 'DataPC.forge'], r'^ACU_BaseSkeleton_Male$', None),
-    ('Unity female skeleton', 'unity', ['DataPC_ACU_Paris.forge', 'DataPC.forge'], r'^ACU_BaseSkeleton_Female$', None),
-    ('Syndicate male skeleton', 'syn', ['DataPC_extra.forge', 'DataPC_20_dlc.forge'], r'^ACVI_CHR_SHR_Male$', None),
-    ('Syndicate female skeleton', 'syn', ['DataPC_14_dlc.forge', 'DataPC_ACVI_London.forge'], r'^ACVI_CHR_SHR_Female$', None),
-    ('Aveline skirt pack', 'syn', ['DataPC_14_dlc.forge'], r'^ACVI_CHR_P_EvieFrye_Outfit09_Aveline_Skirt_LOD0$', None),
-    ('Aveline outfit skeleton', 'syn', ['DataPC_14_dlc.forge'], r'^ACVI_CHR_P_EvieFrye_Outfit09_Aveline_Body$', None),
-    ('Elise outfit skeleton', 'syn', ['DataPC_14_dlc.forge'], r'^ACVI_CHR_P_EvieFrye_Outfit08_Elise_Body$', None),
-    ('Unity sword attack', 'unity', ['DataPC.forge'], r'^xx_Fight_Sword_Atk_1m_Front_01$', None),
-    ('Unity sword kill (Atk)', 'unity', ['DataPC.forge'], r'^xx_Fight_Sword_Kill_Front_01_Atk$', None),
-    ('Unity sword kill (Dfn)', 'unity', ['DataPC.forge'], r'^xx_Fight_Sword_Kill_Front_01_Dfn$', None),
+    ('Unity male skeleton', 'unity', ['DataPC.forge', 'DataPC_10_dlc.forge'], r'^ACU_BaseSkeleton_Male$', 1),
+    ('Unity female skeleton', 'unity', ['DataPC_TitleScreenFPP.forge', 'DataPC.forge'], r'^ACU_BaseSkeleton_Female$', 1),
+    ('Unity sword attack', 'unity', ['DataPC.forge'], r'^xx_Fight_Sword_Atk_2m_Front_01$', 1),
+    ('Unity sword kill (Atk + Dfn)', 'unity', ['DataPC.forge'], r'^xx_Fight_Sword_Kill_Front_01_(Atk|Dfn)$', 2),
+    ('Unity sword combo finisher', 'unity', ['DataPC.forge'], r'^xx_Fight_Sword_Combo_Finisher_Right_01$', 1),
+    ('Syndicate female skeleton', 'syn', ['DataPC_14_dlc.forge'], r'^ACVI_CHR_SHR_Female$', 1),
+    ('Syndicate male skeleton', 'syn', ['DataPC_extra.forge', 'DataPC_20_dlc.forge', 'DataPC_14_dlc.forge'],
+     r'^ACVI_CHR_SHR_Male$', 1),
+    ('Aveline skirt: mesh, cloth, settings, ragdoll', 'syn', ['DataPC_14_dlc.forge'],
+     r'^ACVI_CHR_P_EvieFrye_Outfit09_Aveline_Skirt_(LOD0|Cloth|ClothSettings|LiteRagdoll)$', 6),
+    ('Aveline leg ball joints', 'syn', ['DataPC_14_dlc.forge'],
+     r'^ACVI_CHR_P_EvieFrye_Outfit09_Aveline_(LeftLeg|RightLeg)_BallJointCommonData$', 2),
+    ('Aveline outfit skeleton', 'syn', ['DataPC_14_dlc.forge'], r'^ACVI_CHR_P_EvieFrye_Outfit09_Aveline_Body$', 1),
+    ('Elise outfit skeleton', 'syn', ['DataPC_14_dlc.forge'], r'^ACVI_CHR_P_EvieFrye_Outfit08_Elise_Body$', 1),
+    ('Syndicate cane kill clip (format comparison)', 'syn', ['DataPC_14_dlc.forge'],
+     r'^ACVI_Fight_xx_CaneHB_MultiKill_Vs2_12-3_Init_Left_V02_Atk$', 1),
 ]
 
 
 def act_bundle(a):
-    """Build claude_bundle_<time>.zip: log, env, diagnostics and the BUNDLE_PLAN files, capped at 28 MB."""
+    """Build claude_bundle_<time>.zip: log, env, diagnostics, forge indexes and the BUNDLE_PLAN files (< 28 MB)."""
     t0 = time.time()
     report = {'env': act_env({}), 'items': [], 'forges': {}}
     zbuf = io.BytesIO()
     z = zipfile.ZipFile(zbuf, 'w', zipfile.ZIP_DEFLATED)
-    budget = BUNDLE_LIMIT - 2 * 1024 * 1024  # keep room for log + report
+    budget = BUNDLE_LIMIT - 4 * 1024 * 1024  # keep room for log, report and indexes
     used = 0
+    indexed = {}
     for game in ('unity', 'syn'):
         try:
             report['forges'][game] = list_forges(game)
         except Exception as e:
             report['forges'][game] = {'error': str(e)}
-    for label, game, forges, pack_rx, file_rx in BUNDLE_PLAN:
-        item = {'label': label, 'status': 'not found'}
+    for label, game, forges, file_rx, max_files in BUNDLE_PLAN:
+        item = {'label': label, 'status': 'not found', 'tried': []}
         report['items'].append(item)
         try:
             names = {f['name'].lower(): f['name'] for f in list_forges(game)}
@@ -339,43 +476,56 @@ def act_bundle(a):
             continue
         for fname in forges:
             if fname.lower() not in names:
+                item['tried'].append(f'{fname}: not installed')
                 continue
+            real = names[fname.lower()]
             try:
-                fg = forge(game, names[fname.lower()])
+                fg = forge(game, real)
+                idx = indexed.get((game, real)) or forge_index(game, real)
+                indexed[(game, real)] = idx
             except Exception as e:
                 item.update(status='forge error', forge=fname, error=str(e))
                 log('ERROR', f'bundle: open {fname}: {e}\n{traceback.format_exc()}')
                 head_name = f'raw/{safe(fname)}.head4k.bin'
                 if head_name not in z.namelist():  # the header bytes are what's needed to fix the parser
-                    with open(os.path.join(game_dir(game), names[fname.lower()]), 'rb') as fh:
+                    with open(os.path.join(game_dir(game), real), 'rb') as fh:
                         z.writestr(head_name, fh.read(4096))
                 continue
             report['forges'].setdefault('diag', {})[fname] = fg.diag
-            packs = [p for p in fg.packs if re.search(pack_rx, p['name'])]
-            if not packs:
-                item.update(status='pack not in forge', forge=fname)
+            wanted = [(p, fl) for p in idx['packs'] for fl in p['files'] if re.search(file_rx, fl[2])][:max_files]
+            if not wanted:
+                item['tried'].append(f"{fname}: no matching file in {len(idx['packs'])} packs")
                 continue
-            p = packs[0]
-            try:
-                files = [f for f in fg.pack_files(p) if not file_rx or re.search(file_rx, f['name'])]
-            except Exception as e:
-                raw = fg.raw_pack(p)
-                z.writestr(f"raw/{safe(fname)}/{safe(p['name'])}.pack_head.bin", raw[:4096])
-                item.update(status='decode error', forge=fname, pack=p['name'], error=str(e),
-                            sections=list(af.LAST_SECTIONS), traceback=traceback.format_exc())
-                log('ERROR', f"bundle: {label}: {e}\n{traceback.format_exc()}")
-                break
-            size = sum(len(f['data']) for f in files)
-            if used + size > budget:
-                item.update(status='skipped: over size budget', forge=fname, pack=p['name'], size=size)
-                break
-            for f in files:
-                z.writestr(f"files/{game}/{safe(p['name'])}/{safe(f['name'])}.{f['type']:08X}.{f['id']}.bin",
-                           f['data'])
-            used += size
-            item.update(status='ok', forge=fname, pack=p['name'], pack_id=str(p['id']), files=len(files),
-                        size=size, sections=list(af.LAST_SECTIONS))
+            got = []
+            for p_entry, (fid, ftype, nm, size) in wanted:
+                if used + size > budget:
+                    item.update(status='skipped: over size budget', size=size)
+                    break
+                p = _pack(fg, p_entry['id'])
+                for f in fg.pack_files(p):
+                    if str(f['id']) == fid:
+                        z.writestr(f"files/{game}/{safe(p['name'])}/{safe(nm)}.{ftype}.{fid}.bin", f['data'])
+                        used += size
+                        got.append({'name': nm, 'type': ftype, 'id': fid, 'size': size, 'pack': p['name']})
+                        break
+            if got:
+                item.update(status='ok', forge=fname, files=got)
             break
+    report['indexes'] = {}
+    for (game, real), idx in indexed.items():  # the indexes let the cloud session find anything else later
+        blob = gzip.compress(json.dumps(idx).encode(), 9)
+        if used + len(blob) < BUNDLE_LIMIT - 1024 * 1024:
+            z.writestr(f'index/{game}__{safe(real)}.json.gz', blob, zipfile.ZIP_STORED)
+            used += len(blob)
+            report['indexes'][real] = f'included ({len(blob) // 1024} KB)'
+        else:
+            report['indexes'][real] = f'left out: {len(blob) // 1024} KB would pass the size limit'
+    known = os.path.join(CONFIG.get('duleep_dir', ''), 'Evie', 'elise_skel_bones.json')
+    if os.path.isfile(known):
+        z.write(known, 'files/elise_skel_bones.json')
+        report['known_bones'] = 'included'
+    else:
+        report['known_bones'] = f'missing: {known}'
     known = os.path.join(CONFIG.get('duleep_dir', ''), 'Evie', 'elise_skel_bones.json')
     if os.path.isfile(known):
         z.write(known, 'files/elise_skel_bones.json')
@@ -458,10 +608,12 @@ def main():
     load_config()
     log('info', f'Ishpreet Studio {VERSION}, python {sys.version.split()[0]}, {platform.platform()}, '
                 f'LZO backend: {af.lzo_backend()}')
-    if not CONFIG.get('unity_dir') or not CONFIG.get('syn_dir'):
+    bad = [k for k in ('unity_dir', 'syn_dir') if not _is_game_dir(k[:-4], CONFIG.get(k) or '')]
+    if bad:  # empty, or saved earlier but not actually that game's folder
         found = detect()
-        for k in ('unity_dir', 'syn_dir'):
-            if not CONFIG.get(k) and found[k]:
+        for k in bad:
+            if found[k]:
+                log('info', f'{k}: {CONFIG.get(k)!r} -> {found[k][0]!r}')
                 CONFIG[k] = found[k][0]
         save_config()
     srv = None

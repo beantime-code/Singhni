@@ -99,6 +99,18 @@ code,pre,.mono{font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}pre{ba
     </div>
   </div>
   <div class="card"><div class="scroll"><table id="hits"><thead><tr><th>Forge</th><th>Pack</th><th>Size</th><th>ID</th></tr></thead><tbody></tbody></table></div><div id="searchErr" class="hint"></div></div>
+  <div class="card">
+    <h2>Find a file inside one forge</h2>
+    <p class="hint">Files often live inside packs with other names (for example, one Unity pack holds thousands of animations). The first search in a forge reads every pack and saves an index, so later searches are instant.</p>
+    <div class="row">
+      <div style="flex:0 0 160px"><label>Game</label><select id="ffGame" onchange="loadFfForges()"><option value="unity">Unity</option><option value="syn">Syndicate</option></select></div>
+      <div><label>Forge</label><select id="ffForge"></select></div>
+      <div><label>File name (regex)</label><input type="text" id="ffGrep" placeholder="e.g. ^xx_Fight_Sword_Kill"></div>
+      <div class="btns"><button class="b p" id="ffBtn" onclick="findFiles()">Find</button></div>
+    </div>
+    <div id="ffInfo" class="hint"></div>
+    <div class="scroll"><table id="ffHits"><thead><tr><th>File</th><th>Type</th><th>Size</th><th>Pack</th><th></th></tr></thead><tbody></tbody></table></div>
+  </div>
 </section>
 
 <section id="bones">
@@ -152,10 +164,10 @@ async function api(name,args={},btn){if(btn)btn.disabled=true;$('status').textCo
   catch(e){$('status').textContent='⚠ lost connection to Studio: is its window still open?';throw e}finally{if(btn)btn.disabled=false}}
 function errBox(j){return `<div class="bad"><b>${esc(j.error)}</b></div><pre>${esc(j.traceback||'')}</pre>`}
 document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button,section').forEach(x=>x.classList.remove('on'));b.classList.add('on');$(b.dataset.t).classList.add('on');
-  if(b.dataset.t==='browse'&&!$('bForge').options.length)loadForges();if(b.dataset.t==='bones')loadExtracted()});
+  if(b.dataset.t==='browse'&&!$('bForge').options.length)loadForges();if(b.dataset.t==='search'&&!$('ffForge').options.length)loadFfForges();if(b.dataset.t==='bones')loadExtracted()});
 async function env(){const j=await api('env');$('envOut').textContent=JSON.stringify(j,null,1);for(const k of ['unity_dir','syn_dir','duleep_dir','out_dir'])$(k).value=j.config[k]||'';
   if(!$('boneKnown').value&&j.config.duleep_dir)$('boneKnown').value=j.config.duleep_dir+'/Evie/elise_skel_bones.json'}
-async function saveCfg(){const a={};for(const k of ['unity_dir','syn_dir','duleep_dir','out_dir'])a[k]=$(k).value;const j=await api('set_config',a);if(!j.error){$('detectOut').innerHTML='<span class="ok">Saved.</span>';$('bForge').innerHTML='';env()}}
+async function saveCfg(){const a={};for(const k of ['unity_dir','syn_dir','duleep_dir','out_dir'])a[k]=$(k).value;const j=await api('set_config',a);if(!j.error){$('detectOut').innerHTML='<span class="ok">Saved.</span>'+(j.warnings||[]).map(w=>`<div class="warn">${esc(w)}</div>`).join('');$('bForge').innerHTML='';env()}}
 async function detectDirs(){const j=await api('detect');let h='';for(const k of ['unity_dir','syn_dir']){if(j[k]&&j[k].length){$(k).value=j[k][0];h+=`<div class="ok">Found ${k==='unity_dir'?'Unity':'Syndicate'}: ${esc(j[k][0])}</div>`}else h+=`<div class="warn">${k==='unity_dir'?'Unity':'Syndicate'} not found in CrossOver bottles: paste its folder path.</div>`}$('detectOut').innerHTML=h+'<div>Click Save to keep these.</div>'}
 async function selftest(){const j=await api('selftest');if(j.error){$('selftestOut').innerHTML=errBox(j);return}
   $('selftestOut').innerHTML=j.results.map(r=>`<div class="${r.ok?'ok':'bad'}">${r.ok?'✓':'✗'} ${esc(r.backend)} decoder: ${r.files} files in ${r.seconds}s</div>`).join('')+(j.results.some(r=>r.backend==='liblzo2')?'':'<div class="hint">Using the built-in decoder. It works, but runs about 10x slower than Homebrew\'s lzo (optional).</div>')}
@@ -179,15 +191,22 @@ async function searchAll(){$('hits').tBodies[0].innerHTML='<tr><td>Searching…<
   if(j.error){$('hits').tBodies[0].innerHTML='';$('searchErr').innerHTML=errBox(j);return}
   $('hits').tBodies[0].innerHTML=j.hits.map(h=>`<tr><td>${esc(h.forge)}</td><td>${esc(h.name)}</td><td>${mb(h.size)}</td><td class="mono">${h.id}</td></tr>`).join('')||'<tr><td>No matches</td></tr>';
   $('searchErr').innerHTML=j.errors.length?`<span class="warn">${j.errors.length} forges could not be read (see Debug log)</span>`:''}
+async function loadFfForges(){const j=await api('forges',{game:$('ffGame').value});if(j.error){$('ffInfo').innerHTML=errBox(j);return}
+  $('ffForge').innerHTML=j.forges.map(f=>`<option value="${esc(f.name)}">${esc(f.name)} (${mb(f.size)})</option>`).join('')}
+async function findFiles(){const a={game:$('ffGame').value,forge:$('ffForge').value,grep:$('ffGrep').value};$('ffInfo').textContent='Searching… the first search in a forge reads every pack (watch the Debug log for progress)';
+  const j=await api('find_files',a,$('ffBtn'));if(j.error){$('ffInfo').innerHTML=errBox(j);return}
+  $('ffInfo').innerHTML=`${j.hits.length} files across ${j.packs} packs`+(j.errors.length?` · <span class="warn">${j.errors.length} packs could not be decoded (listed in the Debug log and the bundle)</span>`:'');
+  $('ffHits').tBodies[0].innerHTML=j.hits.map((h,i)=>`<tr><td>${esc(h.name)}</td><td>${esc(h.type_name||h.type)}</td><td>${mb(h.size)}</td><td>${esc(h.pack)}</td><td><button class="b" data-i="${i}">Extract</button></td></tr>`).join('')||'<tr><td>No matches</td></tr>';
+  $('ffHits').tBodies[0].querySelectorAll('button').forEach(b=>b.onclick=async()=>{const h=j.hits[b.dataset.i];const r=await api('extract_file',{game:a.game,forge:a.forge,pack_id:h.pack_id,name:h.name},b);b.textContent=r.error?'failed':'✓ extracted'})}
 async function loadExtracted(){const j=await api('extracted');const opts='<option value="">-</option>'+(j.files||[]).filter(f=>/24AECB7C|Skeleton|Body/i.test(f)).map(f=>`<option value="${esc(f)}">${esc(f.split('/extracted/')[1]||f)}</option>`).join('');$('boneA').innerHTML=opts;$('boneB').innerHTML=opts}
 async function bones(){const j=await api('bones',{a:$('boneA').value,b:$('boneB').value,known:$('boneKnown').value});
   if(j.error){$('bonesOut').innerHTML=esc(j.error);return}let s=`A: ${j.a_bones} bones (hash offset ${j.offset})\n`;
   if('known' in j)s+=`validation: ${j.known_found}/${j.known} known bones found (${j.known_pct}%) → ${j.trusted?'TRUSTED':'NOT trusted, send a bundle'}\n`;
   if('shared' in j)s+=`B: ${j.b_bones} bones\nshared ${j.shared}; only in A ${j.only_a.length}; only in B ${j.only_b.length}\nA bones present in B: ${j.a_in_b_pct}%\nonly in A: ${j.only_a.join(' ')}\n`;$('bonesOut').textContent=s}
-async function bundle(){$('bundleOut').innerHTML='Working… (the first run opens several large forges and can take a minute)';const j=await api('bundle',{},$('bundleBtn'));
+async function bundle(){$('bundleOut').innerHTML='Working… The first run reads every pack of the forges it needs and saves an index, which can take a few minutes. Progress shows in the Debug log.';const j=await api('bundle',{},$('bundleBtn'));
   if(j.error){$('bundleOut').innerHTML=errBox(j);return}
   $('bundleOut').innerHTML=`<div class="${j.size<28e6?'ok':'bad'}"><b>${esc(j.path)}</b> (${mb(j.size)})</div><button class="b" style="margin:8px 0" onclick='api("reveal",{path:${JSON.stringify(j.path)}})'>Show in Finder</button>`+
-  '<table><thead><tr><th>Item</th><th>Status</th><th>Forge / pack</th></tr></thead><tbody>'+j.items.map(i=>`<tr><td>${esc(i.label)}</td><td class="${i.status==='ok'?'ok':'warn'}">${esc(i.status)}${i.error?'<br><span class="bad">'+esc(i.error)+'</span>':''}</td><td>${esc(i.forge||'')}<br>${esc(i.pack||'')}</td></tr>`).join('')+'</tbody></table>'}
+  '<table><thead><tr><th>Item</th><th>Status</th><th>Forge / files</th></tr></thead><tbody>'+j.items.map(i=>`<tr><td>${esc(i.label)}</td><td class="${i.status==='ok'?'ok':'warn'}">${esc(i.status)}${i.error?'<br><span class="bad">'+esc(i.error)+'</span>':''}</td><td>${esc(i.forge||'')}<br>${esc((i.files||[]).map(f=>f.name+' ('+mb(f.size)+')').join(', ')||(i.tried||[]).join('; '))}</td></tr>`).join('')+'</tbody></table>'}
 async function pollLog(){const j=await fetch('/api/log',{method:'POST',headers:{'X-Token':TOKEN},body:JSON.stringify({since:logNext})}).then(r=>r.json()).catch(()=>null);if(!j)return;
   if(j.lines.length){const el=$('log');el.textContent+=j.lines.join('\n')+'\n';el.scrollTop=el.scrollHeight}logNext=j.next}
 function copyLog(){navigator.clipboard.writeText($('log').textContent)}
