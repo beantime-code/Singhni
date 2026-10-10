@@ -65,6 +65,15 @@ Serialization facts (verified):
 - **`UIEnumBinding WeaponType`** (`2e772cd8`) maps each class value to an icon reference and a localised name. Heavy
   (2) and Long (3) still point at Unity-era icons. Retargeting them is a data edit (pack 114, in place).
 
+## 3b. Original (unmodded) graph, received 2026-10-10 12:07 UTC
+- **It verifies:** 52,770,997 B, same size as the installed one. The two differ in **1,459 bytes** (the katar
+  reference swaps).
+- **Clip references:** 55,879, of which **325 are knuckle clips** (11 in the installed graph), plus 1,235 kukri
+  (`Knife`) and 229 cane.
+- **Even in the original, no weapon-value condition is enriched near any of the three families.** The strongest
+  pairs are generic fight states (`AttackState`, `PostHurtAction`, `MainCharacterDescriptorTypeInteraction`). So the
+  style is chosen above the clip level (state-machine structure) or by code. The structural parser decides which.
+
 ## 4. Next steps (cloud, no game launch)
 1. **Structural parser** for state machines and transitions: for each `AtomStateMachineNode`, its states, their
    transitions (target index + condition expression), and its initial-state conditions. Output: the tree path of
