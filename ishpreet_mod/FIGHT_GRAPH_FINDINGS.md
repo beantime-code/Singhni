@@ -74,6 +74,26 @@ Serialization facts (verified):
   pairs are generic fight states (`AttackState`, `PostHurtAction`, `MainCharacterDescriptorTypeInteraction`). So the
   style is chosen above the clip level (state-machine structure) or by code. The structural parser decides which.
 
+## 3c. Multi-kills and multi-counters come from a settings record, not the graph (2026-10-11)
+- **Where:** `ACVIFightSystemWrapper` (type `71D6E363`, file `68552934583`, pack 114). It holds 16 entries:
+  - 7 multi-kills (Vs4 ×3, Vs3, Vs2 ×3);
+  - 3 each of MultiCounter, MultiCounterAD and MultiCounterKill.
+- **Structure:** each entry = name + default clip list (knife) + overrides keyed by weapon definition (kukri,
+  knuckles, cane) and clip family (xx/xy). Each override has its own variants (Atk + Dfn clips). A weapon without an
+  override gets the knife default. Parser and builder: `tools/fight/fsw.py`.
+- **Stabs vs blows (victim blood effect):**
+  - Cane multi-kills: 41 pierce, 4 punch.
+  - Knife: 45 pierce, 2 punch.
+  - Knuckles: 0 pierce, 42 punch.
+  - Hidden-blade (HB) variants: mostly pierce.
+  - Per-clip data: `data/graph/kill_clip_blood.json`.
+- **Bones:** bone masks name bones by CRC32 of the name. Both base skeletons have `RightHand_Weapon_Ref` and
+  `LeftHand_Weapon_Ref`.
+- **Two-handed weapon tests:**
+  - The graph's groups that test weapon values {4,8} (Unity) or {4,19} (Syndicate replaced 8 with 19 in many) gate
+    shooting layers: musket/blunderbuss two-armed aim, and the pistol off-hand.
+  - Unity's melee values come in pairs: (1,10), (3,12), (5,11), (4,8).
+
 ## 4. Next steps (cloud, no game launch)
 1. **Structural parser** for state machines and transitions: for each `AtomStateMachineNode`, its states, their
    transitions (target index + condition expression), and its initial-state conditions. Output: the tree path of
