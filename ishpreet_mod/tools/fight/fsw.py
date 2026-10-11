@@ -20,6 +20,7 @@ Serialization (verified on the stock record, all 16 entries parse to the byte):
 
     python3 fsw.py show RECORD.bin                    # table + blunt/pierce rating of every variant
     python3 fsw.py add  RECORD.bin --weapon ID --first-id ID --out NEW.bin [--report report.json]
+    python3 fsw.py copy RECORD.bin --src ID --dst ID --first-id ID --out NEW.bin   # dst plays src's sets
 
 `add` gives a weapon its own overrides in all 16 entries, built from blunt variants only (see pick_variants).
 It inserts objects (the record grows); nothing else changes. Object ids come from --first-id upward, so the
@@ -247,6 +248,61 @@ def add_weapon(b, weapon, first_id, ys=None, replace=False):
                  'grew_by': len(new) - len(b), 'entries': report}
 
 
+def copy_weapon(b, src, dst, first_id):
+    """Return (new bytes, report): `dst` plays exactly what `src` plays. Every `dst` override is removed, then each
+    `src` override is cloned for `dst` (same clip set, direct clips and variants, new object ids). Where `src` has no
+    override, `dst` has none either, so both fall back to the same default."""
+    b, removed = strip_weapon(b, dst)
+    nxt = [first_id]
+
+    def alloc():
+        nxt[0] += 1
+        return nxt[0] - 1
+
+    out, last, report = bytearray(), 0, []
+    for e in parse(b):
+        blobs = []
+        for s in e['subs']:
+            if s['weapon'] != src:
+                continue
+            blob = b'\x00' + struct.pack('<Q', alloc()) + SUB + b'\x00' + struct.pack('<QI', dst, s['y'])
+            blob += _clips_bytes(s['clips']) + struct.pack('<I', len(s['variants']))
+            for v in s['variants']:
+                blob += b'\x00' + struct.pack('<Q', alloc()) + VAR + _clips_bytes(v['clips'])
+            blobs.append(blob)
+        insert_at = e['subs'][-1]['span'][1] if e['subs'] else e['nsub_at'] + 4
+        nsub = struct.unpack_from('<I', b, e['nsub_at'])[0]
+        out += b[last:e['nsub_at']] + struct.pack('<I', nsub + len(blobs)) + b[e['nsub_at'] + 4:insert_at]
+        out += b''.join(blobs)
+        last = insert_at
+        report.append({'entry': e['name'], 'copied': len(blobs)})
+    out += b[last:]
+    new = bytes(out)
+    for ea, eb in zip(parse(b), parse(new)):
+        keep = [(s['weapon'], s['y'], s['clips'], [v['clips'] for v in s['variants']]) for s in ea['subs']]
+        got = [(s['weapon'], s['y'], s['clips'], [v['clips'] for v in s['variants']]) for s in eb['subs']]
+        assert got[:len(keep)] == keep and ea['default'] == eb['default'], ea['name']
+        assert [(y, c, v) for w, y, c, v in got[len(keep):]] == [(y, c, v) for w, y, c, v in keep if w == src]
+        assert all(w == dst for w, *_ in got[len(keep):])
+    assert weapon_list(b)[1] == weapon_list(new)[1]
+    return new, {'src': src, 'dst': dst, 'first_id': first_id, 'next_free_id': nxt[0], 'removed_first': removed,
+                 'grew_by': len(new) - len(b), 'entries': report}
+
+
+def stabs(b, weapon):
+    """(variants whose victims bleed from a stab, all variants) that `weapon` plays, default included where it has
+    no override."""
+    p = t = 0
+    for e in parse(b):
+        mine = [s for s in e['subs'] if s['weapon'] == weapon]
+        lists = [v['clips'] for s in mine for v in s['variants']] + [s['clips'] for s in mine if s['clips']]
+        if not mine:
+            lists = [e['default']]
+        t += len(lists)
+        p += sum('P' in rating(c) for c in lists)
+    return p, t
+
+
 def verify(old, new, weapon):
     """Re-parse and check: same entries, old overrides unchanged, new overrides blunt and only for `weapon`."""
     a, b = parse(old), parse(new)
@@ -287,11 +343,30 @@ def main():
     p.add_argument('--out', required=True)
     p.add_argument('--report')
     p.add_argument('--replace', action='store_true', help='remove existing overrides for this weapon first')
+    p = sub.add_parser('copy', help='make one weapon play exactly what another plays (e.g. katar = kukri)')
+    p.add_argument('record')
+    p.add_argument('--src', type=int, required=True)
+    p.add_argument('--dst', type=int, required=True)
+    p.add_argument('--first-id', type=int, required=True)
+    p.add_argument('--out', required=True)
+    p.add_argument('--report')
     a = ap.parse_args()
     with open(a.record, 'rb') as f:
         b = f.read()
     if a.cmd == 'show':
         show(b)
+        return
+    if a.cmd == 'copy':
+        new, rep = copy_weapon(b, a.src, a.dst, a.first_id)
+        with open(a.out, 'wb') as f:
+            f.write(new)
+        if a.report:
+            with open(a.report, 'w') as f:
+                json.dump(rep, f, indent=1)
+        bp, bt = stabs(b, a.dst)
+        np_, nt = stabs(new, a.dst)
+        print(f'wrote {a.out}: {len(b)} -> {len(new)} bytes ({len(new) - len(b):+d}); {name(a.dst)} now plays '
+              f'{name(a.src)}\'s sets: stabbing variants {bp}/{bt} -> {np_}/{nt}')
         return
     new, rep = add_weapon(b, a.weapon, a.first_id, replace=a.replace)
     with open(a.out, 'wb') as f:

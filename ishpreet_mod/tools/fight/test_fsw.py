@@ -116,6 +116,24 @@ def test_duplicate_refused():
     raise AssertionError('second add without replace should fail')
 
 
+def test_copy_katar_plays_kukri_sets():
+    """gada first (needs the knuckle donors), then the knuckles (the katar's definition) copy the kukri's sets"""
+    rec, names, blood = synthetic()
+    _install(names, blood)
+    g6, rep = fsw.add_weapon(rec, GADA, 10 ** 12)
+    k1, rep2 = fsw.copy_weapon(g6, fsw.KUKRI, fsw.KNUCKLE, rep['next_free_id'])
+    for e in fsw.parse(k1):
+        kn = [(s['y'], [v['clips'] for v in s['variants']]) for s in e['subs'] if s['weapon'] == fsw.KNUCKLE]
+        ku = [(s['y'], [v['clips'] for v in s['variants']]) for s in e['subs'] if s['weapon'] == fsw.KUKRI]
+        assert kn == ku
+        ga = [s for s in e['subs'] if s['weapon'] == GADA]
+        assert len(ga) == 2 and all('P' not in fsw.rating(v['clips']) for s in ga for v in s['variants'])
+    assert fsw.stabs(rec, fsw.KNUCKLE)[0] == 0 and fsw.stabs(k1, fsw.KNUCKLE) == fsw.stabs(k1, fsw.KUKRI)
+    ids = [s['id'] for e in fsw.parse(k1) for s in e['subs']]
+    assert len(ids) == len(set(ids))
+    assert rep2['removed_first'] == 32 and rep2['next_free_id'] > rep['next_free_id']
+
+
 def test_real_record():
     path = os.environ.get('FSW_RECORD')
     if not path or not os.path.exists(path):
@@ -127,9 +145,12 @@ def test_real_record():
     assert len(e) == 16
     new, rep = fsw.add_weapon(b, GADA, 10 ** 12, replace=True)
     assert fsw.strip_weapon(new, GADA)[0] == fsw.strip_weapon(b, GADA)[0]
+    k1, _ = fsw.copy_weapon(new, fsw.KUKRI, fsw.KNUCKLE, rep['next_free_id'])
+    assert fsw.stabs(k1, fsw.KNUCKLE) == fsw.stabs(k1, fsw.KUKRI)
 
 
 if __name__ == '__main__':
-    for t in [test_parse_synthetic, test_add_blunt_only_and_strip_roundtrip, test_duplicate_refused, test_real_record]:
+    for t in [test_parse_synthetic, test_add_blunt_only_and_strip_roundtrip, test_duplicate_refused,
+              test_copy_katar_plays_kukri_sets, test_real_record]:
         t()
         print('ok', t.__name__)

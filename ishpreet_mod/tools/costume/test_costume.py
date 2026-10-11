@@ -332,6 +332,22 @@ def test_reweight_solve_one_mesh_layers():
     assert g3['pass'] and g4['pass'], (g3['issues'][:2], g4['issues'][:2])
 
 
+def test_reweight_gate():
+    from costume import reweight
+
+    def rows(g2, g3, g4, g1=0, g1pass=True):
+        return [{'gate': 'G7 weights', 'pass': True, 'issues': []},
+                {'gate': 'G2 seam tears', 'pass': not g2, 'count': g2},
+                {'gate': 'G1 holes', 'pass': g1pass, 'count': g1},
+                {'gate': 'G3 junctions', 'pass': not g3, 'count': g3},
+                {'gate': 'G4 clipping', 'pass': not g4, 'count': g4}]
+    assert reweight.gate(rows(3, 5, 9), rows(0, 1, 9))[0]
+    assert not reweight.gate(rows(3, 5, 9), rows(3, 5, 9))[0]              # nothing improved
+    assert not reweight.gate(rows(3, 5, 9), rows(0, 0, 10))[0]             # clipping got worse
+    ok, why = reweight.gate(rows(3, 5, 9), rows(0, 0, 0, g1=1, g1pass=False))
+    assert not ok and any('G1' in w for w in why)                         # a new hole
+
+
 if __name__ == '__main__':
     for name, fn in list(globals().items()):
         if name.startswith('test_'):

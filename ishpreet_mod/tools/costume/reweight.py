@@ -109,6 +109,33 @@ def main(argv=None):
     ap.add_argument('--out', required=True)
     ap.add_argument('--write', action='store_true')
     a = ap.parse_args(argv)
+    res = run(a)
+    return 0 if all(r['pass'] for r in res['after']) else 1
+
+
+def _count(r):
+    return r.get('count', len(r.get('issues', [])))
+
+
+def gate(before, after, must_improve=('G2', 'G3', 'G4')):
+    """(ok, reasons). OK when no gate gets worse (more issues, or PASS -> FAIL) and the joins (G2 seams, G3
+    junctions, G4 clipping) have fewer issues in total than before."""
+    why, ok = [], True
+    for b, c in zip(before, after):
+        g = b['gate'].split()[0]
+        if _count(c) > _count(b) or (b['pass'] and not c['pass']):
+            ok = False
+            why.append(f'{b["gate"]}: worse ({_count(b)} -> {_count(c)})')
+    pick = [(b, c) for b, c in zip(before, after) if b['gate'].split()[0] in must_improve]
+    if sum(_count(c) for _, c in pick) >= sum(_count(b) for b, _ in pick):
+        ok = False
+        why.append('joins not improved: ' + ', '.join(f'{b["gate"].split()[0]} {_count(b)}->{_count(c)}'
+                                                      for b, c in pick))
+    return ok, why
+
+
+def run(a):
+    """The reweight run behind main(): returns {'before', 'after', 'written', 'info'}."""
     os.makedirs(a.out, exist_ok=True)
     sk = [open(p, 'rb').read() for p in a.skeleton]
     parent = skel.merge(*sk)
@@ -119,7 +146,7 @@ def main(argv=None):
     res, hashes, info = solve(body, coat, source, parent, orig, a.coat_band)
     print(f'solved: {info["confident"] * 100:.0f}% of vertices matched the body confidently, '
           f'{info["iterations"]} inpainting iterations')
-    new = {}
+    new, written = {}, {}
     for name, m in (('body', body), ('coat', coat)):
         if m is None:
             continue
@@ -130,21 +157,22 @@ def main(argv=None):
               ', '.join(f'{skel.bone_name(x)}->{skel.bone_name(y)}' for x, y in list(moved.items())[:12])
               if moved else ''))
         if a.write:
-            open(os.path.join(a.out, f'{name}.record'), 'wb').write(raw)
+            written[name] = os.path.join(a.out, f'{name}.record')
+            open(written[name], 'wb').write(raw)
     base = [qa.Layer(sp.split('=', 1)[0], Mesh(qa.load_record(sp.split('=', 1)[1]))) for sp in (a.baseline or [])]
     before = qa.run([qa.Layer(n, m) for n, m in (('body', body), ('coat', coat)) if m is not None], sk,
                     os.path.join(a.out, 'qa_before'), baseline=base or None)
     after = qa.run([qa.Layer(n, m) for n, m in new.items()], sk, os.path.join(a.out, 'qa_after'), baseline=base or None)
     lines = ['gate            before  after']
     for b, c in zip(before, after):
-        def cnt(r):
-            return r.get('count', len(r.get('issues', [])))
-        lines.append(f'{b["gate"]:15s} {("PASS" if b["pass"] else "FAIL") + " " + str(cnt(b)):7s} '
-                     f'{("PASS" if c["pass"] else "FAIL") + " " + str(cnt(c))}')
+        lines.append(f'{b["gate"]:15s} {("PASS" if b["pass"] else "FAIL") + " " + str(_count(b)):7s} '
+                     f'{("PASS" if c["pass"] else "FAIL") + " " + str(_count(c))}')
+    ok, why = gate(before, after)
+    lines.append('\nre-weight gate: ' + ('PASS' if ok else 'FAIL: ' + '; '.join(why)))
     txt = '\n'.join(lines) + '\n\nAFTER:\n' + qa.report(after)
     print(txt)
     open(os.path.join(a.out, 'reweight_report.txt'), 'w').write(txt + '\n')
-    return 0 if all(r['pass'] for r in after) else 1
+    return {'before': before, 'after': after, 'written': written, 'info': info, 'gate': (ok, why)}
 
 
 if __name__ == '__main__':

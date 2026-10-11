@@ -1,0 +1,2917 @@
+[
+ {
+  "family": "Attack01_BackLeft_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack01_BackLeft_V01_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_BackLeft_V02_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_BackLeft_V03_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_BackLeft_V04_Atk"
+  ],
+  "status": "T1",
+  "paired": false,
+  "unity": [
+   "xx_Fight_Sword_Atk_2m_Back_01",
+   "xx_Fight_Sword_Atk_2m_Back_02",
+   "xx_Fight_Sword_Atk_OnSpot_Back_01",
+   "xx_Fight_Sword_Atk_OnSpot_Back_02"
+  ],
+  "note": "Directional strikes. Unity has on-the-spot and 2 m sword strikes per side."
+ },
+ {
+  "family": "Attack01_BackRight_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack01_BackRight_V01_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_BackRight_V02_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_BackRight_V03_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_BackRight_V04_Atk"
+  ],
+  "status": "T1",
+  "paired": false,
+  "unity": [
+   "xx_Fight_Sword_Atk_2m_Back_01",
+   "xx_Fight_Sword_Atk_2m_Back_02",
+   "xx_Fight_Sword_Atk_OnSpot_Back_01",
+   "xx_Fight_Sword_Atk_OnSpot_Back_02"
+  ],
+  "note": "Directional strikes. Unity has on-the-spot and 2 m sword strikes per side."
+ },
+ {
+  "family": "Attack01_Blocked01_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack01_Blocked01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Blocked / countered attacks: these pair with the enemy's block; kept until the strikes are in."
+ },
+ {
+  "family": "Attack01_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack01_InitApp_V01_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_InitApp_V02_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_InitApp_V03_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_InitApp_V04_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_InitApp_V05_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_InitApp_V06_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_InitApp_V07_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_InitApp_V08_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Attack01_Init_BackLeft_Blocked01_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack01_Init_BackLeft_Blocked01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Attack01_Init_BackRight_Blocked01_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack01_Init_BackRight_Blocked01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Attack01_Init_Left_Blocked01_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack01_Init_Left_Blocked01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Attack01_Init_Right_Blocked01_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack01_Init_Right_Blocked01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Attack01_Left_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack01_Left_V01_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_Left_V02_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_Left_V03_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_Left_V04_Atk"
+  ],
+  "status": "T1",
+  "paired": false,
+  "unity": [
+   "xx_Fight_Sword_Atk_2m_Left_01",
+   "xx_Fight_Sword_Atk_2m_Left_02",
+   "xx_Fight_Sword_Atk_OnSpot_Left_01",
+   "xx_Fight_Sword_Atk_OnSpot_Left_02"
+  ],
+  "note": "Directional strikes. Unity has on-the-spot and 2 m sword strikes per side."
+ },
+ {
+  "family": "Attack01_Right_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack01_Right_V01_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_Right_V02_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_Right_V03_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_Right_V04_Atk"
+  ],
+  "status": "T1",
+  "paired": false,
+  "unity": [
+   "xx_Fight_Sword_Atk_2m_Right_01",
+   "xx_Fight_Sword_Atk_2m_Right_02",
+   "xx_Fight_Sword_Atk_OnSpot_Right_01",
+   "xx_Fight_Sword_Atk_OnSpot_Right_02"
+  ],
+  "note": "Directional strikes. Unity has on-the-spot and 2 m sword strikes per side."
+ },
+ {
+  "family": "Attack01_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack01_V01_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_V02_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_V03_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_V04_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_V05_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_V06_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_V07_Atk",
+   "ACVI_Fight_xx_Knife_Attack01_V08_Atk"
+  ],
+  "status": "T1",
+  "paired": false,
+  "unity": [
+   "xx_Fight_Sword_Atk_2m_Front_01",
+   "xx_Fight_Sword_Atk_2m_Front_02",
+   "xx_Fight_Sword_Atk_2m_Front_03",
+   "xx_Fight_Sword_Atk_2m_Front_04",
+   "xx_Fight_Sword_Atk_2m_Front_05",
+   "xx_Fight_Sword_Atk_2m_Front_06",
+   "xx_Fight_Sword_Atk_2m_Front_07",
+   "xx_Fight_Sword_Atk_2m_Front_08",
+   "xx_Fight_Sword_Atk_2m_Front_09",
+   "xx_Fight_Sword_Atk_2m_Front_10",
+   "xx_Fight_Sword_Atk_OnSpot_Front_01",
+   "xx_Fight_Sword_Atk_OnSpot_Front_02",
+   "xx_Fight_Sword_Atk_OnSpot_Front_03",
+   "xx_Fight_Sword_Atk_OnSpot_Front_04",
+   "xx_Fight_Sword_Atk_OnSpot_Front_05",
+   "xx_Fight_Sword_Atk_OnSpot_Front_06",
+   "xx_Fight_Sword_Atk_OnSpot_Front_07",
+   "xx_Fight_Sword_Atk_OnSpot_Front_08",
+   "xx_Fight_Sword_Atk_OnSpot_Front_09",
+   "xx_Fight_Sword_Atk_OnSpot_Front_10"
+  ],
+  "note": "Front strikes: Unity on-the-spot and 2 m front sword strikes."
+ },
+ {
+  "family": "Attack02_Blocked01_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack02_Blocked01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Blocked / countered attacks: these pair with the enemy's block; kept until the strikes are in."
+ },
+ {
+  "family": "Attack02_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack02_V01_Atk",
+   "ACVI_Fight_xx_Knife_Attack02_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Combo_02_Onspot_UR_to_DL_Atk",
+    "xx_Fight_Sword_Combo_02_Onspot_UR_to_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Combo_03_Onspot_UR_to_DR_Atk",
+    "xx_Fight_Sword_Combo_03_Onspot_UR_to_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Combo_04_Onspot_UR_to_UL_Atk",
+    "xx_Fight_Sword_Combo_04_Onspot_UR_to_UL_Dfn"
+   ]
+  ],
+  "note": "Combo hits 2 and 3: Unity guard-chain combos (UR->DL, UR->DR, UR->UL), attacker and enemy halves together."
+ },
+ {
+  "family": "Attack03_Blocked01_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack03_Blocked01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Blocked / countered attacks: these pair with the enemy's block; kept until the strikes are in."
+ },
+ {
+  "family": "Attack03_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Attack03_V01_Atk",
+   "ACVI_Fight_xx_Knife_Attack03_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Combo_02_Onspot_UR_to_DL_Atk",
+    "xx_Fight_Sword_Combo_02_Onspot_UR_to_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Combo_03_Onspot_UR_to_DR_Atk",
+    "xx_Fight_Sword_Combo_03_Onspot_UR_to_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Combo_04_Onspot_UR_to_UL_Atk",
+    "xx_Fight_Sword_Combo_04_Onspot_UR_to_UL_Dfn"
+   ]
+  ],
+  "note": "Combo hits 2 and 3: Unity guard-chain combos (UR->DL, UR->DR, UR->UL), attacker and enemy halves together."
+ },
+ {
+  "family": "AttackCountered_Init_BackLeft_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_AttackCountered_Init_BackLeft_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "AttackCountered_Init_BackRight_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_AttackCountered_Init_BackRight_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "AttackCountered_Init_Left_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_AttackCountered_Init_Left_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "AttackCountered_Init_Right_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_AttackCountered_Init_Right_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "AttackCountered_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_AttackCountered_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Box_Attack01_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_Attack01_InitApp_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Box_Attack01_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_Attack01_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Box and cart fights: contextual, kept as the knife's for now."
+ },
+ {
+  "family": "Box_Attack02_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_Attack02_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Box and cart fights: contextual, kept as the knife's for now."
+ },
+ {
+  "family": "Box_Attack03_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_Attack03_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Box and cart fights: contextual, kept as the knife's for now."
+ },
+ {
+  "family": "Box_ComboStun_Init01_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_ComboStun_Init01_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Box_ComboStun_Init02_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_ComboStun_Init02_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Box_ComboStun_Init03_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_ComboStun_Init03_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Box_Kill_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_Kill_InitApp_V01_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_InitApp_V02_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_InitApp_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Box_Kill_InitND_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_Kill_InitND_V01_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_InitND_V02_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_InitND_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Box_Kill_Init_BackLeft_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_Kill_Init_BackLeft_V01_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_Init_BackLeft_V02_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_Init_BackLeft_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Box_Kill_Init_BackRight_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_Kill_Init_BackRight_V01_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_Init_BackRight_V02_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_Init_BackRight_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Box_Kill_Init_Left_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_Kill_Init_Left_V01_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_Init_Left_V02_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_Init_Left_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Box_Kill_Init_Right_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_Kill_Init_Right_V01_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_Init_Right_V02_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_Init_Right_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Box_Kill_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Box_Kill_V01_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_V02_Atk",
+   "ACVI_Fight_xx_Knife_Box_Kill_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Box and cart fights: contextual, kept as the knife's for now."
+ },
+ {
+  "family": "Cart_Attack01_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack01_InitApp_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Attack01_Init_BackLeft_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack01_Init_BackLeft_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Attack01_Init_BackRight_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack01_Init_BackRight_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Attack01_Init_Left_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack01_Init_Left_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Attack01_Init_Right_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack01_Init_Right_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Attack01_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack01_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Attack01_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack01_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Box and cart fights: contextual, kept as the knife's for now."
+ },
+ {
+  "family": "Cart_Attack02_InitV01_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack02_InitV01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Attack02_InitV02_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack02_InitV02_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Attack02_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack02_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Box and cart fights: contextual, kept as the knife's for now."
+ },
+ {
+  "family": "Cart_Attack03_InitV01_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack03_InitV01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Attack03_InitV02_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack03_InitV02_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Attack03_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Attack03_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Box and cart fights: contextual, kept as the knife's for now."
+ },
+ {
+  "family": "Cart_ComboEnderH_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_ComboEnderH_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_ComboEnder_InitV01_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_ComboEnder_InitV01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_ComboEnder_InitV02_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_ComboEnder_InitV02_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_ComboEnder_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_ComboEnder_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_ComboStun_Init01_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_ComboStun_Init01_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_ComboStun_Init02_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_ComboStun_Init02_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_ComboStun_Init03_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_ComboStun_Init03_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Kill_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Kill_InitApp_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Kill_InitND_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Kill_InitND_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Kill_Init_BackLeft_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Kill_Init_BackLeft_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Kill_Init_BackRight_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Kill_Init_BackRight_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Kill_Init_Left_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Kill_Init_Left_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Kill_Init_Right_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Kill_Init_Right_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Cart_Kill_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Cart_Kill_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Box and cart fights: contextual, kept as the knife's for now."
+ },
+ {
+  "family": "ComboEnderH_InitV01_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboEnderH_InitV01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "ComboEnderH_InitV02_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboEnderH_InitV02_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "ComboEnder_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboEnder_Atk"
+  ],
+  "status": "T1",
+  "paired": false,
+  "unity": [
+   "xx_Fight_Sword_Combo_Finisher_Left_01",
+   "xx_Fight_Sword_Combo_Finisher_Left_02",
+   "xx_Fight_Sword_Combo_Finisher_Left_03",
+   "xx_Fight_Sword_Combo_Finisher_Left_04",
+   "xx_Fight_Sword_Combo_Finisher_Right_01",
+   "xx_Fight_Sword_Combo_Finisher_Right_02",
+   "xx_Fight_Sword_Combo_Finisher_Right_03",
+   "xx_Fight_Sword_Combo_Finisher_Right_04",
+   "xx_Fight_Sword_Combo_Finisher_Right_05"
+  ],
+  "note": "Combo enders: Unity combo finishers (left / right)."
+ },
+ {
+  "family": "ComboEnder_InitV01_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboEnder_InitV01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "ComboEnder_InitV02_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboEnder_InitV02_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "ComboNearDeath_LFlank_Init01_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboNearDeath_LFlank_Init01_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Combo into near-death finisher: Unity signature front kills."
+ },
+ {
+  "family": "ComboNearDeath_LShoulder_Init02_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboNearDeath_LShoulder_Init02_V01_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Combo into near-death finisher: Unity signature front kills."
+ },
+ {
+  "family": "ComboNearDeath_LShoulder_Init03_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboNearDeath_LShoulder_Init03_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Combo into near-death finisher: Unity signature front kills."
+ },
+ {
+  "family": "ComboNearDeath_RFlank_Init01_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboNearDeath_RFlank_Init01_V01_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Combo into near-death finisher: Unity signature front kills."
+ },
+ {
+  "family": "ComboNearDeath_RShoulder_Init02_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboNearDeath_RShoulder_Init02_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Combo into near-death finisher: Unity signature front kills."
+ },
+ {
+  "family": "ComboNearDeath_RShoulder_Init03_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboNearDeath_RShoulder_Init03_V01_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Combo into near-death finisher: Unity signature front kills."
+ },
+ {
+  "family": "ComboStun_Init01_Blocked_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboStun_Init01_Blocked_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "ComboStun_Init01_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboStun_Init01_V01_Atk",
+   "ACVI_Fight_xx_Knife_ComboStun_Init01_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": false,
+  "unity": [
+   "xx_Fight_Sword_ShoulderCharge_BackLeft_Atk",
+   "xx_Fight_Sword_ShoulderCharge_Front_Atk",
+   "xx_Fight_Sword_ShoulderCharge_Left_Atk",
+   "xx_Fight_Sword_ShoulderCharge_RightBack_Atk",
+   "xx_Fight_Sword_ShoulderCharge_Right_Atk"
+  ],
+  "note": "Stuns: Unity sword shoulder charges."
+ },
+ {
+  "family": "ComboStun_Init02_Blocked_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboStun_Init02_Blocked_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "ComboStun_Init02_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboStun_Init02_V01_Atk",
+   "ACVI_Fight_xx_Knife_ComboStun_Init02_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": false,
+  "unity": [
+   "xx_Fight_Sword_ShoulderCharge_BackLeft_Atk",
+   "xx_Fight_Sword_ShoulderCharge_Front_Atk",
+   "xx_Fight_Sword_ShoulderCharge_Left_Atk",
+   "xx_Fight_Sword_ShoulderCharge_RightBack_Atk",
+   "xx_Fight_Sword_ShoulderCharge_Right_Atk"
+  ],
+  "note": "Stuns: Unity sword shoulder charges."
+ },
+ {
+  "family": "ComboStun_Init03_Blocked_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboStun_Init03_Blocked_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "ComboStun_Init03_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_ComboStun_Init03_V01_Atk",
+   "ACVI_Fight_xx_Knife_ComboStun_Init03_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": false,
+  "unity": [
+   "xx_Fight_Sword_ShoulderCharge_BackLeft_Atk",
+   "xx_Fight_Sword_ShoulderCharge_Front_Atk",
+   "xx_Fight_Sword_ShoulderCharge_Left_Atk",
+   "xx_Fight_Sword_ShoulderCharge_RightBack_Atk",
+   "xx_Fight_Sword_ShoulderCharge_Right_Atk"
+  ],
+  "note": "Stuns: Unity sword shoulder charges."
+ },
+ {
+  "family": "Counter90_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Counter90_V01_Atk",
+   "ACVI_Fight_xx_Knife_Counter90_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Parry_Front_DL_Atk",
+    "xx_Fight_Sword_Parry_Front_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Front_DR_Atk",
+    "xx_Fight_Sword_Parry_Front_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Front_UL_Atk",
+    "xx_Fight_Sword_Parry_Front_UL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Front_UR_Atk",
+    "xx_Fight_Sword_Parry_Front_UR_Dfn"
+   ]
+  ],
+  "note": "Quarter-turn counter: Unity has no 90-degree parry, so its front parries."
+ },
+ {
+  "family": "CounterKill_BackLeft_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_CounterKill_BackLeft_V01_Atk",
+   "ACVI_Fight_xx_Knife_CounterKill_BackLeft_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_PerfectParry_Back_DL_Atk",
+    "xx_Fight_Sword_PerfectParry_Back_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Back_DR_Atk",
+    "xx_Fight_Sword_PerfectParry_Back_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Back_UL_Atk",
+    "xx_Fight_Sword_PerfectParry_Back_UL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Back_UR_Atk",
+    "xx_Fight_Sword_PerfectParry_Back_UR_Dfn"
+   ]
+  ],
+  "note": "Counter-kills: Unity perfect parries for that side (they end the enemy), both halves."
+ },
+ {
+  "family": "CounterKill_BackRight_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_CounterKill_BackRight_V01_Atk",
+   "ACVI_Fight_xx_Knife_CounterKill_BackRight_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_PerfectParry_Back_DL_Atk",
+    "xx_Fight_Sword_PerfectParry_Back_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Back_DR_Atk",
+    "xx_Fight_Sword_PerfectParry_Back_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Back_UL_Atk",
+    "xx_Fight_Sword_PerfectParry_Back_UL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Back_UR_Atk",
+    "xx_Fight_Sword_PerfectParry_Back_UR_Dfn"
+   ]
+  ],
+  "note": "Counter-kills: Unity perfect parries for that side (they end the enemy), both halves."
+ },
+ {
+  "family": "CounterKill_Left_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_CounterKill_Left_V01_Atk",
+   "ACVI_Fight_xx_Knife_CounterKill_Left_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_PerfectParry_Left_DL_Atk",
+    "xx_Fight_Sword_PerfectParry_Left_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Left_DR_Atk",
+    "xx_Fight_Sword_PerfectParry_Left_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Left_UL_Atk",
+    "xx_Fight_Sword_PerfectParry_Left_UL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Left_UR_Atk",
+    "xx_Fight_Sword_PerfectParry_Left_UR_Dfn"
+   ]
+  ],
+  "note": "Counter-kills: Unity perfect parries for that side (they end the enemy), both halves."
+ },
+ {
+  "family": "CounterKill_Right_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_CounterKill_Right_V01_Atk",
+   "ACVI_Fight_xx_Knife_CounterKill_Right_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_PerfectParry_Right_DL_Atk",
+    "xx_Fight_Sword_PerfectParry_Right_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Right_DR_Atk",
+    "xx_Fight_Sword_PerfectParry_Right_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Right_UL_Atk",
+    "xx_Fight_Sword_PerfectParry_Right_UL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Right_UR_Atk",
+    "xx_Fight_Sword_PerfectParry_Right_UR_Dfn"
+   ]
+  ],
+  "note": "Counter-kills: Unity perfect parries for that side (they end the enemy), both halves."
+ },
+ {
+  "family": "CounterKill_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_CounterKill_V01_Atk",
+   "ACVI_Fight_xx_Knife_CounterKill_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_PerfectParry_Front_DL_Atk",
+    "xx_Fight_Sword_PerfectParry_Front_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Front_DR_Atk",
+    "xx_Fight_Sword_PerfectParry_Front_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Front_UL_Atk",
+    "xx_Fight_Sword_PerfectParry_Front_UL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_PerfectParry_Front_UR_Atk",
+    "xx_Fight_Sword_PerfectParry_Front_UR_Dfn"
+   ]
+  ],
+  "note": "Counter-kills: Unity perfect parries for that side (they end the enemy), both halves."
+ },
+ {
+  "family": "Counter_BackLeft_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Counter_BackLeft_V01_Atk",
+   "ACVI_Fight_xx_Knife_Counter_BackLeft_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Parry_Back_DL_Atk",
+    "xx_Fight_Sword_Parry_Back_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Back_DR_Atk",
+    "xx_Fight_Sword_Parry_Back_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Back_UL_Atk",
+    "xx_Fight_Sword_Parry_Back_UL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Back_UR_Atk",
+    "xx_Fight_Sword_Parry_Back_UR_Dfn"
+   ]
+  ],
+  "note": "Counters: Unity sword parries for that side, attacker and enemy halves together."
+ },
+ {
+  "family": "Counter_BackRight_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Counter_BackRight_V01_Atk",
+   "ACVI_Fight_xx_Knife_Counter_BackRight_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Parry_Back_DL_Atk",
+    "xx_Fight_Sword_Parry_Back_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Back_DR_Atk",
+    "xx_Fight_Sword_Parry_Back_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Back_UL_Atk",
+    "xx_Fight_Sword_Parry_Back_UL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Back_UR_Atk",
+    "xx_Fight_Sword_Parry_Back_UR_Dfn"
+   ]
+  ],
+  "note": "Counters: Unity sword parries for that side, attacker and enemy halves together."
+ },
+ {
+  "family": "Counter_Left_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Counter_Left_V01_Atk",
+   "ACVI_Fight_xx_Knife_Counter_Left_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Parry_Left_DL_Atk",
+    "xx_Fight_Sword_Parry_Left_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Left_DR_Atk",
+    "xx_Fight_Sword_Parry_Left_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Left_UL_Atk",
+    "xx_Fight_Sword_Parry_Left_UL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Left_UR_Atk",
+    "xx_Fight_Sword_Parry_Left_UR_Dfn"
+   ]
+  ],
+  "note": "Counters: Unity sword parries for that side, attacker and enemy halves together."
+ },
+ {
+  "family": "Counter_Right_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Counter_Right_V01_Atk",
+   "ACVI_Fight_xx_Knife_Counter_Right_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Parry_Right_DL_Atk",
+    "xx_Fight_Sword_Parry_Right_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Right_DR_Atk",
+    "xx_Fight_Sword_Parry_Right_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Right_UL_Atk",
+    "xx_Fight_Sword_Parry_Right_UL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Right_UR_Atk",
+    "xx_Fight_Sword_Parry_Right_UR_Dfn"
+   ]
+  ],
+  "note": "Counters: Unity sword parries for that side, attacker and enemy halves together."
+ },
+ {
+  "family": "Counter_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Counter_V01_Atk",
+   "ACVI_Fight_xx_Knife_Counter_V02_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Parry_Front_DL_Atk",
+    "xx_Fight_Sword_Parry_Front_DL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Front_DR_Atk",
+    "xx_Fight_Sword_Parry_Front_DR_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Front_UL_Atk",
+    "xx_Fight_Sword_Parry_Front_UL_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Parry_Front_UR_Atk",
+    "xx_Fight_Sword_Parry_Front_UR_Dfn"
+   ]
+  ],
+  "note": "Counters: Unity sword parries for that side, attacker and enemy halves together."
+ },
+ {
+  "family": "Kill_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Kill_InitApp_V01_Atk",
+   "ACVI_Fight_xx_Knife_Kill_InitApp_V02_Atk",
+   "ACVI_Fight_xx_Knife_Kill_InitApp_V05_Atk",
+   "ACVI_Fight_xx_Knife_Kill_InitApp_V06_Atk",
+   "ACVI_Fight_xx_Knife_Kill_InitApp_V07_Atk",
+   "ACVI_Fight_xx_Knife_Kill_InitApp_V08_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Kill_InitND_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Kill_InitND_V01_Atk",
+   "ACVI_Fight_xx_Knife_Kill_InitND_V02_Atk",
+   "ACVI_Fight_xx_Knife_Kill_InitND_V05_Atk",
+   "ACVI_Fight_xx_Knife_Kill_InitND_V06_Atk",
+   "ACVI_Fight_xx_Knife_Kill_InitND_V07_Atk",
+   "ACVI_Fight_xx_Knife_Kill_InitND_V08_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Kill_Init_BackLeft_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Kill_Init_BackLeft_V01_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_BackLeft_V02_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_BackLeft_V05_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_BackLeft_V06_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_BackLeft_V07_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_BackLeft_V08_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Kill_Init_BackRight_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Kill_Init_BackRight_V01_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_BackRight_V02_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_BackRight_V05_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_BackRight_V06_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_BackRight_V07_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_BackRight_V08_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Kill_Init_Left_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Kill_Init_Left_V01_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_Left_V02_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_Left_V05_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_Left_V06_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_Left_V07_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_Left_V08_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Kill_Init_Right_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Kill_Init_Right_V01_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_Right_V02_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_Right_V05_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_Right_V06_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_Right_V07_Atk",
+   "ACVI_Fight_xx_Knife_Kill_Init_Right_V08_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Kill_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Kill_V01_Atk",
+   "ACVI_Fight_xx_Knife_Kill_V02_Atk",
+   "ACVI_Fight_xx_Knife_Kill_V05_Atk",
+   "ACVI_Fight_xx_Knife_Kill_V06_Atk",
+   "ACVI_Fight_xx_Knife_Kill_V07_Atk",
+   "ACVI_Fight_xx_Knife_Kill_V08_Atk"
+  ],
+  "status": "done",
+  "paired": true,
+  "unity": [],
+  "note": "S5b: Unity sword front kills 1-4 with the matching Unity deaths."
+ },
+ {
+  "family": "MultiCounterAD_12-3_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterAD_12-3_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiCounterAD_12-6_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterAD_12-6_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiCounterAD_12-9_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterAD_12-9_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiCounterAD_3-12_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterAD_3-12_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterAD_3-6_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterAD_3-6_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterAD_3-9_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterAD_3-9_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterAD_6-12_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterAD_6-12_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterAD_6-3_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterAD_6-3_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterAD_6-9_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterAD_6-9_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterAD_9-12_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterAD_9-12_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterAD_9-3_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterAD_9-3_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterAD_9-6_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterAD_9-6_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterKill_12-3_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterKill_12-3_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiCounterKill_12-6_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterKill_12-6_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiCounterKill_12-9_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterKill_12-9_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiCounterKill_3-12_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterKill_3-12_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterKill_3-6_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterKill_3-6_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterKill_3-9_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterKill_3-9_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterKill_6-12_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterKill_6-12_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterKill_6-3_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterKill_6-3_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterKill_6-9_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterKill_6-9_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterKill_9-12_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterKill_9-12_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterKill_9-3_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterKill_9-3_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounterKill_9-6_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounterKill_9-6_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounter_12-3_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounter_12-3_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiCounter_12-6_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounter_12-6_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiCounter_12-9_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounter_12-9_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiCounter_3-12_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounter_3-12_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounter_3-6_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounter_3-6_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounter_3-9_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounter_3-9_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounter_6-12_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounter_6-12_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounter_6-3_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounter_6-3_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounter_6-9_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounter_6-9_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounter_9-12_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounter_9-12_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounter_9-3_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounter_9-3_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiCounter_9-6_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiCounter_9-6_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs2_12-3_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-3_InitApp_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs2_12-3_InitND_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-3_InitND_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs2_12-3_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-3_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiKill_Vs2_12-6_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-6_InitApp_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs2_12-6_InitND_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-6_InitND_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs2_12-6_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-6_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiKill_Vs2_12-9_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-9_InitApp_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs2_12-9_InitND_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-9_InitND_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs2_12-9_Init_BackLeft_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-9_Init_BackLeft_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs2_12-9_Init_BackRight_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-9_Init_BackRight_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs2_12-9_Init_Left_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-9_Init_Left_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs2_12-9_Init_Right_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-9_Init_Right_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs2_12-9_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs2_12-9_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiKill_Vs3_12-4-8_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_InitApp_V01_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_InitApp_V03_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_InitApp_V04_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs3_12-4-8_InitND_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_InitND_V01_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_InitND_V03_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_InitND_V04_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs3_12-4-8_Init_BackLeft_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_Init_BackLeft_V01_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_Init_BackLeft_V03_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_Init_BackLeft_V04_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs3_12-4-8_Init_BackRight_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_Init_BackRight_V01_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_Init_BackRight_V03_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_Init_BackRight_V04_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs3_12-4-8_Init_Left_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_Init_Left_V01_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_Init_Left_V03_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_Init_Left_V04_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs3_12-4-8_Init_Right_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_Init_Right_V01_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_Init_Right_V03_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_Init_Right_V04_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs3_12-4-8_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_V01_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_V03_Atk",
+   "ACVI_Fight_xx_Knife_MultiKill_Vs3_12-4-8_V04_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiKill_Vs4_12-3-6-9_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs4_12-3-6-9_InitApp_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs4_12-3-6-9_InitND_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs4_12-3-6-9_InitND_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs4_12-3-6-9_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs4_12-3-6-9_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiKill_Vs4_3-1-11-9_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs4_3-1-11-9_InitApp_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs4_3-1-11-9_InitND_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs4_3-1-11-9_InitND_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs4_3-1-11-9_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs4_3-1-11-9_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "MultiKill_Vs4_9-11-1-3_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs4_9-11-1-3_InitApp_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs4_9-11-1-3_InitND_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs4_9-11-1-3_InitND_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "MultiKill_Vs4_9-11-1-3_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_MultiKill_Vs4_9-11-1-3_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": true,
+  "unity": [],
+  "note": "Multi-kills and multi-counters come from the multi-kill table, where the knife sets suit a blade."
+ },
+ {
+  "family": "NearDeath_LFlank_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_NearDeath_LFlank_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Finishers on a staggering enemy: Unity signature front kills, both halves."
+ },
+ {
+  "family": "NearDeath_LFlank_InitApp_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_NearDeath_LFlank_InitApp_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "NearDeath_LFlank_Init_BackLeft_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_NearDeath_LFlank_Init_BackLeft_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "NearDeath_LShoulder_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_NearDeath_LShoulder_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Finishers on a staggering enemy: Unity signature front kills, both halves."
+ },
+ {
+  "family": "NearDeath_LShoulder_InitApp_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_NearDeath_LShoulder_InitApp_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "NearDeath_LShoulder_Init_Left_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_NearDeath_LShoulder_Init_Left_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "NearDeath_RFlank _InitApp_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_NearDeath_RFlank _InitApp_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "NearDeath_RFlank_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_NearDeath_RFlank_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Finishers on a staggering enemy: Unity signature front kills, both halves."
+ },
+ {
+  "family": "NearDeath_RFlank_Init_BacKRight_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_NearDeath_RFlank_Init_BacKRight_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "NearDeath_RShoulder_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_NearDeath_RShoulder_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Finishers on a staggering enemy: Unity signature front kills, both halves."
+ },
+ {
+  "family": "NearDeath_RShoulder_InitApp_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_NearDeath_RShoulder_InitApp_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "NearDeath_RShoulder_Init_Right_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_NearDeath_RShoulder_Init_Right_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "StunNearDeath_LFlank_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_StunNearDeath_LFlank_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Finishers on a staggering enemy: Unity signature front kills, both halves."
+ },
+ {
+  "family": "StunNearDeath_LFlank_Init_BackLeft_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_StunNearDeath_LFlank_Init_BackLeft_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "StunNearDeath_LShoulder_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_StunNearDeath_LShoulder_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Finishers on a staggering enemy: Unity signature front kills, both halves."
+ },
+ {
+  "family": "StunNearDeath_LShoulder_Init_Left_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_StunNearDeath_LShoulder_Init_Left_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "StunNearDeath_RFlank_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_StunNearDeath_RFlank_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Finishers on a staggering enemy: Unity signature front kills, both halves."
+ },
+ {
+  "family": "StunNearDeath_RFlank_Init_BacKRight_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_StunNearDeath_RFlank_Init_BacKRight_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "StunNearDeath_RShoulder_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_StunNearDeath_RShoulder_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_01_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_02_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_03_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_03_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_04_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_04_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_05_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_05_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_06_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_06_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_07_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_07_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_08_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_08_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Sig_Kill_Front_09_Atk",
+    "xx_Fight_Sword_Sig_Kill_Front_09_Dfn"
+   ]
+  ],
+  "note": "Finishers on a staggering enemy: Unity signature front kills, both halves."
+ },
+ {
+  "family": "StunNearDeath_RShoulder_Init_Right_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_StunNearDeath_RShoulder_Init_Right_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Wall_Attack01_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Wall_Attack01_V01_Atk"
+  ],
+  "status": "T1",
+  "paired": false,
+  "unity": [
+   "xx_Fight_Sword_Atk_2m_Front_01",
+   "xx_Fight_Sword_Atk_2m_Front_02",
+   "xx_Fight_Sword_Atk_2m_Front_03",
+   "xx_Fight_Sword_Atk_2m_Front_04",
+   "xx_Fight_Sword_Atk_2m_Front_05",
+   "xx_Fight_Sword_Atk_2m_Front_06",
+   "xx_Fight_Sword_Atk_2m_Front_07",
+   "xx_Fight_Sword_Atk_2m_Front_08",
+   "xx_Fight_Sword_Atk_2m_Front_09",
+   "xx_Fight_Sword_Atk_2m_Front_10",
+   "xx_Fight_Sword_Atk_OnSpot_Front_01",
+   "xx_Fight_Sword_Atk_OnSpot_Front_02",
+   "xx_Fight_Sword_Atk_OnSpot_Front_03",
+   "xx_Fight_Sword_Atk_OnSpot_Front_04",
+   "xx_Fight_Sword_Atk_OnSpot_Front_05",
+   "xx_Fight_Sword_Atk_OnSpot_Front_06",
+   "xx_Fight_Sword_Atk_OnSpot_Front_07",
+   "xx_Fight_Sword_Atk_OnSpot_Front_08",
+   "xx_Fight_Sword_Atk_OnSpot_Front_09",
+   "xx_Fight_Sword_Atk_OnSpot_Front_10"
+  ],
+  "note": "Attacks with the enemy against a wall: Unity front strikes."
+ },
+ {
+  "family": "Wall_Attack02_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Wall_Attack02_V01_Atk"
+  ],
+  "status": "T1",
+  "paired": false,
+  "unity": [
+   "xx_Fight_Sword_Atk_2m_Front_01",
+   "xx_Fight_Sword_Atk_2m_Front_02",
+   "xx_Fight_Sword_Atk_2m_Front_03",
+   "xx_Fight_Sword_Atk_2m_Front_04",
+   "xx_Fight_Sword_Atk_2m_Front_05",
+   "xx_Fight_Sword_Atk_2m_Front_06",
+   "xx_Fight_Sword_Atk_2m_Front_07",
+   "xx_Fight_Sword_Atk_2m_Front_08",
+   "xx_Fight_Sword_Atk_2m_Front_09",
+   "xx_Fight_Sword_Atk_2m_Front_10",
+   "xx_Fight_Sword_Atk_OnSpot_Front_01",
+   "xx_Fight_Sword_Atk_OnSpot_Front_02",
+   "xx_Fight_Sword_Atk_OnSpot_Front_03",
+   "xx_Fight_Sword_Atk_OnSpot_Front_04",
+   "xx_Fight_Sword_Atk_OnSpot_Front_05",
+   "xx_Fight_Sword_Atk_OnSpot_Front_06",
+   "xx_Fight_Sword_Atk_OnSpot_Front_07",
+   "xx_Fight_Sword_Atk_OnSpot_Front_08",
+   "xx_Fight_Sword_Atk_OnSpot_Front_09",
+   "xx_Fight_Sword_Atk_OnSpot_Front_10"
+  ],
+  "note": "Attacks with the enemy against a wall: Unity front strikes."
+ },
+ {
+  "family": "Wall_Attack03_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Wall_Attack03_V01_Atk"
+  ],
+  "status": "T1",
+  "paired": false,
+  "unity": [
+   "xx_Fight_Sword_Atk_2m_Front_01",
+   "xx_Fight_Sword_Atk_2m_Front_02",
+   "xx_Fight_Sword_Atk_2m_Front_03",
+   "xx_Fight_Sword_Atk_2m_Front_04",
+   "xx_Fight_Sword_Atk_2m_Front_05",
+   "xx_Fight_Sword_Atk_2m_Front_06",
+   "xx_Fight_Sword_Atk_2m_Front_07",
+   "xx_Fight_Sword_Atk_2m_Front_08",
+   "xx_Fight_Sword_Atk_2m_Front_09",
+   "xx_Fight_Sword_Atk_2m_Front_10",
+   "xx_Fight_Sword_Atk_OnSpot_Front_01",
+   "xx_Fight_Sword_Atk_OnSpot_Front_02",
+   "xx_Fight_Sword_Atk_OnSpot_Front_03",
+   "xx_Fight_Sword_Atk_OnSpot_Front_04",
+   "xx_Fight_Sword_Atk_OnSpot_Front_05",
+   "xx_Fight_Sword_Atk_OnSpot_Front_06",
+   "xx_Fight_Sword_Atk_OnSpot_Front_07",
+   "xx_Fight_Sword_Atk_OnSpot_Front_08",
+   "xx_Fight_Sword_Atk_OnSpot_Front_09",
+   "xx_Fight_Sword_Atk_OnSpot_Front_10"
+  ],
+  "note": "Attacks with the enemy against a wall: Unity front strikes."
+ },
+ {
+  "family": "Wall_ComboEnderH_Init_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Wall_ComboEnderH_Init_V01_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Wall_Kill_InitApp_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Wall_Kill_InitApp_V01_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_InitApp_V02_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_InitApp_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Wall_Kill_InitND_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Wall_Kill_InitND_V01_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_InitND_V02_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_InitND_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Wall_Kill_Init_BackLeft_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Wall_Kill_Init_BackLeft_V01_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_Init_BackLeft_V02_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_Init_BackLeft_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Wall_Kill_Init_BackRight_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Wall_Kill_Init_BackRight_V01_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_Init_BackRight_V02_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_Init_BackRight_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Wall_Kill_Init_Left_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Wall_Kill_Init_Left_V01_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_Init_Left_V02_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_Init_Left_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Wall_Kill_Init_Right_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Wall_Kill_Init_Right_V01_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_Init_Right_V02_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_Init_Right_V03_Atk"
+  ],
+  "status": "keep",
+  "paired": false,
+  "unity": [],
+  "note": "Lead-ins (0.3-0.4 s step-ins). Kept: they only bring you into range."
+ },
+ {
+  "family": "Wall_Kill_N_Atk",
+  "knife_clips": [
+   "ACVI_Fight_xx_Knife_Wall_Kill_V01_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_V02_Atk",
+   "ACVI_Fight_xx_Knife_Wall_Kill_V03_Atk"
+  ],
+  "status": "T1",
+  "paired": true,
+  "unity": [
+   [
+    "xx_Fight_Sword_Kill_Wall_01_Atk",
+    "xx_Fight_Sword_Kill_Wall_01_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Kill_Wall_02_Atk",
+    "xx_Fight_Sword_Kill_Wall_02_Dfn"
+   ],
+   [
+    "xx_Fight_Sword_Kill_Wall_03_Atk",
+    "xx_Fight_Sword_Kill_Wall_03_Dfn"
+   ]
+  ],
+  "note": "Wall kills: Unity has exactly 3 sword wall kills, both halves."
+ }
+]
