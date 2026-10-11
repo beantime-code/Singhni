@@ -35,6 +35,8 @@ to roll back. Everything below lives in `ishpreet_mod/` (git: `beantime-code/Sin
   - `graph/atomgraph.py`: fight-graph decoders.
 
 ## 2. Ishpreet (Evie's Élise slot)
+- **2026-10-11: start with `ISHPREET_K29_PLAN.md` and `COSTUME_PIPELINE.md`** (causes C1–C5, pipeline v2, gates G1–G8
+  in `tools/costume/`). They supersede the roadmap below for new builds and costumes.
 - **Roadmap:** `ROADMAP_ISHPREET.md`. It has the failure catalog F1–F6 from the k23 screenshots and gates G1–G7, which
   a build must pass before the user sees it.
 - **Facts from real data:**
